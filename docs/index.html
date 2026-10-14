@@ -8,6 +8,9 @@
     <meta property="og:title" content="Modspire — Make a world worth getting lost in">
     <meta property="og:description" content="Find the mods that fit your world, shape your Minecraft pack, and keep every decision in one studio.">
     <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..700,20,1&display=swap" rel="stylesheet">
     <title>Modspire — Make a world worth getting lost in</title>
     <style>
       :root {
@@ -481,6 +484,245 @@
         .motion-ready .reveal-target { opacity:1; transform:none; filter:none; transition:none; }
         .poster-link,.hero-poster,.feature-shot { transform:none !important; }
       }
+      /* Organic glass direction: layered, tinted surfaces with soft reflected light. */
+      :root {
+        font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+        --ink: #edf3e9;
+        --muted: #bdcbbd;
+        --subtle: #95a994;
+        --bg: #07120f;
+        --panel: rgba(15, 34, 29, .86);
+        --panel-strong: rgba(17, 39, 33, .94);
+        --line: rgba(198, 225, 196, .17);
+        --cyan: #a4e1c1;
+        --blue: #9cced0;
+        --violet: #c2b2d7;
+        --pink: #e7bca1;
+        --radius: 30px;
+        --glass: rgba(13, 31, 26, .84);
+        --glass-light: rgba(44, 73, 58, .38);
+        --glass-edge: rgba(212, 235, 199, .26);
+      }
+      body {
+        background: #07120f;
+        font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+      }
+      body::before {
+        z-index: -2;
+        opacity: .52;
+        background-image: linear-gradient(180deg,rgba(4,13,11,.48),rgba(4,13,11,.79)),url("../assets/shader-aurora-lake.png");
+        background-position: center, center 44%;
+        background-size: cover;
+        filter: blur(5px) saturate(.72);
+        transform: scale(1.035);
+        mask-image: linear-gradient(to bottom,#000 0%,#000 68%,transparent 100%);
+      }
+      body::after {
+        position: fixed;
+        z-index: -1;
+        inset: 0;
+        pointer-events: none;
+        content: "";
+        background: radial-gradient(ellipse at 50% 8%,rgba(105,152,118,.13),transparent 42rem),linear-gradient(180deg,rgba(5,15,12,.2),rgba(5,15,12,.49));
+      }
+      h1,h2,h3,.brand { font-family: Fraunces, Georgia, serif; font-weight:600; letter-spacing:-.045em; }
+      .topbar {
+        top: 14px;
+        width: min(var(--max),calc(100% - 32px));
+        margin: 14px auto 0;
+        border: 1px solid rgba(207,230,205,.2);
+        border-radius: 999px;
+        background: rgba(10,25,21,.76);
+        box-shadow: inset 0 1px rgba(241,249,227,.08),0 16px 48px rgba(0,0,0,.18);
+        backdrop-filter: blur(24px) saturate(135%);
+        -webkit-backdrop-filter: blur(24px) saturate(135%);
+      }
+      .nav { min-height:64px; padding-inline:20px; }
+      .brand-mark { border-radius:50%; background:linear-gradient(145deg,rgba(101,166,120,.35),rgba(72,119,99,.18)); color:#c4edcf; }
+      .nav-links { gap:20px; }
+      .nav-links a { color:#cfdbcb; }
+      .nav-links a:hover { color:#fff; }
+      .button,.menu-toggle {
+        border-color:rgba(204,229,204,.24);
+        background:linear-gradient(145deg,rgba(53,83,65,.54),rgba(19,41,34,.77));
+        box-shadow:inset 0 1px rgba(239,249,227,.12),inset 0 -1px rgba(5,14,11,.14);
+        backdrop-filter:blur(16px) saturate(135%);
+        -webkit-backdrop-filter:blur(16px) saturate(135%);
+        transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .28s ease,background .28s ease,box-shadow .28s ease;
+      }
+      .button:hover { transform:translateY(-2px) scale(1.015); border-color:rgba(206,235,202,.52); background:linear-gradient(145deg,rgba(77,119,88,.7),rgba(24,52,41,.88)); box-shadow:inset 0 1px rgba(255,255,241,.18),0 10px 28px rgba(3,12,9,.24); }
+      .button:active,.demo-tab:active,.demo-design-button:active { transform:scale(.975); }
+      .button.primary { border-color:rgba(220,247,216,.32); background:linear-gradient(120deg,#c5e3b8,#a9d6bf 52%,#a9cfc4); color:#10271c; box-shadow:inset 0 1px rgba(255,255,255,.58),0 10px 32px rgba(90,145,108,.2); }
+      .hero { padding-top:72px; }
+      .hero h1,.section-heading h2,.callout h2 { font-weight:600; }
+      .hero h1 span { color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(105deg,#c8e8c0,#aedbd0 56%,#e6d5ae);background-clip:text;-webkit-background-clip:text; }
+      .hero-copy { color:#c6d2c4; }
+      .eyebrow,.section-tag { color:#c4e2b7; }
+      .hero-art::before { background:linear-gradient(120deg,rgba(115,174,125,.24),rgba(114,158,144,.17)); }
+      .hero-poster { border-radius:34px; border-color:rgba(217,235,202,.32); box-shadow:0 30px 100px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.1); }
+      .poster-link { border-radius:34px; }
+      .play-badge { border-color:rgba(220,240,211,.35); background:rgba(12,29,23,.82); }
+      .play-dot { background:linear-gradient(135deg,#c6e6b4,#9fcfc0); color:#14291c; }
+      .demo-shell,.video-panel,.feature-card,.capability,.workflow,.callout,.download-card,.doc-link,.site-footer {
+        border-color:var(--glass-edge);
+        background:linear-gradient(145deg,rgba(27,50,40,.86),rgba(11,28,23,.9));
+        box-shadow:inset 0 1px rgba(245,249,224,.11),0 24px 75px rgba(0,0,0,.19);
+        backdrop-filter:blur(22px) saturate(130%);
+        -webkit-backdrop-filter:blur(22px) saturate(130%);
+      }
+      .video-panel { padding:12px; border-radius:34px; }
+      .video-panel video { border-radius:25px; }
+      .feature-card,.capability,.download-card,.doc-link { border-radius:28px; }
+      .feature-shot { border-radius:21px; }
+      .feature-card:hover,.capability:hover,.download-card:hover,.doc-link:hover { border-color:rgba(207,235,194,.4); transform:translateY(-3px); }
+      .demo-shell {
+        --line:rgba(209,231,198,.16);
+        position:relative;
+        isolation:isolate;
+        overflow:hidden;
+        border-radius:36px;
+        background:linear-gradient(145deg,rgba(19,39,32,.91),rgba(8,23,19,.94));
+        box-shadow:inset 0 1px rgba(246,250,231,.16),0 30px 100px rgba(0,0,0,.34);
+        backdrop-filter:blur(30px) saturate(140%);
+        -webkit-backdrop-filter:blur(30px) saturate(140%);
+      }
+      .demo-shell::before {
+        position:absolute;
+        z-index:-1;
+        inset:0;
+        pointer-events:none;
+        content:"";
+        border-radius:inherit;
+        background:radial-gradient(ellipse at 8% 0%,rgba(195,231,178,.1),transparent 36%),linear-gradient(118deg,rgba(233,245,211,.055),transparent 38%,rgba(150,200,177,.045));
+      }
+      .demo-shell[data-demo-active-theme="Crystal Glass"] { --cyan:#b8dce3; --blue:#9bc7d9; --violet:#b8c4df; border-color:rgba(188,221,231,.46); }
+      .demo-shell[data-demo-active-theme="Lush Caves"] { --cyan:#b9e2ad; --blue:#94c7a3; --violet:#c7d69a; border-color:rgba(185,226,173,.45); }
+      .demo-shell[data-demo-active-theme="End Rift"] { --cyan:#d0c0e0; --blue:#aaa5d4; --violet:#dec0d2; border-color:rgba(208,192,224,.43); }
+      .demo-top {
+        min-height:74px;
+        padding-inline:25px;
+        border-color:rgba(209,231,198,.12);
+        background:rgba(12,29,24,.48);
+        backdrop-filter:blur(20px);
+        -webkit-backdrop-filter:blur(20px);
+      }
+      .demo-brand { font-size:14px; }
+      .demo-brand-mark { width:34px;height:34px;border-radius:50%; background:linear-gradient(145deg,rgba(120,173,126,.32),rgba(61,113,89,.2)); }
+      .demo-status { color:#c3d1bf; }
+      .demo-body { display:block; min-height:0; }
+      .demo-sidebar {
+        width:max-content;
+        max-width:calc(100% - 40px);
+        min-height:58px;
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+        margin:15px auto 0;
+        padding:7px;
+        border:1px solid rgba(208,229,199,.17);
+        border-radius:999px;
+        background:rgba(8,23,19,.68);
+        box-shadow:inset 0 1px rgba(250,255,230,.09),0 12px 30px rgba(0,0,0,.14);
+        backdrop-filter:blur(22px) saturate(135%);
+        -webkit-backdrop-filter:blur(22px) saturate(135%);
+      }
+      .demo-side-label { display:none; }
+      .demo-tab {
+        min-height:42px;
+        padding:0 17px;
+        border-color:transparent;
+        border-radius:999px;
+        color:#c5d2c1;
+        transition:transform .28s cubic-bezier(.2,.8,.2,1),background .28s ease,border-color .28s ease,color .28s ease,box-shadow .28s ease;
+      }
+      .demo-tab:hover { transform:translateY(-1px); border-color:rgba(211,235,203,.15); background:rgba(178,210,173,.1); color:#fff; }
+      .demo-tab[aria-selected="true"] { border-color:rgba(211,235,203,.22); background:linear-gradient(145deg,rgba(113,166,119,.34),rgba(54,104,81,.37)); color:#f3f7e9; box-shadow:inset 0 1px rgba(248,255,231,.16),0 5px 16px rgba(1,10,7,.16); }
+      .demo-tab-icon { width:19px;color:var(--cyan); }
+      .demo-tab-icon svg { width:17px;height:17px;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+      .demo-workspace { padding:24px 28px 29px; }
+      .demo-view.active { animation:panel-arrive .42s cubic-bezier(.2,.75,.25,1) both; }
+      @keyframes panel-arrive { from { opacity:0; transform:translateY(10px) scale(.992); filter:blur(4px); } to { opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+      .demo-heading { align-items:center; margin-bottom:20px; }
+      .demo-heading h3 { font-size:25px; }
+      .demo-heading p { color:#bac9b9; }
+      .demo-chip { border-color:rgba(190,222,183,.22); background:rgba(92,143,99,.16); color:#d8efd0; }
+      .demo-stat,.demo-panel { border-color:rgba(205,227,193,.17); border-radius:22px; background:linear-gradient(145deg,rgba(39,66,51,.63),rgba(13,32,25,.76)); box-shadow:inset 0 1px rgba(255,255,238,.08); }
+      .demo-stat { padding:18px 19px; }
+      .demo-stat strong { font-family:Fraunces,Georgia,serif; font-weight:600; }
+      .demo-panel { padding:19px; }
+      .demo-mod { grid-template-columns:44px minmax(0,1fr) auto; gap:12px; padding:11px; border-color:rgba(209,230,201,.13); border-radius:17px; background:rgba(8,22,17,.43); transition:transform .2s ease,border-color .2s ease,background .2s ease; }
+      .demo-mod:hover { transform:translateY(-2px); border-color:rgba(197,227,188,.32); background:rgba(44,75,53,.48); }
+      .demo-mod-icon { width:44px;height:44px;border:1px solid rgba(205,233,187,.2);border-radius:15px;background:linear-gradient(145deg,rgba(140,188,123,.25),rgba(54,113,82,.28));color:#e1f0cf;font:700 15px "DM Sans",sans-serif; }
+      .demo-mod small { color:#b2c3ae; }
+      .demo-mini-button { min-width:38px;min-height:38px;border-radius:50%;border-color:rgba(195,225,191,.28);background:rgba(83,139,93,.23);color:#d5efcc; transition:transform .22s ease,background .22s ease,border-color .22s ease; }
+      .demo-mini-button:hover { transform:scale(1.07);border-color:var(--cyan);background:rgba(100,165,112,.32); }
+      .demo-input,.demo-select { border-color:rgba(207,229,198,.2);border-radius:999px;background:rgba(7,21,17,.69);color:var(--ink);backdrop-filter:blur(12px); }
+      .demo-input { padding-inline:16px; }
+      .demo-input::placeholder { color:#9fb19b; }
+      .demo-message { max-width:720px;border-color:rgba(190,222,183,.2);border-radius:19px 19px 19px 5px;background:linear-gradient(140deg,rgba(74,123,84,.4),rgba(29,74,63,.43));color:#edf4e8; }
+      .demo-designs { grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+      .demo-design-button {
+        position:relative;
+        overflow:hidden;
+        min-height:148px;
+        padding:16px;
+        border-color:rgba(211,232,202,.19);
+        border-radius:22px;
+        background:linear-gradient(145deg,rgba(38,68,50,.64),rgba(12,30,24,.78));
+        box-shadow:inset 0 1px rgba(246,250,227,.1);
+        font-size:13px;
+        font-weight:700;
+        transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s ease,background .3s ease,box-shadow .3s ease;
+      }
+      .demo-design-button:hover { transform:translateY(-4px); border-color:rgba(217,239,205,.4); }
+      .demo-design-button[aria-pressed="true"] { border-color:var(--cyan); background:linear-gradient(145deg,rgba(73,119,78,.69),rgba(15,40,29,.88)); box-shadow:inset 0 0 0 1px rgba(211,240,199,.18),0 12px 30px rgba(2,13,8,.19); }
+      .demo-theme-swatch { display:block;width:100%;height:66px;margin-bottom:13px;border:1px solid rgba(227,240,212,.19);border-radius:15px;background:radial-gradient(circle at 72% 30%,rgba(220,249,194,.85) 0 2px,transparent 4px),linear-gradient(135deg,#183c35,#547d63 46%,#172a29);box-shadow:inset 0 1px rgba(255,255,255,.18); }
+      .demo-design-button:nth-child(2) .demo-theme-swatch { background:radial-gradient(ellipse at 78% 22%,rgba(196,229,245,.8),transparent 26%),linear-gradient(135deg,#233e49,#819ea0 48%,#23333d); }
+      .demo-design-button:nth-child(3) .demo-theme-swatch { background:radial-gradient(circle at 23% 28%,rgba(203,235,155,.72),transparent 17%),linear-gradient(135deg,#183b2b,#619267 52%,#243a2b); }
+      .demo-design-button:nth-child(4) .demo-theme-swatch { background:radial-gradient(circle at 72% 28%,rgba(220,194,241,.85) 0 2px,transparent 4px),linear-gradient(135deg,#271d3b,#6d5b83 48%,#171b2e); }
+      .demo-design-button small { color:#bdcbb8;font-size:10px;font-weight:500; }
+      .demo-footer { min-height:64px;padding:12px 23px;border-color:rgba(208,229,199,.13);background:rgba(8,23,19,.52);color:#bdcbb9;backdrop-filter:blur(20px); }
+      .demo-footer strong { color:#edf4e6; }
+      .demo-pack-item { border-color:rgba(190,225,180,.19);background:rgba(75,129,81,.21);color:#e0f1d7; }
+      .demo-clear { color:#c8d9c1; }
+      .demo-note { color:#aebaab; }
+      .section-heading p,.feature-copy p,.capability p,.step p,.callout p,.video-caption { color:#bdcbb9; }
+      .pill { border-color:rgba(209,230,197,.2);background:rgba(18,39,31,.54);color:#dce8d4;backdrop-filter:blur(12px); }
+      .site-footer { border-radius:24px 24px 0 0; }
+      .motion-ready .reveal-target { transform:translateY(28px) scale(.988); filter:blur(5px); transition:opacity .82s ease,transform .82s cubic-bezier(.16,.78,.22,1),filter .82s ease; }
+      .motion-ready .reveal-target.is-visible { transform:translateY(0) scale(1); }
+      .hero-art { transform-style:preserve-3d; }
+      .hero-poster { transition:transform .5s cubic-bezier(.2,.75,.25,1),border-color .3s ease; }
+      .hero-art:hover .hero-poster { transform:translateY(-4px) rotateX(1deg);border-color:rgba(218,240,201,.52); }
+      @media (max-width:900px) {
+        .demo-designs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        .demo-sidebar { max-width:calc(100% - 24px); }
+        .demo-tab { padding-inline:13px; }
+      }
+      @media (max-width:680px) {
+        .topbar { top:7px;width:calc(100% - 16px);margin-top:7px;border-radius:25px; }
+        .nav { min-height:58px;padding-inline:13px; }
+        .nav-links { gap:8px; }
+        .hero { padding-top:50px; }
+        .demo-shell { border-radius:25px; }
+        .demo-top { min-height:62px;padding-inline:15px; }
+        .demo-status { max-width:132px;text-align:right;line-height:1.35; }
+        .demo-sidebar { width:calc(100% - 20px);max-width:none;justify-content:flex-start;overflow-x:auto;margin-top:10px;padding:6px;border-radius:20px;scrollbar-width:thin; }
+        .demo-tab { min-height:39px;flex:0 0 auto;padding-inline:13px;font-size:11px; }
+        .demo-workspace { padding:19px 14px 20px; }
+        .demo-heading { display:flex;align-items:flex-start; }
+        .demo-heading h3 { font-size:22px; }
+        .demo-stats { grid-template-columns:1fr; }
+        .demo-designs { grid-template-columns:1fr 1fr; }
+        .demo-design-button { min-height:124px;padding:11px;font-size:12px; }
+        .demo-theme-swatch { height:52px; }
+        .demo-footer { align-items:flex-start;flex-direction:column;padding:14px 16px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .demo-view.active { animation:none; }
+        .hero-art:hover .hero-poster { transform:none; }
+      }
     </style>
   </head>
   <body>
@@ -531,42 +773,42 @@
           <p>Switch between the workspace, assistant, catalog, and Pack Lab. The preview is interactive and uses sample data.</p>
         </div>
         <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
-          <div class="demo-top"><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true">✦</span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 Fabric</span></div>
+          <div class="demo-top"><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 Fabric</span></div>
           <div class="demo-body">
             <nav class="demo-sidebar" aria-label="Demo workspace sections" role="tablist">
               <span class="demo-side-label">Workspace</span>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-overview" aria-controls="demo-view-overview" aria-selected="true" tabindex="0" data-demo-tab="overview"><span class="demo-tab-icon">▦</span>Overview</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-assistant" aria-controls="demo-view-assistant" aria-selected="false" tabindex="-1" data-demo-tab="assistant"><span class="demo-tab-icon">✦</span>Pack Assistant</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-search" aria-controls="demo-view-search" aria-selected="false" tabindex="-1" data-demo-tab="search"><span class="demo-tab-icon">⌕</span>Mod search</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-lab" aria-controls="demo-view-lab" aria-selected="false" tabindex="-1" data-demo-tab="lab"><span class="demo-tab-icon">⌘</span>Pack Lab</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-designs" aria-controls="demo-view-designs" aria-selected="false" tabindex="-1" data-demo-tab="designs"><span class="demo-tab-icon">◈</span>Designs</button>
+              <button class="demo-tab" type="button" role="tab" id="demo-tab-overview" aria-controls="demo-view-overview" aria-selected="true" tabindex="0" data-demo-tab="overview"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg></span>Overview</button>
+              <button class="demo-tab" type="button" role="tab" id="demo-tab-assistant" aria-controls="demo-view-assistant" aria-selected="false" tabindex="-1" data-demo-tab="assistant"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2L12 3Z"/></svg></span>Pack Assistant</button>
+              <button class="demo-tab" type="button" role="tab" id="demo-tab-search" aria-controls="demo-view-search" aria-selected="false" tabindex="-1" data-demo-tab="search"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span>Mod search</button>
+              <button class="demo-tab" type="button" role="tab" id="demo-tab-lab" aria-controls="demo-view-lab" aria-selected="false" tabindex="-1" data-demo-tab="lab"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10m8 10V4m8 16v-7"/><path d="M2 20h20"/></svg></span>Pack Lab</button>
+              <button class="demo-tab" type="button" role="tab" id="demo-tab-designs" aria-controls="demo-view-designs" aria-selected="false" tabindex="-1" data-demo-tab="designs"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>Designs</button>
             </nav>
             <div class="demo-workspace">
               <section class="demo-view active" id="demo-view-overview" role="tabpanel" aria-labelledby="demo-tab-overview" data-demo-view="overview" aria-label="Project overview" tabindex="0">
-                <div class="demo-heading"><div><h3>🌄 Wildlands & Waypoints</h3><p>A sample exploration pack · Minecraft Java 1.21.1 · Fabric</p></div><span class="demo-chip">● Project saved</span></div>
+                <div class="demo-heading"><div><h3>Wildlands & Waypoints</h3><p>A sample exploration pack · Minecraft Java 1.21.1 · Fabric</p></div><span class="demo-chip"><span class="demo-live-dot" aria-hidden="true"></span> Project saved</span></div>
                 <div class="demo-stats"><article class="demo-stat"><span>Mods in your pack</span><strong id="demo-count">3</strong></article><article class="demo-stat"><span>Loader</span><strong>Fabric</strong></article><article class="demo-stat"><span>Pack focus</span><strong>Explore</strong></article></div>
-                <article class="demo-panel"><div class="demo-panel-title"><span>🧭 Suggested for your world</span><span style="color:var(--subtle);font-size:10px">Sample catalog</span></div><div class="demo-mod-list">
-                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">🗺️</span><span><strong>Terralith</strong><small>World generation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Terralith" aria-label="Add Terralith">+</button></div>
-                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">🧭</span><span><strong>Xaero's Minimap</strong><small>Map & navigation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Xaero's Minimap" aria-label="Add Xaero's Minimap">+</button></div>
+                <article class="demo-panel"><div class="demo-panel-title"><span>Suggested for your world</span><span style="color:var(--subtle);font-size:10px">Sample catalog</span></div><div class="demo-mod-list">
+                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">T</span><span><strong>Terralith</strong><small>World generation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Terralith" aria-label="Add Terralith">+</button></div>
+                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">X</span><span><strong>Xaero's Minimap</strong><small>Map & navigation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Xaero's Minimap" aria-label="Add Xaero's Minimap">+</button></div>
                 </div></article>
               </section>
               <section class="demo-view" id="demo-view-assistant" role="tabpanel" aria-labelledby="demo-tab-assistant" data-demo-view="assistant" aria-label="Pack Assistant demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>💬 Pack Assistant</h3><p>Plan the feeling of your next world, then curate the suggestions.</p></div><span class="demo-chip">Local preview</span></div>
+                <div class="demo-heading"><div><h3>Pack Assistant</h3><p>Plan the feeling of your next world, then curate the suggestions.</p></div><span class="demo-chip">Local preview</span></div>
                 <div class="demo-panel demo-chat"><div><div class="demo-message">For a quieter exploration pack, I’d start with richer terrain, a lightweight map, and a few ambient details. Search the sample catalog to choose what belongs in your pack.</div><p class="demo-note">This browser preview uses example responses. Connect an AI provider in the desktop app for live chat and suggestions.</p></div><form class="demo-prompt" id="demo-prompt"><input class="demo-input" id="demo-prompt-input" aria-label="Ask the sample assistant" placeholder="Try: suggest a world-generation mod"><button class="demo-mini-button" type="submit" aria-label="Send sample prompt">↑</button></form></div>
               </section>
               <section class="demo-view" id="demo-view-search" role="tabpanel" aria-labelledby="demo-tab-search" data-demo-view="search" aria-label="Mod search demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>🔎 Mod search</h3><p>Try filters and add or remove sample mods from your pack.</p></div><span class="demo-chip">Demo catalog · not live</span></div>
+                <div class="demo-heading"><div><h3>Mod search</h3><p>Try filters and add or remove sample mods from your pack.</p></div><span class="demo-chip">Demo catalog · not live</span></div>
                 <div class="demo-toolbar"><input class="demo-input" id="demo-search-input" aria-label="Search sample mods" placeholder="Search sample mods…"><select class="demo-select" id="demo-category" aria-label="Filter sample mods"><option value="all">All categories</option><option value="world">World</option><option value="map">Map & travel</option><option value="performance">Performance</option></select></div>
                 <div class="demo-panel"><div class="demo-panel-title"><span>Catalog results</span><span id="demo-results-label" style="color:var(--muted);font-size:10px">4 sample mods</span></div><div class="demo-mod-list" id="demo-results"></div></div>
               </section>
               <section class="demo-view" id="demo-view-lab" role="tabpanel" aria-labelledby="demo-tab-lab" data-demo-view="lab" aria-label="Pack Lab preview" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>🧪 Pack Lab</h3><p>A quick sample view of project balance and checks.</p></div><span class="demo-chip">Example analysis</span></div>
+                <div class="demo-heading"><div><h3>Pack Lab</h3><p>A quick sample view of project balance and checks.</p></div><span class="demo-chip">Example analysis</span></div>
                 <div class="demo-stats"><article class="demo-stat"><span>World & exploration</span><strong>42%</strong></article><article class="demo-stat"><span>Quality of life</span><strong>31%</strong></article><article class="demo-stat"><span>Performance</span><strong>27%</strong></article></div>
                 <article class="demo-panel"><div class="demo-panel-title"><span>Pack mix</span><span style="color:var(--subtle);font-size:10px">Illustrative data</span></div><div class="demo-bars" aria-label="Illustrative pack category chart"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:83%"></i><i style="height:57%"></i><i style="height:94%"></i><i style="height:70%"></i><i style="height:52%"></i><i style="height:76%"></i><i style="height:64%"></i><i style="height:88%"></i><i style="height:46%"></i></div><p class="demo-note">Compatibility and dependency checks in the desktop app use your selected project and installed tools.</p></article>
               </section>
               <section class="demo-view" id="demo-view-designs" role="tabpanel" aria-labelledby="demo-tab-designs" data-demo-view="designs" aria-label="Design selection demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>🎨 Make it yours</h3><p>Switch the preview mood. Your selection is kept for this page session.</p></div><span class="demo-chip" id="demo-theme-status">Aurora selected</span></div>
-                <div class="demo-designs"><button class="demo-design-button" type="button" data-demo-theme="Aurora" aria-pressed="true">🌌 Aurora <small>Deep navy · cyan light</small></button><button class="demo-design-button" type="button" data-demo-theme="Crystal Glass" aria-pressed="false">💎 Crystal Glass <small>Cool glass · blue edge</small></button><button class="demo-design-button" type="button" data-demo-theme="Lush Caves" aria-pressed="false">🌿 Lush Caves <small>Forest green · soft glow</small></button><button class="demo-design-button" type="button" data-demo-theme="End Rift" aria-pressed="false">🪐 End Rift <small>Violet night · starlight</small></button></div>
+                <div class="demo-heading"><div><h3>Choose a world mood</h3><p>Switch the preview mood. Your selection is kept for this page session.</p></div><span class="demo-chip" id="demo-theme-status">Aurora selected</span></div>
+                <div class="demo-designs"><button class="demo-design-button" type="button" data-demo-theme="Aurora" aria-pressed="true"><span class="demo-theme-swatch" aria-hidden="true"></span>Aurora <small>Deep navy · cyan light</small></button><button class="demo-design-button" type="button" data-demo-theme="Crystal Glass" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>Crystal Glass <small>Cool glass · blue edge</small></button><button class="demo-design-button" type="button" data-demo-theme="Lush Caves" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>Lush Caves <small>Forest green · soft glow</small></button><button class="demo-design-button" type="button" data-demo-theme="End Rift" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>End Rift <small>Violet night · starlight</small></button></div>
               </section>
             </div>
           </div>
@@ -797,10 +1039,10 @@
       }
       document.querySelector("#year").textContent = new Date().getFullYear();
       const demoMods = [
-        { name: "Terralith", category: "world", icon: "🗺️", detail: "Overhauled terrain · World generation" },
-        { name: "Tectonic", category: "world", icon: "⛰️", detail: "Large-scale terrain shaping · World generation" },
-        { name: "Xaero's Minimap", category: "map", icon: "🧭", detail: "Map & navigation · Exploration" },
-        { name: "Sodium", category: "performance", icon: "⚡", detail: "Rendering optimization · Performance" }
+        { name: "Terralith", category: "world", icon: "T", detail: "Overhauled terrain · World generation" },
+        { name: "Tectonic", category: "world", icon: "T", detail: "Large-scale terrain shaping · World generation" },
+        { name: "Xaero's Minimap", category: "map", icon: "X", detail: "Map & navigation · Exploration" },
+        { name: "Sodium", category: "performance", icon: "S", detail: "Rendering optimization · Performance" }
       ];
       const demoPack = new Set(["Sodium", "JEI", "Terralith"]);
       const demoResults = document.querySelector("#demo-results");

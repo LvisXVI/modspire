@@ -6,7 +6,7 @@
 
 ### 🛠️ Core Features & Integrations
 [![PackLab](https://img.shields.io/badge/PackLab-Diagnostics-22c55e?style=flat-square&logo=target)]()
-[![Design Manager](https://img.shields.io/badge/Design_Manager-Themes_%26_Backgrounds-d946ef?style=flat-square&logo=artstation&logoColor=white)]()
+[![Design Manager](https://img.shields.io/badge/Design_Manager-Themes_%26_Backgrounds-d946ef?style=flat-square&logo=artstation&logoColor=white)](https://github.com/LvisXVI/own-modbot/blob/5b54f645d69710742d72833d0687c918496cc4b4/Bildschirmaufnahme%202026-10-14%20142802.mp4)
 [![Modrinth](https://img.shields.io/badge/Modrinth-Integrated-1bd96a?style=flat-square&logo=modrinth&logoColor=black)]()
 [![CurseForge](https://img.shields.io/badge/CurseForge-API_Key_Required-f16436?style=flat-square&logo=curseforge&logoColor=white)]()
 [![Crash Reporter](https://img.shields.io/badge/Crash_Reports-Analyzer-ef4444?style=flat-square)]()

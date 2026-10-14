@@ -22,6 +22,7 @@ const { chromium } = require('playwright');
     await page.getByRole('tab', { name: 'Overview' }).click();
     await page.locator('[data-demo-add="Terralith"]').click();
     assert.equal(await page.locator('#demo-pack-count').textContent(), '2 mods selected');
+    assert.ok(await page.locator('#demo-count').evaluate(node => node.getAnimations().some(animation => animation.playState === 'running')), 'pack count reacts with a short number-pop animation');
     await page.getByRole('tab', { name: /Mod search/ }).click();
     await page.locator('#demo-results .demo-mod').filter({ hasText: 'Tectonic' }).locator('button').click();
     assert.equal(await page.locator('#demo-pack-count').textContent(), '3 mods selected');
@@ -31,6 +32,7 @@ const { chromium } = require('playwright');
     await page.locator('[data-demo-theme="End Rift"]').click();
     assert.equal(await page.locator('#demo-theme-status').textContent(), 'End Rift selected');
     assert.equal(await page.locator('[data-demo-theme="End Rift"]').getAttribute('aria-pressed'), 'true');
+    assert.ok(await page.locator('.demo-shell').evaluate(node => node.getAnimations().some(animation => animation.transitionProperty === '--cyan')), 'demo accent colors transition between selected themes');
 
     await page.getByRole('tab', { name: 'Pack Assistant' }).click();
     await page.locator('#demo-prompt-input').fill('More exploration and biomes');
@@ -45,6 +47,10 @@ const { chromium } = require('playwright');
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     const scrollScale = await page.locator('#scroll-progress').evaluate(node => Number(node.style.transform.match(/scaleX\(([^)]+)\)/)?.[1] ?? 0));
     assert.ok(scrollScale > .95, `scroll progress follows the page without layout-width updates: ${scrollScale}`);
+    const parallaxOffset = await page.locator('.hero-art').evaluate(node => parseFloat(getComputedStyle(node).getPropertyValue('--scroll-parallax')));
+    assert.ok(parallaxOffset <= -20 && parallaxOffset >= -24, `hero artwork moves subtly with page scroll: ${parallaxOffset}px`);
+    const heroTranslation = await page.locator('.hero-art').evaluate(node => new DOMMatrixReadOnly(getComputedStyle(node).transform).m42);
+    assert.ok(heroTranslation <= -20 && heroTranslation >= -24, `scroll parallax reaches the rendered hero transform: ${heroTranslation}px`);
     assert.ok(await page.locator('#site-nav a[aria-current="location"]').count() <= 1, 'scroll section indicator never marks multiple sections active');
     assert.deepEqual(pageErrors, [], 'page interactions and motion do not throw runtime errors');
 
@@ -52,6 +58,7 @@ const { chromium } = require('playwright');
     await page.reload();
     assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).scrollBehavior), 'auto', 'reduced-motion users retain instant, predictable navigation');
     assert.equal(await page.locator('html').evaluate(node => node.classList.contains('motion-ready')), false, 'scroll reveal animations stay disabled when reduced motion is requested');
+    assert.equal(await page.locator('.hero-art').evaluate(node => getComputedStyle(node).getPropertyValue('--scroll-parallax').trim()), '', 'scroll parallax is not activated when reduced motion is requested');
     console.log('GitHub Pages scroll reveals, progress, active navigation, interactive demo transitions, and reduced-motion behavior passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

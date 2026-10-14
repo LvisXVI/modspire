@@ -50,6 +50,14 @@ The project wiki is maintained in [`docs/wiki/`](docs/wiki/README.md). It covers
 
 ![Local web version](Screenshot%202026-10-14%20144817.png)
 
+These additional captures show the AI-assisted workflow, catalog search, and appearance controls. They use illustrative sample pack content; live suggestions and catalog results depend on the connected providers.
+
+![AI Pack Assistant conversation with contextual follow-up choices](docs/screenshots/ai-pack-assistant.jpg)
+
+![Modrinth catalog search with version and loader context and add-to-pack controls](docs/screenshots/modrinth-search-and-selection.jpg)
+
+![Design manager with selectable interface themes, opacity, motion, and Minecraft backgrounds](docs/screenshots/designs-and-minecraft-backgrounds.jpg)
+
 
 ## What is not implemented yet
 

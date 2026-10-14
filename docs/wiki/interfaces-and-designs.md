@@ -1,20 +1,24 @@
-# Interfaces and designs
+# 🎨 Interfaces and designs
 
-## Four UI layouts
+## 🪟 Four ways to work
 
-The design manager switches between four layouts while preserving the same pack and chat state:
+The Design Manager lets you switch between four layouts while keeping the active pack and chat state:
 
-1. **Classic workshop** — compact navigation and the original workbench arrangement.
-2. **Modern overview** — dashboard navigation and a larger overview of the active pack.
-3. **UI Version 3** — studio-style workspace with a clean mode and Minecraft-world themes.
-4. **UI Version 4** — expanded gaming workspace with a separate creator preview area.
+1. **Classic Workshop** — the original compact workbench layout.
+2. **Modern Overview** — dashboard-style navigation and a larger pack overview.
+3. **UI 3** — a studio workspace with a clean presentation and Minecraft-world themes.
+4. **UI 4** — an expanded gaming workspace with a dedicated concept-preview area.
 
-Chat, mod catalog, pack tools, settings, and mod creator remain available across layouts. The layout switch does not change a modpack's underlying data.
+The Chat, Mod Selection, pack tools, settings, and Mod Creator are available throughout the app. A layout switch changes presentation, not the pack's underlying data.
 
-## Themes, wallpapers, and glass
+## 🌌 Themes, worlds, and glass
 
-Themes control the palette; wallpapers are selected separately. Crystal Glass and Translucent use tinted, blurred surfaces rather than desktop see-through. The shared glass-surface opacity slider applies across designs and persists locally. Polarlicht uses a subdued colored glow to keep text readable.
+Choose a color theme and wallpaper in the appearance settings. Crystal Glass and Translucent use tinted, blurred surfaces; they are not intended to show the desktop through the app. Adjust surface opacity to balance the wallpaper with text contrast. Polarlicht uses colored light accents tuned to preserve legibility.
 
-Minecraft wallpapers may use subtle motion. The motion setting can be switched off; reduced-motion system preferences are respected where implemented.
+Minecraft-inspired wallpapers can move subtly. Use the motion control to turn that animation off; system reduced-motion preferences are respected in supported transitions.
 
-For readability, keep text/background contrast in mind when customizing colors. The app uses keyboard-focus outlines and semantic controls for major actions; report any inaccessible or low-contrast state with the UI layout and theme name.
+## ♿ Readability and input
+
+Keep enough contrast between text, controls, and the selected surface. Main actions support keyboard focus, and focus indicators help show where keyboard input will go. If a layout clips content or a panel stops scrolling, include the UI number, theme, window size, and the affected section in a bug report.
+
+🧰 See [Troubleshooting and development](troubleshooting-development.md) for reporting details.

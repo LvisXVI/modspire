@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#080d17">
+    <meta name="theme-color" content="#090f10">
     <meta name="description" content="Explore Modspire: a Windows studio for planning Minecraft Java modpacks, searching mods, and organizing your world.">
-    <meta property="og:title" content="Modspire — Build your next adventure">
-    <meta property="og:description" content="Plan your Minecraft Java modpack, explore real mod suggestions, and shape your workspace.">
+    <meta property="og:title" content="Modspire — Make a world worth getting lost in">
+    <meta property="og:description" content="Find the mods that fit your world, shape your Minecraft pack, and keep every decision in one studio.">
     <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
-    <title>Modspire — Build your next adventure</title>
+    <title>Modspire — Make a world worth getting lost in</title>
     <style>
       :root {
         color-scheme: dark;
@@ -287,9 +287,151 @@
         .footer-main { display:block; }
         .footer-links { justify-content:flex-start; margin-top:20px; }
       }
+      /* Art direction: editorial field guide, anchored in real product imagery. */
+      :root {
+        --ink:#f0f1e9; --muted:#bac4bd; --subtle:#85938b; --bg:#090f10;
+        --panel:rgba(17,27,26,.9); --panel-strong:#111b1a; --line:rgba(181,203,187,.16);
+        --cyan:#c1ee83; --blue:#8ec7b7; --violet:#d5b28a; --pink:#e9856c;
+        --radius:16px; --max:1240px;
+      }
+      html { scroll-padding-top:88px; }
+      body { background:radial-gradient(ellipse at 74% 8%,rgba(71,103,74,.12),transparent 35rem),#090f10; }
+      body::before { opacity:.08; background-image:linear-gradient(rgba(202,226,207,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(202,226,207,.22) 1px,transparent 1px); background-size:54px 54px; mask-image:linear-gradient(to bottom,#000,transparent 42%); }
+      .reading-progress { position:fixed; z-index:30; inset:0 0 auto; height:2px; background:transparent; }
+      .reading-progress span { display:block; width:0; height:100%; background:var(--cyan); transform-origin:left; }
+      .topbar { border-bottom-color:rgba(181,203,187,.11); background:rgba(9,15,16,.9); backdrop-filter:blur(12px); transition:background .25s ease,border-color .25s ease; }
+      .topbar.scrolled { background:rgba(9,15,16,.97); border-bottom-color:rgba(181,203,187,.2); }
+      .nav { min-height:72px; }
+      .brand-mark { width:35px; height:35px; border-radius:10px; background:#c1ee83; color:#172018; border:0; }
+      .nav-links { gap:22px; }
+      .nav-links a { font-size:12px; }
+      .button { min-height:48px; padding-inline:19px; border-radius:13px; background:#151e1d; border-color:rgba(181,203,187,.2); transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .28s ease,background .28s ease,color .28s ease; }
+      .button:hover { transform:translateY(-3px); background:#1b2924; border-color:rgba(193,238,131,.62); }
+      .button.primary { background:var(--cyan); color:#132016; border-color:var(--cyan); }
+      .button.primary:hover { background:#d2f79c; border-color:#d2f79c; }
+      .hero { display:flex; min-height:min(820px,calc(100svh - 72px)); align-items:center; padding:48px 0 66px; }
+      .hero-grid { width:100%; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(32px,4vw,62px); }
+      .eyebrow { gap:12px; margin-bottom:23px; color:#c5e49b; font-size:10px; letter-spacing:.19em; }
+      .eyebrow::before { width:34px; height:2px; }
+      .hero h1 { max-width:650px; font-size:clamp(52px,5.2vw,72px); line-height:.98; letter-spacing:-.075em; }
+      .hero h1 span { color:var(--cyan); background:none; -webkit-text-fill-color:var(--cyan); }
+      .hero-copy { max-width:475px; margin-top:22px; color:#c0c9c2; font-size:16px; line-height:1.75; }
+      .hero-actions { gap:10px; margin-top:30px; }
+      .hero-actions .button:nth-child(2) span { transition:transform .25s ease; }
+      .hero-actions .button:nth-child(2):hover span { transform:translate(3px,3px); }
+      .release-note { color:#9daa9f; font-size:11px; letter-spacing:.02em; }
+      .hero-stats { gap:0; margin-top:35px; padding-top:19px; border-top:1px solid var(--line); }
+      .hero-stats span { display:flex; align-items:center; gap:8px; padding-right:16px; margin-right:16px; border-right:1px solid var(--line); color:#9daa9f; font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+      .hero-stats span:last-child { border:0; }
+      .hero-stats strong { color:var(--cyan); font-family:ui-monospace,Consolas,monospace; font-size:10px; }
+      .hero-art { perspective:1200px; }
+      .hero-art::before { inset:14% 9% 5%; background:rgba(157,203,117,.12); filter:blur(80px); }
+      .poster-link { overflow:hidden; border:1px solid rgba(193,238,131,.28); border-radius:14px; background:#101818; transform:translate3d(var(--scene-x,0px),var(--scene-y,0px),0) rotateY(var(--scene-rotate,0deg)); transition:transform .5s cubic-bezier(.2,.75,.25,1),border-color .3s ease; }
+      .poster-link:hover { border-color:rgba(193,238,131,.65); transform:translate3d(0,-4px,0) rotateY(0deg); }
+      .hero-poster { width:100%; aspect-ratio:1.45; object-fit:cover; object-position:top center; border:0; border-radius:0; box-shadow:none; transition:transform .7s cubic-bezier(.2,.75,.25,1),filter .5s ease; }
+      .poster-link:hover .hero-poster { transform:scale(1.025); filter:saturate(1.06); }
+      .hero-art::after { position:absolute; z-index:1; inset:0 0 29px; border-radius:14px 14px 0 0; pointer-events:none; background:linear-gradient(180deg,rgba(8,14,15,.06) 55%,rgba(8,14,15,.25)); content:""; }
+      .play-badge { right:15px; bottom:46px; z-index:2; padding:8px 11px 8px 8px; border-color:rgba(240,241,233,.22); border-radius:11px; background:rgba(10,16,16,.88); font-size:10px; }
+      .play-dot { width:25px; height:25px; background:var(--cyan); color:#172018; }
+      .hero-caption { display:flex; justify-content:space-between; gap:12px; padding:13px 2px 0; color:#99a89e; font-family:ui-monospace,Consolas,monospace; font-size:9px; letter-spacing:.06em; text-transform:uppercase; }
+      .section { position:relative; padding-block:clamp(72px,9vw,126px); border-top:1px solid rgba(181,203,187,.1); }
+      .section-heading { align-items:end; margin-bottom:34px; }
+      .section-heading h2 { max-width:740px; font-size:clamp(34px,4.8vw,58px); line-height:1.02; letter-spacing:-.065em; }
+      .section-heading p { max-width:390px; color:#aeb9b1; font-size:13px; line-height:1.75; }
+      .section-tag { margin-bottom:14px; color:#b5d99b; font-size:9px; letter-spacing:.2em; }
+      #demo { padding-top:clamp(68px,8vw,100px); }
+      .demo-shell { border-color:rgba(193,238,131,.2); border-radius:15px; background:#0d1515; box-shadow:0 45px 100px rgba(0,0,0,.28); }
+      .demo-top { min-height:62px; background:#111a19; }
+      .demo-body { min-height:465px; }
+      .demo-sidebar { background:#0e1716; }
+      .demo-tab { border-radius:9px; }
+      .demo-tab[aria-selected="true"] { border-color:rgba(193,238,131,.23); background:rgba(193,238,131,.1); color:#ecf5df; }
+      .demo-view.active { animation:panel-arrive .38s cubic-bezier(.2,.75,.25,1) both; }
+      .demo-stat,.demo-panel { border-radius:12px; background:#111b1a; }
+      .demo-mod { border-radius:9px; background:#0d1515; }
+      .demo-design-button { border-radius:10px; background:#121d1a; }
+      .demo-footer { background:#0e1716; }
+      .video-section { padding-top:clamp(68px,8vw,100px); }
+      .video-panel { padding:9px; border-color:rgba(193,238,131,.19); border-radius:15px; background:#0d1515; }
+      .video-panel video { border-radius:9px; }
+      .video-caption { padding-inline:6px; font-size:11px; }
+      .feature-grid { gap:13px; }
+      .feature-card { border-radius:13px; background:#101817; transition:transform .45s cubic-bezier(.2,.75,.25,1),border-color .3s ease,background .3s ease; }
+      .feature-card:hover { transform:translateY(-5px); border-color:rgba(193,238,131,.36); background:#131d1a; }
+      .feature-copy { padding:23px 24px 15px; }
+      .feature-copy h3 { font-size:19px; letter-spacing:-.035em; }
+      .feature-copy p { color:#abb8ae; font-size:12px; }
+      .feature-shot { border-color:rgba(193,238,131,.13); border-radius:8px; transition:transform .7s cubic-bezier(.2,.75,.25,1),filter .5s ease; }
+      .feature-card:hover .feature-shot { transform:scale(1.012); filter:saturate(1.08); }
+      .capability-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 22px; }
+      .capability { min-height:0; padding:23px 4px 24px; border:0; border-top:1px solid var(--line); border-radius:0; background:transparent; }
+      .capability .icon { width:34px; height:34px; margin-bottom:14px; border-color:rgba(193,238,131,.16); border-radius:9px; background:rgba(193,238,131,.07); color:var(--cyan); }
+      .capability h3 { font-size:15px; }
+      .capability p { color:#aeb9b1; font-size:12px; }
+      .workflow { border-color:var(--line); border-radius:13px; background:#101817; }
+      .step { min-height:180px; padding:23px 21px; }
+      .step-number { margin-bottom:40px; color:var(--cyan); font-family:ui-monospace,Consolas,monospace; font-size:10px; }
+      .step h3 { font-size:16px; }
+      .step p { color:#aeb9b1; font-size:12px; }
+      .callout { border-color:rgba(193,238,131,.25); border-radius:14px; background:linear-gradient(115deg,#111c19,#101816 60%,#14191a); }
+      .callout h2 { font-size:clamp(32px,4.4vw,50px); }
+      .callout p { color:#b5c0b8; font-size:13px; }
+      .pill { border-color:rgba(193,238,131,.16); border-radius:9px; background:#0d1514; color:#dbe3d9; font-size:11px; }
+      .download-layout { grid-template-columns:1.12fr .88fr; gap:13px; }
+      .download-card { border-color:var(--line); border-radius:14px; background:#101817; }
+      .download-card.primary-card { position:relative; overflow:hidden; border-color:rgba(193,238,131,.35); background:linear-gradient(130deg,#17251d,#111918 70%); }
+      .download-card.primary-card::after { position:absolute; right:-75px; bottom:-120px; width:300px; height:300px; border:1px solid rgba(193,238,131,.13); border-radius:50%; box-shadow:0 0 0 35px rgba(193,238,131,.025),0 0 0 70px rgba(193,238,131,.02); pointer-events:none; content:""; }
+      .download-card h3 { font-size:19px; }
+      .download-card p { max-width:560px; color:#b2beb4; font-size:12px; }
+      .download-links { gap:8px; }
+      .download-link { border-color:rgba(181,203,187,.13); border-radius:10px; background:rgba(8,14,13,.42); transition:transform .25s ease,border-color .25s ease,background .25s ease; }
+      .download-link:hover { transform:translateY(-3px); border-color:rgba(193,238,131,.35); background:rgba(193,238,131,.05); }
+      .download-link span { color:#9ba99f; }
+      #downloads .section-heading { margin-bottom:29px; }
+      #downloads .section-heading strong { color:var(--cyan); }
+      .doc-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+      .doc-link { min-height:74px; border-color:rgba(181,203,187,.13); border-radius:10px; background:#0f1716; transition:transform .25s ease,border-color .25s ease,background .25s ease; }
+      .doc-link:hover { transform:translateY(-3px); border-color:rgba(193,238,131,.32); background:#121c19; }
+      .doc-link strong { font-size:12px; }
+      .doc-link small { color:#99a69d; }
+      .notice { border-left-color:var(--cyan); border-radius:0 8px 8px 0; background:rgba(193,238,131,.055); color:#bdc8bf; font-size:12px; }
+      .footer { border-top-color:rgba(181,203,187,.13); }
+      .footer p { color:#98a59c; }
+      .footer-links a { transition:color .2s ease; }
+      .footer-links a:hover { color:var(--cyan); }
+      .reveal { animation:none; }
+      .motion-ready .reveal-target { opacity:0; transform:translateY(23px); filter:blur(3px); transition:opacity .72s ease,transform .72s cubic-bezier(.2,.75,.25,1),filter .72s ease; transition-delay:var(--reveal-delay,0ms); }
+      .motion-ready .reveal-target.is-visible { opacity:1; transform:translateY(0); filter:blur(0); }
+      @keyframes panel-arrive { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+      @media (max-width:900px) { .hero { min-height:0; } .hero-grid { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:34px; } .hero h1 { font-size:clamp(48px,6vw,62px); } .capability-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+      @media (max-width:680px) {
+        .nav { min-height:66px; }
+        .nav-links { background:rgba(9,15,16,.98); }
+        .hero { display:block; min-height:0; padding:53px 0 58px; }
+        .hero-grid { grid-template-columns:1fr; gap:34px; }
+        .hero h1 { font-size:clamp(48px,13vw,68px); }
+        .hero-copy { max-width:100%; }
+        .hero-actions .button { flex:1 1 100%; }
+        .hero-stats { flex-wrap:wrap; row-gap:13px; }
+        .hero-stats span { padding-right:10px; margin-right:10px; font-size:8px; }
+        .hero-caption { font-size:8px; }
+        .section { padding-block:62px; }
+        .section-heading h2 { font-size:36px; }
+        .capability-grid { grid-template-columns:1fr; }
+        .feature-grid { gap:10px; }
+        .download-layout,.doc-grid { grid-template-columns:1fr; }
+        .step { min-height:0; }
+        .step-number { margin-bottom:16px; }
+        .download-card.primary-card::after { opacity:.5; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .motion-ready .reveal-target { opacity:1; transform:none; filter:none; transition:none; }
+        .poster-link,.hero-poster,.feature-shot { transform:none !important; }
+      }
     </style>
   </head>
   <body>
+    <div class="reading-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
     <div class="topbar">
       <nav class="nav wrap" aria-label="Main navigation">
         <a class="brand" href="#top" aria-label="Modspire home">
@@ -300,7 +442,7 @@
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">☰</button>
         <div class="nav-links" id="site-nav">
           <a href="#demo">Try demo</a><a href="#features">Features</a><a href="#showcase">Showcase</a><a href="#downloads">Downloads</a><a href="#docs">Guides</a>
-          <a class="button small primary nav-cta" href="https://github.com/LvisXVI/modspire">View on GitHub ↗</a>
+          <a class="button small primary nav-cta" href="#downloads">Download Modspire <span aria-hidden="true">↓</span></a>
         </div>
       </nav>
     </div>
@@ -308,31 +450,32 @@
       <header class="hero wrap">
         <div class="hero-grid">
           <div class="reveal">
-            <p class="eyebrow">Minecraft Java · Windows</p>
-            <h1>Build your next <span>adventure.</span></h1>
-            <p class="hero-copy">Plan a pack around the world you want to play. Modspire brings the assistant, Modrinth search, pack checks, and project tools into one studio.</p>
+            <p class="eyebrow">A modpack studio for Minecraft Java</p>
+            <h1>Make a world<br><span>worth getting lost in.</span></h1>
+            <p class="hero-copy">Start with the world you want to play. Find the mods that fit it, shape your pack, and keep every decision in one place.</p>
             <div class="hero-actions">
-              <a class="button primary" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest">⬇ Get Modspire <span id="hero-version">0.2.88</span></a>
-              <a class="button" href="#tour">▶ Watch the app tour</a>
+              <a class="button primary" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest">Download for Windows <span id="hero-version">0.2.88</span></a>
+              <a class="button" href="#demo">Explore the interactive demo <span aria-hidden="true">↘</span></a>
             </div>
-            <p class="release-note">Portable Windows app · AI is optional · Your pack stays yours</p>
+            <p class="release-note">Portable app · AI is optional · Your pack stays local</p>
             <div class="hero-stats" aria-label="Project highlights">
-              <span><strong>4</strong> interface layouts</span><span><strong>Modrinth</strong> search</span><span><strong>Local</strong> pack projects</span>
+              <span><strong>01</strong> plan the world</span><span><strong>02</strong> find the mods</span><span><strong>03</strong> shape the pack</span>
             </div>
           </div>
           <div class="hero-art reveal">
             <a class="poster-link" href="#tour" aria-label="Play the Modspire app tour">
-              <img class="hero-poster" src="media/modspire-promo-poster.png" alt="Modspire's Minecraft modpack studio shown in its dark blue interface">
-              <span class="play-badge"><span class="play-dot" aria-hidden="true">▶</span> See the studio in action</span>
+              <img class="hero-poster" src="screenshots/rounded/ai-pack-assistant.png" alt="Real Modspire Pack Assistant screen over a Minecraft world background">
+              <span class="play-badge"><span class="play-dot" aria-hidden="true">▶</span> Watch the real app tour</span>
             </a>
+            <div class="hero-caption"><span>IN THE STUDIO</span><span>Forest Expedition · 1.21.1 · Fabric</span></div>
           </div>
         </div>
       </header>
 
       <section class="section wrap" id="demo">
         <div class="section-heading">
-          <div><p class="section-tag">🕹️ Try the studio</p><h2>Take Modspire for a small spin.</h2></div>
-          <p>Click through a hands-on preview of the workspace. Explore the assistant, search sample mods, and build a tiny pack right here.</p>
+          <div><p class="section-tag">Explore the studio</p><h2>Get a feel for the workflow.</h2></div>
+          <p>Switch between the workspace, assistant, catalog, and Pack Lab. The preview is interactive and uses sample data.</p>
         </div>
         <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
           <div class="demo-top"><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true">✦</span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 Fabric</span></div>
@@ -381,7 +524,7 @@
 
       <section class="section video-section wrap" id="tour">
         <div class="section-heading">
-          <div><p class="section-tag">🎬 The 23-second tour</p><h2>Real screens. Real workflows.</h2></div>
+          <div><p class="section-tag">The app, in motion</p><h2>See how a pack takes shape.</h2></div>
           <p>A quick walkthrough recorded from the app: plan a pack, explore mods, switch the workspace, and review your project.</p>
         </div>
         <div class="video-panel">
@@ -395,24 +538,24 @@
 
       <section class="section wrap" id="showcase">
         <div class="section-heading">
-          <div><p class="section-tag">🧭 Inside the studio</p><h2>One workspace. Every part of the pack.</h2></div>
+          <div><p class="section-tag">Inside the studio</p><h2>One workspace. Every part of the pack.</h2></div>
           <p>Explore screenshots from the actual Modspire app and see how the tools fit together.</p>
         </div>
         <div class="feature-grid">
           <article class="feature-card large">
-            <div class="feature-copy"><h3>🤖 Start with a world idea</h3><p>Describe the atmosphere or name a specific mod. The Pack Assistant uses your active Minecraft setup and current selection to shape catalog suggestions.</p></div>
+            <div class="feature-copy"><h3>Start with a world idea</h3><p>Describe the atmosphere or name a specific mod. The Pack Assistant uses your active Minecraft setup and current selection to shape catalog suggestions.</p></div>
             <img class="feature-shot tall" src="screenshots/rounded/ai-pack-assistant.png" alt="Pack Assistant chat with contextual suggestions in Modspire" loading="lazy">
           </article>
           <article class="feature-card medium">
-            <div class="feature-copy"><h3>🔎 Search the catalog</h3><p>Browse Modrinth directly, filter for your game version and loader, and add or remove mods from the result cards.</p></div>
+            <div class="feature-copy"><h3>Search the catalog</h3><p>Browse Modrinth directly, filter for your game version and loader, and add or remove mods from the result cards.</p></div>
             <img class="feature-shot tall" src="screenshots/rounded/modrinth-search-and-selection.png" alt="Modrinth mod search and selection cards" loading="lazy">
           </article>
           <article class="feature-card half">
-            <div class="feature-copy"><h3>🧪 Review the pack</h3><p>Use Pack Lab tools for dependency notes, compatibility context, snapshots, crash-log review, and pack diagnostics.</p></div>
+            <div class="feature-copy"><h3>Review the pack</h3><p>Use Pack Lab tools for dependency notes, compatibility context, snapshots, crash-log review, and pack diagnostics.</p></div>
             <img class="feature-shot short" src="screenshots/rounded/pack-lab.png" alt="Pack Lab project diagnostics and pack tools" loading="lazy">
           </article>
           <article class="feature-card half">
-            <div class="feature-copy"><h3>🎨 Shape your workspace</h3><p>Choose among four layouts, several visual themes, Minecraft-inspired wallpapers, and motion controls.</p></div>
+            <div class="feature-copy"><h3>Shape your workspace</h3><p>Choose among four layouts, several visual themes, Minecraft-inspired wallpapers, and motion controls.</p></div>
             <img class="feature-shot short" src="screenshots/rounded/designs-and-minecraft-backgrounds.png" alt="Modspire appearance settings and Minecraft backgrounds" loading="lazy">
           </article>
         </div>
@@ -420,22 +563,22 @@
 
       <section class="section wrap" id="features">
         <div class="section-heading">
-          <div><p class="section-tag">✨ What Modspire can do</p><h2>From first idea to a pack you can share.</h2></div>
+          <div><p class="section-tag">The toolkit</p><h2>From first idea to a pack you can share.</h2></div>
           <p>Keep the decisions in your hands while the studio organizes the research and project details.</p>
         </div>
         <div class="capability-grid">
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg></span><h3>💬 Pack Assistant</h3><p>Continue a themed or exact-name search in chat with context from the selected pack.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><h3>🧭 Mod selection</h3><p>Use direct catalog search, filters, suggestion sorting, and a pack tray to manage candidates.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4z"/><path d="M8 15v-3m4 3V8m4 7v-5"/></svg></span><h3>🧪 Pack Lab</h3><p>Review project snapshots, category balance, mod roles, dependencies, and diagnostics.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.3 5.4L20 10l-5.7 1.6L12 17l-2.3-5.4L4 10l5.7-1.6L12 3Z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z"/></svg></span><h3>🛠️ Mod Creator</h3><p>Turn a mod concept into a structured specification and starter-code outline.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></span><h3>📦 Project tools</h3><p>Keep multiple packs, import Modrinth links or .mrpack files, and export your project.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h18v14H3z"/><path d="M8 22h8M12 19v3M7 9h10M7 13h6"/></svg></span><h3>🌐 Local web view</h3><p>Open the same local workspace in a browser while the desktop app remains running.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg></span><h3>Pack Assistant</h3><p>Continue a themed or exact-name search in chat with context from the selected pack.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><h3>Mod selection</h3><p>Use direct catalog search, filters, suggestion sorting, and a pack tray to manage candidates.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4z"/><path d="M8 15v-3m4 3V8m4 7v-5"/></svg></span><h3>Pack Lab</h3><p>Review project snapshots, category balance, mod roles, dependencies, and diagnostics.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.3 5.4L20 10l-5.7 1.6L12 17l-2.3-5.4L4 10l5.7-1.6L12 3Z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z"/></svg></span><h3>Mod Creator</h3><p>Turn a mod concept into a structured specification and starter-code outline.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></span><h3>Project tools</h3><p>Keep multiple packs, import Modrinth links or .mrpack files, and export your project.</p></article>
+          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h18v14H3z"/><path d="M8 22h8M12 19v3M7 9h10M7 13h6"/></svg></span><h3>Local web view</h3><p>Open the same local workspace in a browser while the desktop app remains running.</p></article>
         </div>
       </section>
 
       <section class="section wrap">
         <div class="section-heading">
-          <div><p class="section-tag">🪄 A simple flow</p><h2>Choose the direction. Curate the details.</h2></div>
+          <div><p class="section-tag">The method</p><h2>Choose the direction. Curate the details.</h2></div>
           <p>AI can help discover candidates; the catalog and your pack controls keep the workflow reviewable.</p>
         </div>
         <div class="workflow">
@@ -448,19 +591,19 @@
 
       <section class="section wrap">
         <div class="callout">
-          <div><p class="section-tag">🧠 Choose your AI route</p><h2>Mod search works without AI.</h2><p>Use direct Modrinth search on its own, or connect a supported AI route for chat and assisted suggestions. Provider behavior, quotas, and model capabilities depend on your setup.</p></div>
+          <div><p class="section-tag">Optional intelligence</p><h2>Mod search works without AI.</h2><p>Use direct Modrinth search on its own, or connect a supported AI route for chat and assisted suggestions. Provider behavior, quotas, and model capabilities depend on your setup.</p></div>
           <div class="provider-list" aria-label="AI provider options"><span class="pill">ChatGPT account access</span><span class="pill">OpenAI API</span><span class="pill">Anthropic API</span><span class="pill">Ollama</span><span class="pill">Bionic / LM Studio</span><span class="pill">OmniRoute</span></div>
         </div>
       </section>
 
       <section class="section wrap" id="downloads">
         <div class="section-heading">
-          <div><p class="section-tag">⬇ Get the current build</p><h2>Start your next pack.</h2></div>
+          <div><p class="section-tag">Get the current build</p><h2>Start your next pack.</h2></div>
           <p>Version <strong id="release-version">0.2.88</strong> · Windows portable app · Current source available on GitHub</p>
         </div>
         <div class="download-layout">
           <article class="download-card primary-card">
-            <h3>🪟 Modspire for Windows</h3>
+            <h3>Modspire for Windows</h3>
             <p>Download the portable desktop application from the latest GitHub release. No installer is required.</p>
             <div class="download-actions"><a class="button primary" id="app-download" href="https://github.com/LvisXVI/modspire/releases/latest">⬇ Download portable app</a><a class="button" href="https://github.com/LvisXVI/modspire/releases/latest">Release notes ↗</a></div>
             <div class="download-links">
@@ -469,7 +612,7 @@
             </div>
           </article>
           <article class="download-card">
-            <h3>📚 Learn and explore</h3>
+            <h3>Learn and explore</h3>
             <p>Find setup notes, feature guides, troubleshooting, and every published release.</p>
             <div class="download-links">
               <a class="download-link" href="https://github.com/LvisXVI/modspire/wiki"><strong>📖 GitHub Wiki</strong><span>Guides and patch log</span></a>
@@ -483,22 +626,22 @@
 
       <section class="section wrap" id="docs">
         <div class="section-heading">
-          <div><p class="section-tag">🗺️ Project library</p><h2>Everything around the app.</h2></div>
+          <div><p class="section-tag">Project library</p><h2>Everything around the app.</h2></div>
           <p>Read the guides, inspect the source, review release history, or explore the project’s licensing and test limits.</p>
         </div>
         <div class="doc-grid">
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span><strong>🚀 Getting started</strong><small>Set up a pack and connect optional AI.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span><strong>🔎 Mod search</strong><small>Catalog filters, suggestions, and selection.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/interfaces-and-designs.md"><span><strong>🎨 Interfaces and designs</strong><small>Four layouts, themes, backgrounds, and glass.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span><strong>🔐 AI and privacy</strong><small>Provider routes, data flow, and limitations.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span><strong>🧰 Troubleshooting</strong><small>Common fixes, tests, and local builds.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/wiki/Patch%E2%80%90log"><span><strong>📝 Patch log</strong><small>Release history and recent project updates.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/README.md"><span><strong>📘 Repository README</strong><small>Feature overview and development commands.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md"><span><strong>⚠️ Test disclaimer</strong><small>Compatibility and community-test status.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md"><span><strong>⚖️ Licensing notices</strong><small>App license and bundled component terms.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span><strong>Getting started</strong><small>Set up a pack and connect optional AI.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span><strong>Mod search</strong><small>Catalog filters, suggestions, and selection.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/interfaces-and-designs.md"><span><strong>Interfaces and designs</strong><small>Four layouts, themes, backgrounds, and glass.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span><strong>AI and privacy</strong><small>Provider routes, data flow, and limitations.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span><strong>Troubleshooting</strong><small>Common fixes, tests, and local builds.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/wiki/Patch%E2%80%90log"><span><strong>Patch log</strong><small>Release history and recent project updates.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/README.md"><span><strong>Repository README</strong><small>Feature overview and development commands.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md"><span><strong>Test disclaimer</strong><small>Compatibility and community-test status.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md"><span><strong>Licensing notices</strong><small>App license and bundled component terms.</small></span><span class="arrow">↗</span></a>
         </div>
-        <div class="notice"><strong>ℹ️ Project status:</strong> Modspire is an independent community test project. Original app files are MIT licensed, while the bundled Sign in with ChatGPT DevKit has separate noncommercial terms, so the combined repository is source-available under multiple licences. Modspire organizes pack plans; it does not install every mod or confirm that Minecraft launches.</div>
-        <div class="notice"><strong>🔒 Model compatibility:</strong> The app has not been tested with every local model or cloud agent. Check the connected provider’s privacy and usage terms, review suggestions, and test your pack in Minecraft.</div>
+        <div class="notice"><strong>Project status:</strong> Modspire is an independent community test project. Original app files are MIT licensed, while the bundled Sign in with ChatGPT DevKit has separate noncommercial terms, so the combined repository is source-available under multiple licences. Modspire organizes pack plans; it does not install every mod or confirm that Minecraft launches.</div>
+        <div class="notice"><strong>Model compatibility:</strong> The app has not been tested with every local model or cloud agent. Check the connected provider’s privacy and usage terms, review suggestions, and test your pack in Minecraft.</div>
       </section>
     </main>
     <footer class="footer">
@@ -526,6 +669,55 @@
           menuButton.setAttribute("aria-label", "Open navigation");
         }
       });
+      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const revealTargets = document.querySelectorAll(".reveal,.section-heading,.feature-card,.capability,.step,.callout,.download-card,.doc-link");
+      if ("IntersectionObserver" in window && !motionPreference.matches) {
+        document.documentElement.classList.add("motion-ready");
+        const revealObserver = new IntersectionObserver(entries => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add("is-visible");
+            entry.target.removeAttribute("data-reveal");
+            revealObserver.unobserve(entry.target);
+          }
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+        revealTargets.forEach((element, index) => {
+          element.classList.add("reveal-target");
+          element.dataset.reveal = "pending";
+          element.style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 65}ms`);
+          revealObserver.observe(element);
+        });
+      }
+      const progress = document.querySelector("#scroll-progress");
+      const topbar = document.querySelector(".topbar");
+      let scrollFrame = 0;
+      function updateScrollChrome() {
+        scrollFrame = 0;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = `${maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0}%`;
+        topbar.classList.toggle("scrolled", window.scrollY > 24);
+      }
+      window.addEventListener("scroll", () => {
+        if (scrollFrame) return;
+        scrollFrame = requestAnimationFrame(updateScrollChrome);
+      }, { passive: true });
+      updateScrollChrome();
+      const heroArt = document.querySelector(".hero-art");
+      if (heroArt && !motionPreference.matches && window.matchMedia("(pointer: fine)").matches) {
+        heroArt.addEventListener("pointermove", event => {
+          const bounds = heroArt.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width - .5;
+          const y = (event.clientY - bounds.top) / bounds.height - .5;
+          heroArt.style.setProperty("--scene-x", `${x * -5}px`);
+          heroArt.style.setProperty("--scene-y", `${y * -5}px`);
+          heroArt.style.setProperty("--scene-rotate", `${x * 1.1}deg`);
+        });
+        heroArt.addEventListener("pointerleave", () => {
+          heroArt.style.setProperty("--scene-x", "0px");
+          heroArt.style.setProperty("--scene-y", "0px");
+          heroArt.style.setProperty("--scene-rotate", "0deg");
+        });
+      }
       document.querySelector("#year").textContent = new Date().getFullYear();
       const demoMods = [
         { name: "Terralith", category: "world", icon: "🗺️", detail: "Overhauled terrain · World generation" },

@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.86",
+  "version": "0.2.87",
   "description": "Windows desktop app for building Minecraft modpacks with AI assistance.",
   "main": "main.cjs",
   "scripts": {

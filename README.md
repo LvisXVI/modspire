@@ -8,7 +8,7 @@
     <a href="docs/wiki/README.md"><img alt="Project wiki" src="https://img.shields.io/badge/docs-project%20wiki-1c3b50"></a>
   </p>
   <p>
-    <a href="https://lvisxvi.github.io/modspire/">▶️ Watch the 23-second app tour</a> ·
+    <a href="https://lvisxvi.github.io/modspire/">🌐 Open extended preview & interactive demo</a> ·
     <a href="https://github.com/LvisXVI/modspire/releases/latest">⬇️ Download for Windows</a> ·
     <a href="https://github.com/LvisXVI/modspire/wiki">📚 Read the wiki</a>
   </p>

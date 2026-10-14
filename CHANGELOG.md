@@ -2,6 +2,13 @@
 
 Notable user-facing changes are documented here. This project follows Keep a Changelog conventions.
 
+## [0.2.90] - 2026-10-14
+
+### Fixed
+- Improved contrast for overview cards and Pack Assistant recommendations across all four UI modes and theme palettes.
+- Aligned UI 3 Pack Lab fields and telemetry with its dark theme so labels, values, and notes remain readable.
+- Removed a transient startup credit that overlapped the desktop toolbar.
+
 ## [0.2.89] - 2026-10-14
 
 ### Changed

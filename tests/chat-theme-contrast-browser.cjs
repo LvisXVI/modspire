@@ -35,6 +35,7 @@ function contrast(foreground, background) {
       <div class="chat-messages">
         <article class="message assistant-message"><div class="message-content"><div class="bubble"><p class="sample-copy">Assistant response</p></div></div></article>
         <article class="message user-message"><div class="message-content"><div class="bubble"><p class="user-copy">User message</p></div></div></article>
+        <section class="popular-section"><header class="popular-heading"><strong class="popular-title">Popular for your setup</strong></header><div class="popular-grid"><article class="popular-card"><div class="popular-copy"><strong class="popular-name">Fabric API</strong><span class="popular-meta">Modrinth · 2.7M downloads</span></div><button class="popular-add">+</button></article></div></section>
       </div>
       <form class="chat-form" id="chat-form"><div class="attach-row">Attach</div><textarea id="chat-input" placeholder="Write a message">Sample text</textarea><div class="composer-footer"><span class="composer-hint">Enter sends</span><button type="button" class="voice-button">Voice</button></div></form>
       <p class="chat-footnote">Video images are sent with your message.</p>
@@ -63,6 +64,12 @@ function contrast(foreground, background) {
             assistantCopy: read('.assistant-message .sample-copy'),
             user: read('.user-message .bubble'),
             userCopy: read('.user-message .user-copy'),
+            popularSection: read('.popular-section'),
+            popularCard: read('.popular-card'),
+            popularTitle: read('.popular-title'),
+            popularName: read('.popular-name'),
+            popularMeta: read('.popular-meta'),
+            popularAdd: read('.popular-add'),
             composer: read('#chat-form'),
             input: read('#chat-input'),
             bodyCopy: read('.sample-copy'),
@@ -82,6 +89,11 @@ function contrast(foreground, background) {
           const textColor = parseColor(role === 'assistant' ? result.assistantCopy.color : result.userCopy.color);
           assert.ok(contrast(textColor, bubbleColor) >= 4.5, `${mode}/${theme}: ${role} message text must meet 4.5:1 contrast (got ${contrast(textColor, bubbleColor).toFixed(2)}:1)`);
         }
+        const popularSurface = composite(parseColor(result.popularCard.background), parseColor(result.popularSection.background));
+        assert.ok(contrast(parseColor(result.popularTitle.color), parseColor(result.popularSection.background)) >= 4.5, `${mode}/${theme}: popular section heading must meet 4.5:1 contrast`);
+        assert.ok(contrast(parseColor(result.popularName.color), popularSurface) >= 4.5, `${mode}/${theme}: popular mod title must meet 4.5:1 contrast`);
+        assert.ok(contrast(parseColor(result.popularMeta.color), popularSurface) >= 4.5, `${mode}/${theme}: popular mod metadata must meet 4.5:1 contrast`);
+        assert.notEqual(result.popularAdd.background, 'rgba(0, 0, 0, 0)', `${mode}/${theme}: popular add action must have a visible themed surface`);
         const inputBackground = composite(parseColor(result.input.background), stageColor);
         assert.ok(contrast(parseColor(result.placeholder), inputBackground) >= 4.5, `${mode}/${theme}: input placeholder must meet 4.5:1 contrast`);
         assert.ok(contrast(parseColor(result.hint.color), parseColor(result.composer.background)) >= 4.5, `${mode}/${theme}: composer hint must meet 4.5:1 contrast`);
@@ -93,6 +105,6 @@ function contrast(foreground, background) {
       }
     }
     assert.ok(allAssistantSurfaces.size >= themes.length, `Conversation cards must reflect the selected palette, got ${allAssistantSurfaces.size} distinct surfaces for ${themes.length} themes`);
-    console.log(`Chat panel, assistant/user copy, composer, WCAG AA text contrast and glass blur passed for ${modes.length} UIs × ${themes.length} themes.`);
+    console.log(`Chat panel, assistant/user copy, popular mod cards, composer, WCAG AA text contrast and glass blur passed for ${modes.length} UIs × ${themes.length} themes.`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -5,9 +5,12 @@ body:not(.ui-modern):not(.ui-v3) .welcome-card{color:#f1f6ff}
 body:not(.ui-modern):not(.ui-v3) .welcome-card h1{color:#f4f8ff}
 body:not(.ui-modern):not(.ui-v3) .welcome-card .eyebrow{color:#8fc8ff}
 body:not(.ui-modern):not(.ui-v3) .welcome-card>p{color:#b6c9e2}
-body:not(.ui-modern):not(.ui-v3) .overview-card{color:#e9f2ff}
-body:not(.ui-modern):not(.ui-v3) .overview-card p{color:#aec2dc}
-body:not(.ui-modern):not(.ui-v3) .overview-note{color:#8fa7c4}
+body[data-theme="blue"]:not(.ui-modern):not(.ui-v3) .overview-card,
+body[data-theme="fluid"]:not(.ui-modern):not(.ui-v3) .overview-card{color:#1e3552}
+body[data-theme="blue"]:not(.ui-modern):not(.ui-v3) .overview-card p,
+body[data-theme="fluid"]:not(.ui-modern):not(.ui-v3) .overview-card p{color:#526a85}
+body[data-theme="blue"]:not(.ui-modern):not(.ui-v3) .overview-note,
+body[data-theme="fluid"]:not(.ui-modern):not(.ui-v3) .overview-note{color:#667d98}
 /* The AI connection control is a real action, so give it a readable, intentional surface. */
 body.ui-modern .modern-ai-status{display:flex;align-items:center;gap:9px;min-height:38px;padding:5px 11px;border:1px solid var(--modern-line);border-radius:999px;background:var(--modern-card);color:var(--modern-ink);text-align:left;font:600 10px var(--modern-font);cursor:pointer}
 body.ui-modern .modern-ai-status:hover{border-color:var(--modern-accent);background:var(--modern-accentSoft)}
@@ -509,7 +512,7 @@ body.startup-gated .sidebar,
 body:has(#startup-login-overlay:not([hidden])) .sidebar,
 body:has(#username-setup-overlay:not([hidden])) .sidebar{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .sidebar .nav-item{position:relative}
-.startup-credit{position:fixed;z-index:130;top:14px;left:50%;transform:translateX(-50%);padding:8px 14px;border:1px solid color-mix(in srgb,var(--custom-accent,#398ce0) 34%,transparent);border-radius:999px;background:color-mix(in srgb,var(--custom-surface,#f2f8ff) 82%,transparent);color:var(--text,#234560);box-shadow:0 8px 28px #102b4d24, inset 0 1px #ffffff9c;font:600 11px/1.2 'DM Sans',Segoe UI,sans-serif;letter-spacing:.02em;pointer-events:none;animation:creator-credit-intro 2.8s cubic-bezier(.2,.7,.25,1) both}
+.startup-credit{display:none!important}
 @keyframes creator-credit-intro{0%{opacity:0;transform:translate(-50%,-12px) scale(.96);filter:blur(3px)}14%{opacity:1;transform:translate(-50%,0) scale(1);filter:blur(0)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-5px) scale(.99)}}
 @media(prefers-reduced-motion:reduce){.startup-credit{animation:none;opacity:0}}
 

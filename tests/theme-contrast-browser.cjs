@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const root = path.resolve(__dirname, '..');
-    await page.setContent('<section class="setup-strip"><label>MODPACK <select id="project-select"><option>Neues Abenteuer</option></select></label><label>VERSION <select id="minecraft-version"><option>1.21.1</option></select></label><label>MODLOADER <select id="loader"><option>Fabric</option></select></label></section><div class="mod-results"><article class="mod-card"><img class="mod-icon"><div class="mod-card-main"><div class="mod-name"><strong>Test-Mod</strong></div><p class="mod-desc">Vorschautext</p></div></article></div>');
+    await page.setContent('<section class="setup-strip"><label>MODPACK <select id="project-select"><option>Neues Abenteuer</option></select></label><label>VERSION <select id="minecraft-version"><option>1.21.1</option></select></label><label>MODLOADER <select id="loader"><option>Fabric</option></select></label></section><article class="overview-card"><strong class="overview-title">AI chat</strong><p class="overview-copy">Describe your idea or share a video as a reference.</p></article><div class="mod-results"><article class="mod-card"><img class="mod-icon"><div class="mod-card-main"><div class="mod-name"><strong>Test-Mod</strong></div><p class="mod-desc">Vorschautext</p></div></article></div>');
     await page.addStyleTag({ path: path.join(root, 'styles.css') });
     await page.addStyleTag({ path: path.join(root, 'visual-fixes.css') });
     await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' });
@@ -29,16 +29,23 @@ const { chromium } = require('playwright');
         };
         const luminance = color => { const parts = rgb(color); if (!parts) return null; const linear = parts.map(channel => { const c = channel / 255; return c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }); return .2126 * linear[0] + .7152 * linear[1] + .0722 * linear[2]; };
         const ratio = (foreground, background) => { const a = luminance(foreground), b = luminance(background); return a === null || b === null ? null : (Math.max(a, b) + .05) / (Math.min(a, b) + .05); };
-        return { theme, text: field.color, textFill: field.webkitTextFillColor, background: field.backgroundColor, backgroundImage: field.backgroundImage, label: label.color, strip: strip.backgroundColor, themeSurface, fieldContrast: ratio(field.color, field.backgroundColor), labelContrast: ratio(label.color, themeSurface), cardHeight: card.minHeight, contentVisibility: card.contentVisibility, contain: card.contain };
+        const overview = getComputedStyle(document.querySelector('.overview-card'));
+        const overviewTitle = getComputedStyle(document.querySelector('.overview-title')).color;
+        const overviewCopy = getComputedStyle(document.querySelector('.overview-copy')).color;
+        return { theme, text: field.color, textFill: field.webkitTextFillColor, background: field.backgroundColor, backgroundImage: field.backgroundImage, label: label.color, strip: strip.backgroundColor, themeSurface, fieldContrast: ratio(field.color, field.backgroundColor), labelContrast: ratio(label.color, themeSurface), overviewBackground: overview.backgroundColor, overviewTitle, overviewCopy, overviewTitleContrast: ratio(overviewTitle, overview.backgroundColor), overviewCopyContrast: ratio(overviewCopy, overview.backgroundColor), cardHeight: card.minHeight, contentVisibility: card.contentVisibility, contain: card.contain };
       }, theme);
       assert.equal(result.text, 'rgb(244, 248, 255)', `${theme}: selected text color`);
       assert.equal(result.textFill, 'rgb(244, 248, 255)', `${theme}: selected text fill`);
       assert.ok(result.fieldContrast === null || result.fieldContrast >= 4.5, `${theme}: version selector contrast ${result.fieldContrast?.toFixed(2)}:1 against ${result.background}`);
       assert.ok(result.labelContrast === null || result.labelContrast >= 4.5, `${theme}: setup label contrast ${result.labelContrast?.toFixed(2)}:1; label ${result.label}, surface ${result.themeSurface}`);
+      if (theme === 'blue' || theme === 'fluid') {
+        assert.ok(result.overviewTitleContrast === null || result.overviewTitleContrast >= 4.5, `${theme}: overview title contrast ${result.overviewTitleContrast?.toFixed(2)}:1`);
+        assert.ok(result.overviewCopyContrast === null || result.overviewCopyContrast >= 4.5, `${theme}: overview copy contrast ${result.overviewCopyContrast?.toFixed(2)}:1`);
+      }
       assert.ok(Number.parseFloat(result.cardHeight) >= 154, `${theme}: mod card minimum height`);
       assert.equal(result.contentVisibility, 'visible', `${theme}: mod cards must render fully`);
       assert.equal(result.contain, 'none', `${theme}: mod cards must not be paint-contained`);
     }
-    console.log(`Setup-field contrast and full mod-card rendering passed for ${themes.length} themes.`);
+    console.log(`Setup fields, overview cards, and full mod-card rendering passed contrast checks for ${themes.length} themes.`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

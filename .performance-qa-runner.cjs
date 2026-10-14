@@ -1,0 +1,1 @@
+const {app}=require('electron');app.setPath('userData',"C:\\Users\\luisw\\Documents\\Codex\\2026-10-11\\ich\\outputs\\Modpack-Werkstatt\\work\\performance-qa-078");require("C:\\Users\\luisw\\Documents\\Codex\\2026-10-11\\ich\\outputs\\Modpack-Werkstatt\\main.cjs");

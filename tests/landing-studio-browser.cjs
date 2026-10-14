@@ -48,6 +48,15 @@ const { chromium } = require('playwright');
       }));
       assert.ok(inspector.blankBelow < 35, `Pack Lab inspector uses its tall bento area (empty space: ${inspector.blankBelow}px)`);
       assert.ok(inspector.imageComplete, 'Pack Lab screenshot loads');
+      await page.locator('#features').scrollIntoViewIfNeeded();
+      assert.equal(await page.locator('#features').evaluate(node => node.open), false, 'secondary features stay out of the initial reading flow');
+      await page.locator('#features > summary').click();
+      assert.equal(await page.locator('#features .capability').count(), 6, 'all secondary features remain available on demand');
+      assert.match(await page.locator('.provider-summary').textContent(), /Ollama.*OmniRoute/, 'AI provider options remain discoverable');
+      await page.locator('#docs').scrollIntoViewIfNeeded();
+      assert.equal(await page.locator('#docs > .doc-grid > .doc-link').count(), 4, 'core guides are immediately visible');
+      await page.locator('.more-docs > summary').click();
+      assert.equal(await page.locator('.more-docs .doc-link').count(), 5, 'additional repository and legal links remain available');
       assert.deepEqual(errors, [], `no browser errors at ${viewport.width}px`);
       await page.close();
     }

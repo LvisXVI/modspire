@@ -1,19 +1,21 @@
-# Getting started
+# 🚀 Getting started
 
-## First launch
+## 🏁 Create your first pack
 
-1. Start the app and choose a local display name. It is a local profile label, not a Minecraft or ChatGPT identity.
-2. Pick a modpack project, Minecraft version, and loader in the top setup strip. Projects keep separate selections and chat histories.
-3. Open **Mod-Auswahl** to search directly, or open **Pack-Assistent** and describe a theme or exact mod.
-4. Review suggestions. A plus adds a mod and a minus removes it. Selected mods appear in **Dein Pack**.
-5. Save locally, export a project JSON, or export a compatible Modrinth pack when offered by the UI.
+1. Launch Modspire and choose a local display name. It labels this device profile; it is not a Minecraft or AI account.
+2. In the setup strip, choose a pack project, Minecraft version, and modloader. Each project keeps its own selection and chat history.
+3. Open **Mod Selection** for a direct catalog search, or open **Pack Assistant** and describe a theme or name a specific mod.
+4. Review the results before changing your pack. Select **+** to add a mod and **−** to remove it; your current selection appears in **Your Pack**.
+5. Save the project, export its JSON, or export a Modrinth-compatible pack when that action is available.
 
-## Connect AI (optional)
+## 🤖 AI is optional
 
-Modrinth catalog search works without an AI connection. Open **Einstellungen → Verbindungen** to choose an AI route: local Ollama/Bionic (LM Studio), an OpenAI or Claude API key, OmniRoute, or ChatGPT plan-sharing where the bundled DevKit is available and its licence permits the intended use. Configure provider keys only in the app; never commit them to the repository.
+Modrinth search works without an AI connection. To use chat, open **Settings → Connections** and configure an available route: a local Ollama/Bionic (LM Studio) service, an OpenAI or Anthropic API key, OmniRoute, or ChatGPT account access when the bundled DevKit is available and its licence permits your use.
 
-The chat model selector reflects configured routes. Automatic mode selects an available configured route; OmniRoute `auto` delegates model choice to the configured router. Local models vary in tool use, image input, streaming, and response quality.
+Keep provider keys in the app's settings. Never put them in source files, screenshots, public issues, or commits. Automatic mode can use only routes that are configured and available on this device. Local models differ in speed, tool support, image input, and output quality.
 
-## Keep a pack safe
+## 📦 Keep your work safe
 
-Use the pack snapshot/export tools before substantial edits. Compatibility reports are advisory. Verify mod versions and dependencies on the catalog pages and test the resulting pack in Minecraft separately.
+Save or export a project snapshot before making substantial changes. Compatibility and dependency checks are guidance; verify versions on the catalog pages and test the finished pack in Minecraft separately.
+
+🔐 For provider data handling and model limitations, read [AI, privacy, and limits](ai-privacy.md). For search tips, see [Mod search and selection](mod-search.md).

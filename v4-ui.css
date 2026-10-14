@@ -504,6 +504,28 @@ html body[data-theme] #chat-panel #chat-form :is(input,select) {
 html body[data-theme] #chat-panel #chat-input::placeholder {color:var(--chat-muted)!important;opacity:1!important}
 html body[data-theme] #chat-panel :is(.bubble p,.bubble li,.bubble strong,.bubble code,.bubble a,.panel-heading h2,.panel-heading p,.composer-footer,.composer-hint,.chat-footnote,.attach-row,#video-name,.chat-model-control) {color:var(--chat-ink)!important;text-shadow:none!important}
 html body[data-theme] #chat-panel :is(.composer-hint,.chat-footnote,#video-name,.chat-model-control>span) {color:var(--chat-muted)!important}
+html body[data-theme] #chat-panel .popular-section {
+  background-color:var(--chat-panel)!important;
+  background-image:none!important;
+  border-color:var(--chat-line)!important;
+  color:var(--chat-ink)!important;
+  text-shadow:none!important;
+}
+html body[data-theme] #chat-panel .popular-card {
+  background-color:var(--chat-assistant)!important;
+  background-image:none!important;
+  border-color:var(--chat-line)!important;
+  color:var(--chat-ink)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.035)!important;
+  text-shadow:none!important;
+}
+html body[data-theme] #chat-panel .popular-card :is(strong,span) {color:var(--chat-ink)!important;text-shadow:none!important}
+html body[data-theme] #chat-panel .popular-card span {color:var(--chat-muted)!important}
+html body[data-theme="clear"] #chat-panel :is(.popular-section,.popular-card),
+html body[data-theme="translucent"] #chat-panel :is(.popular-section,.popular-card) {
+  backdrop-filter:blur(20px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(125%)!important;
+}
 html body[data-theme] #chat-panel :is(.suggestion,.button-quiet,.chat-header-action,.attach-button,.voice-button) {background-color:var(--chat-assistant)!important;border-color:var(--chat-line)!important;color:var(--chat-ink)!important}
 html body[data-theme] #chat-panel :is(.send-button,.button-primary) {background:linear-gradient(135deg,color-mix(in srgb,var(--chat-accent) 72%,#143146),var(--chat-user))!important;border-color:var(--chat-accent)!important;color:#fff!important}
 html body[data-theme] #chat-panel :is(button,select,textarea,a,[tabindex="0"]):focus-visible {outline:3px solid var(--chat-accent)!important;outline-offset:3px!important}

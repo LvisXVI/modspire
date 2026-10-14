@@ -10,6 +10,8 @@ const { createDiagnostics } = require('./diagnostics.cjs');
 const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
+// Keep packaged upgrades on their original project and credential folder after the product rename.
+if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData', path.join(app.getPath('appData'), 'Modpack-Werkstatt'));
 const workshopHandlers = new Map();
 let localWeb;
 let nativeWebReturnPending=false,webReturnTimer;
@@ -163,7 +165,7 @@ async function getChatGPTClient() {
       try { ({ createChatGPT } = require(path.join(__dirname, 'vendor', 'siwc-runtime.cjs'))); }
       catch { throw new Error('Die ChatGPT-Kontoanmeldung ist in diesem Open-Source-Build nicht enthalten. Verbinde stattdessen einen OpenAI-API-Schlüssel in den Einstellungen.'); }
       return createChatGPT({
-      appName: 'Modpack-Werkstatt',
+      appName: 'Modspire',
       appId: 'modpack-werkstatt',
       redirectPort: 0,
       storageDir: path.join(app.getPath('userData'), 'chatgpt'),
@@ -268,13 +270,13 @@ async function createProfileDesktopShortcut(username, settings = {}) {
   const png = createProfileIconPng(initial);
   await fs.writeFile(iconPath, makePngIco(png));
 
-  const baseName = `${safeFilePart(username)} – Modpack-Werkstatt`;
+  const baseName = `${safeFilePart(username)} – Modspire`;
   let shortcutPath = path.join(desktop, `${baseName}.lnk`);
   for (let suffix = 2; await fs.access(shortcutPath).then(() => true, () => false); suffix++) {
     if (settings.desktopShortcutPath && path.resolve(settings.desktopShortcutPath) === path.resolve(shortcutPath)) break;
     shortcutPath = path.join(desktop, `${baseName} (${suffix}).lnk`);
   }
-  const ps = `$ErrorActionPreference='Stop';$w=New-Object -ComObject WScript.Shell;$s=$w.CreateShortcut(${psQuote(shortcutPath)});$s.TargetPath=${psQuote(process.execPath)};$s.WorkingDirectory=${psQuote(path.dirname(process.execPath))};$s.IconLocation=${psQuote(iconPath)};$s.Description=${psQuote(`Modpack-Werkstatt – lokales Profil ${username}`)};$s.Save()`;
+  const ps = `$ErrorActionPreference='Stop';$w=New-Object -ComObject WScript.Shell;$s=$w.CreateShortcut(${psQuote(shortcutPath)});$s.TargetPath=${psQuote(process.execPath)};$s.WorkingDirectory=${psQuote(path.dirname(process.execPath))};$s.IconLocation=${psQuote(iconPath)};$s.Description=${psQuote(`Modspire – lokales Profil ${username}`)};$s.Save()`;
   await new Promise((resolve, reject) => {
     const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', Buffer.from(ps, 'utf16le').toString('base64')], { windowsHide: true, stdio: 'ignore' });
     child.once('error', reject); child.once('exit', code => code === 0 ? resolve() : reject(new Error(`Desktop-Verknüpfung konnte nicht erstellt werden (PowerShell ${code}).`)));
@@ -294,7 +296,7 @@ async function secret(key) {
 function createWindow() {
   const win = new BrowserWindow({
     width: 1420, height: 920, minWidth: 1024, minHeight: 680, center: true,
-    backgroundColor: '#00000000', transparent: true, title: 'Modpack-Werkstatt', frame: false,
+    backgroundColor: '#00000000', transparent: true, title: 'Modspire', frame: false,
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true }
   });
   mainWindow = win;
@@ -391,7 +393,7 @@ handleWorkshop('diagnostics:open-folder', async () => {
 handleWorkshop('diagnostics:export', async () => {
   const report = getDiagnostics().snapshot();
   const result = await dialog.showSaveDialog(mainWindow, {
-    title: 'App-Diagnose speichern', defaultPath: `Modpack-Werkstatt-Diagnose-${new Date().toISOString().slice(0, 10)}.json`,
+    title: 'App-Diagnose speichern', defaultPath: `Modspire-Diagnose-${new Date().toISOString().slice(0, 10)}.json`,
     filters: [{ name: 'Diagnosebericht', extensions: ['json'] }],
   });
   if (result.canceled || !result.filePath) return { canceled: true };
@@ -1077,7 +1079,7 @@ handleWorkshop('chat:ask', async (event, turns, context, attachments = [], reque
       ? 'You are in the AI Mod Creator. Develop a new Minecraft Java mod with the user: clarify the idea, recommend a loader and Minecraft version based on Modrinth availability, then outline a concrete project structure and example files step by step. Mark code as a draft, name needed tests, and do not add anything to the modpack. Search Modrinth projects only when the user explicitly asks for existing mods.'
       : 'Du bist im KI-Mod-Creator. Entwickle mit dem Nutzer eine neue Minecraft-Java-Mod: kläre die Idee, empfehle anhand der Modrinth-Verfügbarkeit einen passenden Loader und eine Minecraft-Version, skizziere danach eine konkrete Projektstruktur und schrittweise Beispiel-Dateien. Kennzeichne Code als Entwurf, nenne nötige Tests und füge nichts zum Modpack hinzu. Suche nur dann Modrinth-Projekte, wenn der Nutzer ausdrücklich nach vorhandenen Mods fragt.'
     : searchPlanningInstruction;
-  const instructions = `${language === 'en' ? 'You are the English-language assistant for Modpack Workshop. Help the user plan and explain. Never claim a mod compatibility check was performed unless it is supported by evidence. Present mods as choices and never add them without asking.' : 'Du bist der deutsche Assistent der Modpack-Werkstatt. Hilf beim Planen und Erklären. Behaupte nie, eine Modkompatibilität geprüft zu haben, wenn sie nicht belegt ist. Schlage Mods als Auswahl vor und füge nichts ungefragt hinzu.'} ${creatorInstruction} ${imagesInstruction} ${consentInstruction} Pack-Kontext: ${JSON.stringify(context).slice(0, 8000)}`;
+  const instructions = `${language === 'en' ? 'You are the English-language assistant for Modspire. Help the user plan and explain. Never claim a mod compatibility check was performed unless it is supported by evidence. Present mods as choices and never add them without asking.' : 'Du bist der deutsche Assistent von Modspire. Hilf beim Planen und Erklären. Behaupte nie, eine Modkompatibilität geprüft zu haben, wenn sie nicht belegt ist. Schlage Mods als Auswahl vor und füge nichts ungefragt hinzu.'} ${creatorInstruction} ${imagesInstruction} ${consentInstruction} Pack-Kontext: ${JSON.stringify(context).slice(0, 8000)}`;
   const input = (turns || []).slice(-6).map(t => ({ role: t.role === 'assistant' ? 'assistant' : 'user', content: String(t.content).slice(0, 1800) }));
   if (hasVideo) {
     if (!input.length || input[input.length - 1].role !== 'user') throw new Error('Die Videoanalyse braucht eine aktuelle Nutzernachricht.');

@@ -1,7 +1,7 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.87",
-  "description": "Windows desktop app for building Minecraft modpacks with AI assistance.",
+  "version": "0.2.88",
+  "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
@@ -16,7 +16,7 @@
   },
   "build": {
     "appId": "de.modpackwerkstatt.app",
-    "productName": "Modpack-Werkstatt",
+    "productName": "Modspire",
     "files": [
       "main.cjs",
       "preload.cjs",
@@ -49,16 +49,16 @@
       "local-web.css"
     ],
     "win": {
-      "icon": "assets/modpack-werkstatt.ico",
+      "icon": "assets/modspire.ico",
       "target": [
         "portable"
       ],
-      "artifactName": "Modpack-Werkstatt-${version}-Private.${ext}"
+      "artifactName": "Modspire-${version}-Portable.${ext}"
     },
     "directories": {
       "output": "release"
     }
   },
-  "author": "Modpack-Werkstatt contributors",
+  "author": "Modspire contributors",
   "license": "MIT"
 }

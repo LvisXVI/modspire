@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#090f10">
+    <meta name="theme-color" content="#0a0b0e">
     <meta name="description" content="Explore Modspire: a Windows studio for planning Minecraft Java modpacks, searching mods, and organizing your world.">
-    <meta property="og:title" content="Modspire — Make a world worth getting lost in">
-    <meta property="og:description" content="Find the mods that fit your world, shape your Minecraft pack, and keep every decision in one studio.">
+    <meta property="og:title" content="Modspire — Minecraft Java pack planning studio">
+    <meta property="og:description" content="Plan a Minecraft Java pack in a local-first studio with Modrinth search, pack inspection, and optional AI.">
     <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..700,20,1&display=swap" rel="stylesheet">
-    <title>Modspire — Make a world worth getting lost in</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Modspire — Minecraft Java pack planning studio</title>
     <style>
       :root {
         color-scheme: dark;
@@ -724,6 +724,224 @@
         .demo-view.active { animation:none; }
         .hero-art:hover .hero-poster { transform:none; }
       }
+      /* Modspire / Studio OS: a precise dark canvas with real product imagery. */
+      :root {
+        color-scheme:dark;
+        font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;
+        --ink:#f1f2f0; --muted:#a5a9ad; --subtle:#747a81; --bg:#0a0b0e;
+        --panel:#111317; --panel-strong:#181b21; --line:rgba(236,240,245,.09);
+        --cyan:#10b981; --blue:#8da0ff; --violet:#8da0ff; --pink:#f59e0b;
+        --radius:12px; --max:1280px;
+      }
+      html { background:#0a0b0e; scroll-padding-top:96px; }
+      body { color:var(--ink);background:#0a0b0e;font-family:"Plus Jakarta Sans","Segoe UI",sans-serif; }
+      body::before { opacity:.34;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,#000,transparent 74%); }
+      body::after { display:none; }
+      h1,h2,h3,.brand { font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;font-weight:700;letter-spacing:-.055em; }
+      .wrap { width:min(var(--max),calc(100% - 64px)); }
+      .topbar { top:10px;width:min(1320px,calc(100% - 28px));margin:10px auto 0;border:1px solid var(--line);border-radius:12px;background:rgba(15,17,21,.9);box-shadow:0 8px 28px rgba(0,0,0,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px); }
+      .topbar.scrolled { background:rgba(15,17,21,.97); }
+      .nav { min-height:62px;padding-inline:17px; }
+      .brand { gap:10px;font-size:15px;letter-spacing:-.04em; }
+      .brand-mark { width:30px;height:30px;border:1px solid rgba(16,185,129,.32);border-radius:7px;background:rgba(16,185,129,.1);color:#54d6a5; }
+      .brand-mark svg { width:16px;height:16px; }
+      .nav-links { gap:20px; }
+      .nav-links a:not(.button) { color:#a6abb0;font-size:11px; }
+      .nav-links a:not(.button):hover,.nav-links a[aria-current="location"] { color:#fff; }
+      .button,.menu-toggle { min-height:40px;padding:0 14px;border:1px solid rgba(237,240,245,.12);border-radius:8px;background:#15181d;color:#e9ebed;box-shadow:inset 0 1px rgba(255,255,255,.035);font-size:11px;transition:transform .2s ease,border-color .2s ease,background .2s ease,color .2s ease; }
+      .button:hover { transform:translateY(-1px);border-color:rgba(16,185,129,.48);background:#1a2020; }
+      .button:active { transform:translateY(1px) scale(.99); }
+      .button.primary { border-color:#10b981;background:#10b981;color:#06150f;box-shadow:none; }
+      .button.primary:hover { border-color:#34d399;background:#34d399; }
+      .button.small { min-height:36px;padding-inline:12px;font-size:10px; }
+      .menu-toggle { display:none; }
+      .menu-toggle svg { width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round; }
+      .eyebrow,.section-tag { color:#99a2aa;font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:500;letter-spacing:.02em;text-transform:none; }
+      .eyebrow::before { display:none; }
+      .status-indicator,.signal-dot,.search-preview-label i,.hud-foot i { display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1); }
+      .hero { display:block;min-height:0;padding:clamp(82px,12vw,148px) 0 84px; }
+      .hero-grid { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(42px,6vw,84px); }
+      .hero h1 { max-width:660px;margin:0;font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;font-size:clamp(48px,5.7vw,76px);font-weight:700;line-height:1.02;letter-spacing:-.075em; }
+      .hero h1 span { display:block;color:#b7c1ca;background:none;-webkit-text-fill-color:currentColor; }
+      .hero-copy { max-width:520px;margin:23px 0 0;color:#aeb4b9;font-size:15px;line-height:1.8; }
+      .hero-platform { display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px;margin-top:29px; }
+      .platform-choice { display:grid;grid-template-columns:1fr auto;gap:3px 12px;align-items:center;min-height:65px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#111317;color:#d8dcdf;text-decoration:none;transition:border-color .2s ease,background .2s ease,transform .2s ease; }
+      .platform-choice:hover { transform:translateY(-2px);border-color:rgba(16,185,129,.45);background:#151a19; }
+      .platform-choice.is-active { border-color:rgba(16,185,129,.42);background:linear-gradient(115deg,rgba(16,185,129,.11),#111317 64%); }
+      .platform-choice>span { font-size:11px;font-weight:700; }
+      .platform-choice kbd,.key-combo kbd,.command-trigger kbd,.demo-search-field kbd,.command-item kbd,.command-close { padding:3px 6px;border:1px solid rgba(237,240,245,.13);border-radius:5px;background:#1a1d22;color:#b7bdc2;font-family:"JetBrains Mono",monospace;font-size:9px; }
+      .platform-choice small { grid-column:1/-1;color:#828991;font-family:"JetBrains Mono",monospace;font-size:9px; }
+      .hero-utilities { display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin-top:11px; }
+      .command-trigger { display:inline-flex;align-items:center;gap:12px;padding:5px 0;border:0;background:transparent;color:#a5abb0;font:inherit;font-size:10px;cursor:pointer; }
+      .key-combo { display:flex;gap:4px; }
+      .release-note { display:flex;align-items:center;gap:8px;margin:0;color:#848b92;font-family:"JetBrains Mono",monospace;font-size:9px; }
+      .release-note i { width:3px;height:3px;border-radius:50%;background:#59616a; }
+      .hero-art { position:relative;min-width:0;padding-bottom:22px;perspective:none; }
+      .hero-art::before { display:none; }
+      .poster-link { overflow:hidden;border:1px solid rgba(235,241,246,.16);border-radius:12px;background:#111317;transform:none;transition:border-color .25s ease,transform .25s ease; }
+      .poster-link:hover { transform:translateY(-3px);border-color:rgba(16,185,129,.38); }
+      .hero-poster { display:block;width:100%;aspect-ratio:1.45;object-fit:cover;object-position:top center;border:0;border-radius:0;box-shadow:none;transition:transform .45s cubic-bezier(.2,.75,.25,1),filter .35s ease; }
+      .poster-link:hover .hero-poster { transform:scale(1.012);filter:saturate(1.04); }
+      .hero-art::after { display:none; }
+      .play-badge { right:12px;bottom:12px;z-index:2;gap:7px;padding:6px 9px 6px 6px;border:1px solid rgba(239,242,246,.16);border-radius:7px;background:rgba(12,14,17,.9);font-size:9px; }
+      .play-dot { width:22px;height:22px;background:#10b981;color:#06150f; }
+      .play-dot svg { width:12px;height:12px;fill:currentColor; }
+      .hero-caption { display:flex;justify-content:space-between;gap:12px;padding:9px 2px 0;color:#788087;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.02em;text-transform:none; }
+      .hero-hud { position:absolute;right:-22px;bottom:7px;z-index:3;width:min(290px,63%);padding:12px;border:1px solid rgba(232,239,244,.14);border-radius:9px;background:rgba(20,23,28,.96);box-shadow:0 16px 38px rgba(0,0,0,.38); }
+      .hud-head,.hud-foot { display:flex;justify-content:space-between;align-items:center;gap:8px;color:#dce0e3;font-size:9px;font-weight:700; }
+      .mono-label { color:#818a91;font-family:"JetBrains Mono",monospace;font-size:8px;font-weight:400; }
+      .hud-graph { position:relative;height:105px;margin-top:8px;border:1px solid rgba(238,242,246,.07);border-radius:6px;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:16px 16px; }
+      .graph-lines { position:absolute;inset:0;width:100%;height:100%;fill:#10b981;stroke:#10b981;stroke-width:1.3; }
+      .graph-lines path { fill:none;stroke:rgba(16,185,129,.65);stroke-dasharray:4 4;animation:cable-flow 8s linear infinite; }
+      .graph-lines circle { stroke:none; }
+      .graph-node { position:absolute;z-index:1;display:grid;gap:2px;padding:5px 7px;border:1px solid rgba(235,241,245,.12);border-radius:5px;background:#191d22;color:#e7eaec; }
+      .graph-node small { color:#838c93;font-family:"JetBrains Mono",monospace;font-size:6px; }
+      .graph-node strong { font-size:8px;font-weight:700; }
+      .node-core { left:6%;top:38%; }.node-world {left:37%;top:8%;border-color:rgba(16,185,129,.35);}.node-perf {right:5%;top:38%;border-color:rgba(245,158,11,.3);}
+      .hud-foot { margin-top:8px;color:#939ba1;font-size:8px;font-weight:500; }.hud-foot>span:first-child {display:flex;align-items:center;gap:7px;}.hud-foot .signal-dot {width:5px;height:5px;box-shadow:none;}
+      @keyframes cable-flow { to { stroke-dashoffset:-32; } }
+      .section { position:relative;padding-block:clamp(64px,8vw,104px);border-top:1px solid rgba(236,240,245,.075); }
+      .section-heading { align-items:end;margin-bottom:27px; }
+      .section-tag { margin-bottom:10px;color:#7f8a92; }
+      .section-heading h2 { max-width:760px;font-size:clamp(30px,4.4vw,52px);line-height:1.07;letter-spacing:-.065em; }
+      .section-heading h2::after { display:none; }
+      .section-heading p { max-width:420px;color:#9ba2a8;font-size:12px;line-height:1.75; }
+      #demo { padding-top:clamp(70px,9vw,112px); }
+      .demo-shell { overflow:hidden;border:1px solid rgba(233,239,244,.13);border-radius:12px;background:#101216;box-shadow:0 26px 85px rgba(0,0,0,.28); }
+      .demo-top { display:grid;grid-template-columns:1fr auto 1fr;min-height:47px;padding:0 14px;border-bottom:1px solid var(--line);background:#15181d; }
+      .demo-window-mark { display:flex;align-items:center;gap:6px; }
+      .demo-window-mark span { width:8px;height:8px;border:1px solid rgba(236,240,245,.2);border-radius:50%;background:#282d33; }
+      .demo-window-mark span:first-child { border-color:rgba(248,113,113,.55);background:#ef6863; }.demo-window-mark span:nth-child(2){border-color:rgba(245,158,11,.55);background:#e9ad4d;}.demo-window-mark span:nth-child(3){border-color:rgba(16,185,129,.5);background:#43ba83;}
+      .demo-brand { justify-self:center;gap:8px;font-family:"Plus Jakarta Sans",sans-serif;font-size:10px; }
+      .demo-brand-mark { width:22px;height:22px;border:1px solid rgba(16,185,129,.25);border-radius:5px;background:rgba(16,185,129,.08);color:#54d6a5; }
+      .demo-brand-mark svg { width:13px;height:13px; }
+      .demo-chip { padding:4px 7px;border:1px solid rgba(236,240,245,.1);border-radius:5px;background:#1c2026;color:#a0a8ad;font-family:"JetBrains Mono",monospace;font-size:7px; }
+      .demo-status { justify-self:end;color:#858e95;font-family:"JetBrains Mono",monospace;font-size:8px; }
+      .demo-status::before { width:6px;height:6px;background:#10b981;box-shadow:none; }
+      .demo-window-controls { display:none; }
+      .demo-body { display:grid;min-height:495px;grid-template-columns:180px minmax(0,1fr); }
+      .demo-sidebar { display:flex;width:auto;max-width:none;min-height:0;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;margin:0;padding:13px 9px;border:0;border-right:1px solid var(--line);border-radius:0;background:#111419;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none; }
+      .demo-side-label { margin:6px 9px 8px;color:#747d85;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.02em; }
+      .demo-tab { min-height:36px;padding:0 10px;border:1px solid transparent;border-radius:6px;color:#a5abb0;font-size:10px; }
+      .demo-tab::before { top:8px;bottom:8px;left:-1px;width:2px;background:#10b981; }
+      .demo-tab:hover { transform:none;background:#1a1e23;color:#f0f2f3; }
+      .demo-tab[aria-selected="true"] { border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.09);color:#d9f7e8; }
+      .demo-tab-icon { width:16px;color:#8b959c; }.demo-tab[aria-selected="true"] .demo-tab-icon { color:#45d19a; }
+      .demo-tab-icon svg { width:15px;height:15px;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+      .demo-workspace { min-width:0;padding:23px 25px; }
+      .demo-heading { align-items:center;margin-bottom:17px; }
+      .demo-heading h3 { font-size:20px;letter-spacing:-.05em; }
+      .demo-heading p { margin-top:5px;color:#8f989f;font-size:10px; }
+      .demo-stat,.demo-panel { border:1px solid rgba(235,240,244,.09);border-radius:8px;background:#15181d;box-shadow:none; }
+      .demo-stats { gap:8px;margin-bottom:10px; }
+      .demo-stat { padding:11px 13px; }
+      .demo-stat span { color:#868f96;font-family:"JetBrains Mono",monospace;font-size:8px; }
+      .demo-stat strong { margin-top:7px;font-family:"Plus Jakarta Sans",sans-serif;font-size:17px;letter-spacing:-.04em; }
+      .demo-panel { padding:13px; }
+      .demo-panel-title { margin-bottom:9px;font-size:10px; }
+      .demo-mod-list { gap:5px; }
+      .demo-mod { grid-template-columns:34px minmax(0,1fr) auto;gap:9px;padding:8px;border:1px solid rgba(235,240,244,.07);border-radius:7px;background:#101317; }
+      .demo-mod:hover { transform:translateY(-1px);border-color:rgba(16,185,129,.24);background:#151a1a; }
+      .demo-mod-icon { width:34px;height:34px;border:1px solid rgba(235,240,244,.1);border-radius:6px;background:#1c2225;color:#a9e8c8;font-family:"JetBrains Mono",monospace;font-size:13px; }
+      .demo-mod strong { font-size:9px; }.demo-mod small { color:#808990;font-family:"JetBrains Mono",monospace;font-size:8px; }
+      .demo-mini-button { min-width:30px;min-height:30px;border:1px solid rgba(16,185,129,.28);border-radius:6px;background:rgba(16,185,129,.09);color:#80dfb2;font:600 13px "JetBrains Mono",monospace; }
+      .demo-mini-button:hover { transform:translateY(-1px);border-color:#10b981;background:rgba(16,185,129,.16); }
+      .demo-toolbar { gap:7px; }
+      .demo-search-field { display:flex;min-width:180px;flex:1 1 240px;align-items:center;gap:8px;padding:0 9px;border:1px solid rgba(236,240,245,.11);border-radius:7px;background:#0c0e11; }
+      .demo-search-field svg,.command-search svg { width:14px;height:14px;flex:none;fill:none;stroke:#7c858c;stroke-width:1.8;stroke-linecap:round; }
+      .demo-search-field .demo-input { min-height:36px;flex:1;border:0;background:transparent;outline:none;box-shadow:none; }
+      .demo-search-field kbd { padding:2px 5px;color:#7c858c;font-size:8px; }
+      .demo-input,.demo-select { min-height:37px;border:1px solid rgba(236,240,245,.11);border-radius:7px;background:#0c0e11;color:#eceff1;font:inherit;font-size:10px; }
+      .demo-input { padding:0 10px; }.demo-input::placeholder {color:#727b83;}
+      .demo-select { padding:0 11px; }
+      .demo-chat { min-height:244px; }
+      .demo-message { max-width:650px;padding:12px;border:1px solid rgba(16,185,129,.16);border-radius:8px;background:#171c1a;color:#d9e4de;font-size:10px;line-height:1.7; }
+      .demo-message + .demo-message { margin-top:8px;margin-left:auto;border-color:rgba(141,160,255,.16);background:#171920; }
+      .demo-note { color:#7f888e;font-size:9px; }
+      .demo-designs { gap:8px; }
+      .demo-design-button { min-height:116px;padding:11px;border:1px solid rgba(236,240,245,.1);border-radius:7px;background:#15181d;color:#eceff1;font-size:10px; }
+      .demo-design-button:hover { transform:translateY(-2px);border-color:rgba(16,185,129,.33); }
+      .demo-design-button[aria-pressed="true"] { border-color:rgba(16,185,129,.55);background:#17211d;box-shadow:inset 0 0 0 1px rgba(16,185,129,.12); }
+      .demo-theme-swatch { height:54px;margin-bottom:9px;border-radius:4px;box-shadow:none; }
+      .demo-design-button small { color:#8c959c;font-size:8px; }
+      .demo-footer { min-height:52px;padding:8px 14px;border-top:1px solid var(--line);background:#111419;color:#899198;font-family:"JetBrains Mono",monospace;font-size:8px; }
+      .demo-footer strong { color:#cfd4d7;font-family:"Plus Jakarta Sans",sans-serif;font-size:9px; }
+      .demo-pack-tray { gap:5px; }
+      .demo-pack-item { padding:5px 7px;border:1px solid rgba(16,185,129,.18);border-radius:5px;background:rgba(16,185,129,.07);color:#b5e6cb;font-size:8px; }
+      .demo-pack-item button { color:#95a29a; }
+      .demo-clear { padding:6px 8px;border:1px solid rgba(236,240,245,.1);border-radius:5px;background:#171a1f;color:#a3aaaf;font:inherit;font-size:8px; }
+      .demo-clear:hover { border-color:rgba(245,158,11,.35);color:#f5c578; }
+      .demo-note { color:#767f86; }
+      .video-panel,.feature-card,.capability,.workflow,.callout,.download-card,.doc-link { border-color:rgba(236,240,245,.09);border-radius:10px;background:#111317;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none; }
+      .video-panel { padding:8px; }.video-panel video { border-radius:5px; }
+      .video-caption,.feature-copy p,.capability p,.step p,.callout p,.section-heading p { color:#969da3; }
+      .studio-bento { display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px; }
+      .bento-card { position:relative;min-width:0;overflow:hidden;border:1px solid rgba(236,240,245,.09);border-radius:10px;background:#111317;transition:border-color .25s ease,transform .25s ease,background .25s ease; }
+      .bento-card:hover { transform:translateY(-3px);border-color:rgba(236,240,245,.18);background:#14171b; }
+      .bento-graph { grid-column:span 7;min-height:330px; }.bento-inspector {grid-column:span 5;grid-row:span 2;}.bento-search {grid-column:span 7;}.bento-workspace {grid-column:span 7;display:grid;grid-template-columns:.8fr 1.2fr;align-items:center;gap:12px;min-height:178px;}
+      .bento-copy { position:relative;z-index:2;padding:19px 19px 0; }
+      .bento-index { color:#828a91;font-family:"JetBrains Mono",monospace;font-size:8px; }
+      .bento-copy h3 { margin:8px 0 0;font-size:17px;letter-spacing:-.05em; }
+      .bento-copy p { max-width:420px;margin:7px 0 0;color:#90989e;font-size:10px;line-height:1.7; }
+      .dependency-canvas { position:relative;height:205px;margin:12px 17px 17px;border:1px solid rgba(236,240,245,.075);border-radius:7px;background-color:#0d0f12;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:25px 25px; }
+      .dependency-canvas>svg { position:absolute;inset:0;width:100%;height:100%;fill:none;stroke-width:1.3; }
+      .dependency-canvas .cable { stroke:rgba(16,185,129,.47);stroke-dasharray:5 5;animation:cable-flow 8s linear infinite; }
+      .dependency-canvas .cable-branch { stroke:rgba(141,160,255,.28); }
+      .dependency-canvas .cable-port { fill:#101317;stroke:#10b981;stroke-width:2; }
+      .canvas-label { position:absolute;top:9px;left:11px;color:#737c83;font-family:"JetBrains Mono",monospace;font-size:7px; }
+      .map-node { position:absolute;z-index:1;display:grid;gap:3px;min-width:81px;padding:7px 9px;border:1px solid rgba(236,240,245,.13);border-radius:5px;background:#191d22; }
+      .map-node small { color:#747d84;font-family:"JetBrains Mono",monospace;font-size:6px; }.map-node strong {color:#d6dcdf;font-size:8px;}
+      .map-loader {left:4%;top:42%;}.map-api {left:38%;top:20%;border-color:rgba(16,185,129,.35);}.map-terrain {right:4%;top:42%;border-color:rgba(245,158,11,.28);}.map-render {left:43%;bottom:9%;border-color:rgba(141,160,255,.3);}
+      .canvas-foot { position:absolute;right:9px;bottom:8px;display:flex;align-items:center;gap:7px;color:#7c858c;font-size:7px; }
+      .canvas-foot i { width:5px;height:5px;border-radius:50%;background:#f59e0b; }
+      .inspector-preview,.search-preview { position:relative;overflow:hidden;margin:14px;border:1px solid rgba(236,240,245,.08);border-radius:6px;background:#0b0d10; }
+      .inspector-preview img,.search-preview img,.bento-workspace>img { display:block;width:100%;height:auto;object-fit:cover; }
+      .inspector-preview img { max-height:230px;object-position:top; }
+      .inspector-overlay { position:absolute;right:8px;bottom:8px;left:8px;display:grid;gap:2px;padding:9px;border:1px solid rgba(236,240,245,.12);border-radius:5px;background:rgba(13,15,18,.94); }
+      .inspector-overlay span,.inspector-overlay small { color:#838c93;font-family:"JetBrains Mono",monospace;font-size:7px; }.inspector-overlay strong {font-size:10px;}
+      .inspector-tags { display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 14px; }.inspector-tags span {padding:5px 7px;border:1px solid rgba(236,240,245,.1);border-radius:4px;color:#a4abb1;font-size:7px;}
+      .inspector-readout { display:grid;gap:0;margin:0 14px 14px;padding:10px;border:1px solid rgba(236,240,245,.08);border-radius:6px;background:#0e1013; }
+      .readout-heading { display:flex;justify-content:space-between;padding:1px 2px 8px;color:#7e888f;font:7px "JetBrains Mono",monospace;letter-spacing:.06em; }
+      .inspector-readout>div:not(.readout-heading) { display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 2px;border-top:1px solid rgba(236,240,245,.055); }
+      .readout-marker { color:#51c99c;font:8px "JetBrains Mono",monospace; }
+      .inspector-readout strong,.inspector-readout small { display:block; }.inspector-readout strong { color:#cdd2d5;font-size:8px;font-weight:600; }.inspector-readout small { margin-top:3px;color:#7f888e;font-size:7px; }
+      .readout-state { padding:4px 6px;border:1px solid rgba(236,240,245,.09);border-radius:4px;color:#929ba1;font:7px "JetBrains Mono",monospace; }
+      .bento-inspector { grid-row:span 1; }
+      .bento-workspace { grid-column:span 5; }
+      .search-preview { max-height:205px; }.search-preview img {object-position:top;}.search-preview-label {position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid rgba(236,240,245,.12);border-radius:5px;background:rgba(13,15,18,.94);color:#c9d0d4;font-family:"JetBrains Mono",monospace;font-size:7px;}.search-preview-label i {width:5px;height:5px;}
+      .bento-workspace .bento-copy { padding:18px; }.bento-workspace>img { width:calc(100% - 14px);max-height:145px;border:1px solid rgba(236,240,245,.1);border-radius:5px;object-position:top; }
+      .capability-grid { grid-template-columns:repeat(3,minmax(0,1fr));gap:0 22px; }
+      .capability { min-height:0;padding:19px 4px;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent; }
+      .capability .icon { width:30px;height:30px;margin-bottom:12px;border:1px solid rgba(16,185,129,.18);border-radius:6px;background:rgba(16,185,129,.06);color:#45d19a; }
+      .capability h3 {font-size:13px;letter-spacing:-.035em;}.capability p {font-size:10px;line-height:1.7;}
+      .workflow { border-radius:8px;background:#111317; }.step {min-height:160px;padding:20px 18px;}.step-number {margin-bottom:27px;color:#8e989f;font-family:"JetBrains Mono",monospace;font-size:8px;}.step h3 {font-size:14px;}.step p {font-size:10px;}
+      .callout { grid-template-columns:1.1fr .9fr;padding:25px;border-color:rgba(16,185,129,.23);background:#111714; }.callout h2 {font-size:clamp(28px,3.7vw,43px);}.callout p {font-size:11px;}.pill {border-color:rgba(236,240,245,.1);border-radius:5px;background:#181b20;color:#bbc1c6;font-size:9px;}
+      .download-layout {grid-template-columns:1.1fr .9fr;gap:12px;}.download-card {padding:20px;}.download-card h3 {font-size:16px;}.download-card p {font-size:10px;}.download-card.primary-card {border-color:rgba(16,185,129,.28);background:#111714;}.download-card.primary-card::after {display:none;}.download-links {gap:6px;}.download-link {border-color:rgba(236,240,245,.08);border-radius:6px;background:#15181d;}.download-link:hover {border-color:rgba(16,185,129,.3);background:#191e1b;}.download-link strong {font-size:10px;}.download-link span {color:#858e94;font-size:9px;}
+      .doc-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}.doc-link {min-height:65px;border-radius:6px;background:#111317;}.doc-link:hover {border-color:rgba(16,185,129,.3);background:#151916;}.doc-link strong {font-size:10px;}.doc-link small {color:#848c92;font-size:8px;}.notice {border-left-color:#10b981;border-radius:0 5px 5px 0;background:#111714;color:#aeb6b2;font-size:10px;}
+      .footer {border-top:1px solid var(--line);}.footer p,.copyright {color:#7c848b;font-size:10px;}.footer-links a {color:#9da5ab;font-size:10px;}.footer-links a:hover {color:#50d39c;}.inline-icon {width:13px;height:13px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+      .command-dialog {width:min(560px,calc(100% - 28px));padding:0;border:1px solid rgba(236,240,245,.14);border-radius:11px;background:#111419;color:#e8ebed;box-shadow:0 28px 100px rgba(0,0,0,.65); }
+      .command-dialog::backdrop {background:rgba(3,5,7,.72);backdrop-filter:blur(3px);}
+      .command-top {display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;}
+      .command-close {padding:4px 7px;cursor:pointer;}.command-search {display:flex;align-items:center;gap:9px;margin:11px;padding:0 10px;border:1px solid rgba(236,240,245,.11);border-radius:6px;background:#0b0d10;}.command-search input {width:100%;height:38px;border:0;outline:none;background:none;color:#eee;font:inherit;font-size:10px;}.command-list {display:grid;gap:3px;padding:0 7px 8px;}.command-item {display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid transparent;border-radius:5px;background:transparent;color:#c8cdd1;text-align:left;font:inherit;font-size:10px;cursor:pointer;}.command-item:hover,.command-item:focus-visible {border-color:rgba(16,185,129,.23);background:rgba(16,185,129,.08);outline:none;}.command-item[hidden] {display:none;}
+      .motion-ready .reveal-target { transform:translateY(15px);filter:blur(1px);transition:opacity .58s ease,transform .58s cubic-bezier(.2,.75,.25,1),filter .58s ease; }
+      .motion-ready .reveal-target.is-visible { transform:translateY(0);filter:none; }
+      .feature-card,.capability,.download-card,.doc-link,.bento-card,.step { transition:transform .24s ease,border-color .24s ease,background .24s ease; }
+      .demo-view.active { animation:panel-arrive .22s ease both; }
+      @media (max-width:1000px) { .hero-grid {grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:35px;}.hero-hud {right:-8px;width:58%;}.bento-inspector {grid-row:span 1;}.bento-graph,.bento-search,.bento-workspace {grid-column:span 6;} }
+      @media (max-width:760px) {
+        .wrap {width:calc(100% - 36px);}.topbar {top:7px;width:calc(100% - 16px);margin-top:7px;}.nav {min-height:55px;padding-inline:10px;}.menu-toggle {display:inline-grid;width:36px;height:36px;place-items:center;}.nav-links {display:none;position:absolute;top:calc(100% + 6px);right:8px;left:8px;flex-direction:column;align-items:stretch;gap:4px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111419;}.nav-links.open {display:flex;}.nav-links a:not(.button) {padding:10px;border-radius:5px;}.nav-links a:not(.button):hover {background:#1b1f24;}.nav-links .button {width:100%;}
+        .hero {padding:78px 0 62px;}.hero-grid {grid-template-columns:1fr;gap:35px;}.hero h1 {font-size:clamp(40px,10.8vw,62px);}.hero-copy {font-size:13px;}.hero-platform {max-width:560px;}.hero-utilities {flex-wrap:wrap;}.hero-art {padding-bottom:14px;}.hero-hud {right:-5px;bottom:0;width:min(275px,72%);}.hero-caption {font-size:7px;}
+        .section {padding-block:58px;}.section-heading {display:grid;gap:10px;}.section-heading h2 {font-size:clamp(29px,8vw,42px);}.demo-shell {border-radius:8px;}.demo-top {grid-template-columns:auto 1fr auto;min-height:43px;padding-inline:9px;}.demo-brand {justify-self:start;margin-left:8px;}.demo-status {display:none;}.demo-window-controls {display:flex;gap:4px;}.demo-window-controls span {width:7px;height:7px;border:1px solid rgba(236,240,245,.2);border-radius:50%;background:#252a30;}.demo-body {display:block;min-height:0;}.demo-sidebar {display:flex;width:auto;max-width:none;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;overflow-x:auto;gap:3px;margin:0;padding:7px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#111419;box-shadow:none;scrollbar-width:thin;}.demo-side-label {display:none;}.demo-tab {flex:0 0 auto;min-height:33px;padding-inline:9px;font-size:9px;}.demo-tab-icon {width:14px;}.demo-workspace {padding:15px 11px;}.demo-heading {align-items:flex-start;}.demo-heading h3 {font-size:17px;}.demo-heading p {font-size:9px;}.demo-stats {grid-template-columns:repeat(3,minmax(0,1fr));}.demo-stat {padding:9px 7px;}.demo-stat strong {font-size:14px;}.demo-footer {align-items:flex-start;flex-wrap:wrap;gap:8px;padding:9px;}.demo-pack-tray {order:3;width:100%;}.demo-designs {grid-template-columns:repeat(2,minmax(0,1fr));}
+        .studio-bento {grid-template-columns:1fr;}.bento-graph,.bento-inspector,.bento-search,.bento-workspace {grid-column:auto;grid-row:auto;}.bento-workspace {grid-template-columns:1fr;}.bento-workspace>img {width:calc(100% - 28px);max-height:180px;margin:0 14px 14px;}.dependency-canvas {height:185px;}.map-node {min-width:72px;padding:6px;}.canvas-label {font-size:6px;}.canvas-foot {font-size:6px;}
+        .capability-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px;}.workflow {grid-template-columns:1fr 1fr;}.step {min-height:145px;padding:15px 12px;}.step + .step {border-left:1px solid var(--line);}.step:nth-child(3) {border-left:0;border-top:1px solid var(--line);}.step:nth-child(4) {border-top:1px solid var(--line);}.callout,.download-layout {grid-template-columns:1fr;}.provider-list {justify-content:flex-start;}.doc-grid {grid-template-columns:1fr 1fr;}.video-panel {padding:5px;}.video-caption {font-size:9px;}
+      }
+      @media (max-width:420px) { .wrap {width:calc(100% - 28px);}.hero h1 {font-size:clamp(38px,10vw,46px);}.hero-platform {grid-template-columns:1fr;}.hero-hud {width:70%;}.hud-graph {height:88px;}.demo-stats {grid-template-columns:1fr;}.demo-heading {display:block;}.demo-heading .demo-chip {margin-top:8px;}.demo-toolbar {display:grid;grid-template-columns:1fr;}.demo-search-field {min-width:0;}.demo-select {width:100%;}.demo-mod {grid-template-columns:29px minmax(0,1fr) auto;gap:6px;padding:6px;}.demo-mod-icon {width:29px;height:29px;}.demo-mod small {font-size:7px;}.demo-design-button {min-height:106px;padding:8px;}.doc-grid,.capability-grid {grid-template-columns:1fr;} }
+      @media (prefers-reduced-motion: reduce) {
+        .graph-lines path,.dependency-canvas .cable {animation:none;}
+        .motion-ready .reveal-target {opacity:1;transform:none;filter:none;transition:none;}
+        .demo-view.active {animation:none;}
+        html {scroll-behavior:auto;}
+      }
     </style>
   </head>
   <body>
@@ -735,7 +953,7 @@
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg>
           </span><span>Modspire</span>
         </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation">☰</button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <div class="nav-links" id="site-nav">
           <a href="#demo">Try demo</a><a href="#features">Features</a><a href="#showcase">Showcase</a><a href="#downloads">Downloads</a><a href="#docs">Guides</a>
           <a class="button small primary nav-cta" href="#downloads">Download Modspire <span aria-hidden="true">↓</span></a>
@@ -746,24 +964,29 @@
       <header class="hero wrap">
         <div class="hero-grid">
           <div class="reveal">
-            <p class="eyebrow">A modpack studio for Minecraft Java</p>
-            <h1>Make a world<br><span>worth getting lost in.</span></h1>
-            <p class="hero-copy">Start with the world you want to play. Find the mods that fit it, shape your pack, and keep every decision in one place.</p>
-            <div class="hero-actions">
-              <a class="button primary" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest">Download for Windows <span id="hero-version">0.2.88</span></a>
-              <a class="button" href="#demo">Explore the interactive demo <span aria-hidden="true">↘</span></a>
+            <p class="eyebrow"><span class="status-indicator" aria-hidden="true"></span> Minecraft Java · Pack planning studio</p>
+            <h1>Plan the pack.<br><span>Keep it yours.</span></h1>
+            <p class="hero-copy">A focused desktop workspace for finding the right mods, shaping a pack, and keeping the plan in your hands. Local-first. AI optional.</p>
+            <div class="hero-platform" role="group" aria-label="Choose a download">
+              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.2.88</span></small></a>
+              <a class="platform-choice" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><span>Project source</span><kbd>ZIP</kbd><small>Complete repository</small></a>
             </div>
-            <p class="release-note">Portable app · AI is optional · Your pack stays local</p>
-            <div class="hero-stats" aria-label="Project highlights">
-              <span><strong>01</strong> plan the world</span><span><strong>02</strong> find the mods</span><span><strong>03</strong> shape the pack</span>
-            </div>
+            <div class="hero-utilities"><button class="command-trigger" type="button" data-open-commands><span>Open command menu</span><span class="key-combo"><kbd>Ctrl</kbd><kbd>K</kbd></span></button><span class="release-note">AI optional <i></i> Pack stays local</span></div>
           </div>
           <div class="hero-art reveal">
-            <a class="poster-link" href="#tour" aria-label="Play the Modspire app tour">
+            <a class="poster-link" href="#tour" aria-label="Watch the Modspire app tour">
               <img class="hero-poster" src="screenshots/rounded/ai-pack-assistant.png" alt="Real Modspire Pack Assistant screen over a Minecraft world background">
-              <span class="play-badge"><span class="play-dot" aria-hidden="true">▶</span> Watch the real app tour</span>
+              <span class="play-badge"><span class="play-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 9 6-9 6z"/></svg></span> Watch the real app tour</span>
             </a>
-            <div class="hero-caption"><span>IN THE STUDIO</span><span>Forest Expedition · 1.21.1 · Fabric</span></div>
+            <aside class="hero-hud" aria-label="Illustrative modpack plan">
+              <div class="hud-head"><span>Pack map</span><span class="mono-label">SAMPLE · 1.21.1</span></div>
+              <div class="hud-graph" aria-label="Illustrative relationship map for selected sample mods">
+                <svg class="graph-lines" viewBox="0 0 360 154" aria-hidden="true"><path d="M68 77h74M216 77h76M180 52V27M180 102v25"/><circle cx="68" cy="77" r="3"/><circle cx="142" cy="77" r="3"/><circle cx="216" cy="77" r="3"/><circle cx="292" cy="77" r="3"/><circle cx="180" cy="27" r="3"/><circle cx="180" cy="127" r="3"/></svg>
+                <span class="graph-node node-core">Fabric API</span><span class="graph-node node-world">Terralith</span><span class="graph-node node-perf">Sodium</span>
+              </div>
+              <div class="hud-foot"><span><i class="signal-dot"></i> Illustrative plan</span><span class="mono-label">3 MODS</span></div>
+            </aside>
+            <div class="hero-caption"><span>REAL APP SCREEN</span><span>Pack Assistant · Windows</span></div>
           </div>
         </div>
       </header>
@@ -774,7 +997,7 @@
           <p>Switch between the workspace, assistant, catalog, and Pack Lab. The preview is interactive and uses sample data.</p>
         </div>
         <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
-          <div class="demo-top"><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 Fabric</span></div>
+          <div class="demo-top"><div class="demo-window-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 · Fabric</span><div class="demo-window-controls" aria-hidden="true"><span></span><span></span><span></span></div></div>
           <div class="demo-body">
             <nav class="demo-sidebar" aria-label="Demo workspace sections" role="tablist">
               <span class="demo-side-label">Workspace</span>
@@ -799,7 +1022,7 @@
               </section>
               <section class="demo-view" id="demo-view-search" role="tabpanel" aria-labelledby="demo-tab-search" data-demo-view="search" aria-label="Mod search demo" tabindex="0" hidden>
                 <div class="demo-heading"><div><h3>Mod search</h3><p>Try filters and add or remove sample mods from your pack.</p></div><span class="demo-chip">Demo catalog · not live</span></div>
-                <div class="demo-toolbar"><input class="demo-input" id="demo-search-input" aria-label="Search sample mods" placeholder="Search sample mods…"><select class="demo-select" id="demo-category" aria-label="Filter sample mods"><option value="all">All categories</option><option value="world">World</option><option value="map">Map & travel</option><option value="performance">Performance</option></select></div>
+                <div class="demo-toolbar"><label class="demo-search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input class="demo-input" id="demo-search-input" aria-label="Search sample mods" placeholder="Search sample mods…"><kbd>/</kbd></label><select class="demo-select" id="demo-category" aria-label="Filter sample mods"><option value="all">All categories</option><option value="world">World</option><option value="map">Map & travel</option><option value="performance">Performance</option></select></div>
                 <div class="demo-panel"><div class="demo-panel-title"><span>Catalog results</span><span id="demo-results-label" style="color:var(--muted);font-size:10px">4 sample mods</span></div><div class="demo-mod-list" id="demo-results"></div></div>
               </section>
               <section class="demo-view" id="demo-view-lab" role="tabpanel" aria-labelledby="demo-tab-lab" data-demo-view="lab" aria-label="Pack Lab preview" tabindex="0" hidden>
@@ -828,31 +1051,43 @@
             <source src="media/modspire-promo-v0.2.88.mp4" type="video/mp4">
             Your browser cannot play the video. <a href="media/modspire-promo-v0.2.88.mp4">Download the MP4</a>.
           </video>
-          <div class="video-caption"><span>Modspire 0.2.88 · MP4 · 1920 × 1080</span><a class="button small" href="media/modspire-promo-v0.2.88.mp4" download>⬇ Download video</a></div>
+          <div class="video-caption"><span>Modspire 0.2.88 · MP4 · 1920 × 1080</span><a class="button small" href="media/modspire-promo-v0.2.88.mp4" download><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg> Download video</a></div>
         </div>
       </section>
 
       <section class="section wrap" id="showcase">
         <div class="section-heading">
-          <div><p class="section-tag">Inside the studio</p><h2>One workspace. Every part of the pack.</h2></div>
-          <p>Explore screenshots from the actual Modspire app and see how the tools fit together.</p>
+          <div><p class="section-tag">Inside the studio</p><h2>Three tools. One working set.</h2></div>
+          <p>Catalog research, pack inspection, and project context in one place. The interface below uses real app captures and clearly marked sample data.</p>
         </div>
-        <div class="feature-grid">
-          <article class="feature-card large">
-            <div class="feature-copy"><h3>Start with a world idea</h3><p>Describe the atmosphere or name a specific mod. The Pack Assistant uses your active Minecraft setup and current selection to shape catalog suggestions.</p></div>
-            <img class="feature-shot tall" src="screenshots/rounded/ai-pack-assistant.png" alt="Pack Assistant chat with contextual suggestions in Modspire" loading="lazy">
+        <div class="studio-bento">
+          <article class="bento-card bento-graph">
+            <div class="bento-copy"><span class="bento-index">01 / PACK MAP</span><h3>See how the pieces connect.</h3><p>Keep loader context, selected mods, and dependency notes close while you shape a pack.</p></div>
+            <div class="dependency-canvas" aria-label="Illustrative relationship map with sample mods">
+              <span class="canvas-label">ILLUSTRATIVE SAMPLE · 1.21.1 FABRIC</span>
+              <svg viewBox="0 0 660 260" role="img" aria-label="Example map showing a loader connected to sample mods"><path class="cable cable-main" d="M100 130H250M410 130h150M330 80V42M330 180v38"/><path class="cable cable-branch" d="M250 130 330 80m80 50-80-50m0 100-80-50m80 50 80-50"/><circle class="cable-port" cx="250" cy="130" r="5"/><circle class="cable-port" cx="410" cy="130" r="5"/></svg>
+              <span class="map-node map-loader"><small>LOADER</small><strong>Fabric</strong></span><span class="map-node map-api"><small>CORE</small><strong>Fabric API</strong></span><span class="map-node map-terrain"><small>WORLD</small><strong>Terralith</strong></span><span class="map-node map-render"><small>RENDER</small><strong>Sodium</strong></span>
+              <span class="canvas-foot"><i></i> Example relationships only · not a live dependency graph</span>
+            </div>
           </article>
-          <article class="feature-card medium">
-            <div class="feature-copy"><h3>Search the catalog</h3><p>Browse Modrinth directly, filter for your game version and loader, and add or remove mods from the result cards.</p></div>
-            <img class="feature-shot tall" src="screenshots/rounded/modrinth-search-and-selection.png" alt="Modrinth mod search and selection cards" loading="lazy">
+          <article class="bento-card bento-inspector">
+            <div class="bento-copy"><span class="bento-index">02 / PACK LAB</span><h3>Inspect before you export.</h3><p>Review pack balance, compatibility context, snapshots, and crash reports.</p></div>
+            <div class="inspector-preview"><img src="screenshots/rounded/pack-lab.png" alt="Real Pack Lab screen from Modspire" loading="lazy"><div class="inspector-overlay"><span>PROJECT INSPECTOR</span><strong>Pack Lab</strong><small>Real app screenshot</small></div></div>
+            <div class="inspector-tags"><span>Snapshots</span><span>Crash review</span><span>Dependencies</span></div>
+            <div class="inspector-readout" aria-label="Illustrative Pack Lab review steps">
+              <div class="readout-heading"><span>REVIEW WORKFLOW</span><span>ILLUSTRATIVE</span></div>
+              <div><span class="readout-marker">01</span><span><strong>Project context</strong><small>Minecraft version and loader</small></span><span class="readout-state">Attached</span></div>
+              <div><span class="readout-marker">02</span><span><strong>Dependencies</strong><small>Review required and optional links</small></span><span class="readout-state">Inspect</span></div>
+              <div><span class="readout-marker">03</span><span><strong>Launch readiness</strong><small>Check your setup before playing</small></span><span class="readout-state">Verify</span></div>
+            </div>
           </article>
-          <article class="feature-card half">
-            <div class="feature-copy"><h3>Review the pack</h3><p>Use Pack Lab tools for dependency notes, compatibility context, snapshots, crash-log review, and pack diagnostics.</p></div>
-            <img class="feature-shot short" src="screenshots/rounded/pack-lab.png" alt="Pack Lab project diagnostics and pack tools" loading="lazy">
+          <article class="bento-card bento-search">
+            <div class="bento-copy"><span class="bento-index">03 / MODRINTH</span><h3>Search the source catalog.</h3><p>Filter by Minecraft version and loader, then curate results into your pack.</p></div>
+            <div class="search-preview"><img src="screenshots/rounded/modrinth-search-and-selection.png" alt="Real Modrinth catalog and selection screen from Modspire" loading="lazy"><span class="search-preview-label"><i></i> Direct catalog integration</span></div>
           </article>
-          <article class="feature-card half">
-            <div class="feature-copy"><h3>Shape your workspace</h3><p>Choose among four layouts, several visual themes, Minecraft-inspired wallpapers, and motion controls.</p></div>
-            <img class="feature-shot short" src="screenshots/rounded/designs-and-minecraft-backgrounds.png" alt="Modspire appearance settings and Minecraft backgrounds" loading="lazy">
+          <article class="bento-card bento-workspace">
+            <div class="bento-copy"><span class="bento-index">WORKSPACE</span><h3>Make the studio yours.</h3><p>Four layouts, multiple themes, Minecraft wallpapers, and motion controls.</p></div>
+            <img src="screenshots/rounded/designs-and-minecraft-backgrounds.png" alt="Real Modspire design and background settings" loading="lazy">
           </article>
         </div>
       </section>
@@ -863,7 +1098,7 @@
           <p>Keep the decisions in your hands while the studio organizes the research and project details.</p>
         </div>
         <div class="capability-grid">
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg></span><h3>Pack Assistant</h3><p>Continue a themed or exact-name search in chat with context from the selected pack.</p></article>
+            <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg></span><h3>Pack Assistant</h3><p>Continue a themed or exact-name search in chat with context from the selected pack.</p></article>
           <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><h3>Mod selection</h3><p>Use direct catalog search, filters, suggestion sorting, and a pack tray to manage candidates.</p></article>
           <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4z"/><path d="M8 15v-3m4 3V8m4 7v-5"/></svg></span><h3>Pack Lab</h3><p>Review project snapshots, category balance, mod roles, dependencies, and diagnostics.</p></article>
           <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.3 5.4L20 10l-5.7 1.6L12 17l-2.3-5.4L4 10l5.7-1.6L12 3Z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z"/></svg></span><h3>Mod Creator</h3><p>Turn a mod concept into a structured specification and starter-code outline.</p></article>
@@ -901,20 +1136,20 @@
           <article class="download-card primary-card">
             <h3>Modspire for Windows</h3>
             <p>Download the portable desktop application from the latest GitHub release. No installer is required.</p>
-            <div class="download-actions"><a class="button primary" id="app-download" href="https://github.com/LvisXVI/modspire/releases/latest">⬇ Download portable app</a><a class="button" href="https://github.com/LvisXVI/modspire/releases/latest">Release notes ↗</a></div>
+            <div class="download-actions"><a class="button primary" id="app-download" href="https://github.com/LvisXVI/modspire/releases/latest"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg> Download portable app</a><a class="button" href="https://github.com/LvisXVI/modspire/releases/latest">Release notes</a></div>
             <div class="download-links">
-              <a class="download-link" id="release-source" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><strong>🧰 Source archive</strong><span>Complete current project source</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire"><strong>💻 Browse the repository</strong><span>Code, assets, tests, and project files</span></a>
+              <a class="download-link" id="release-source" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><strong>Source archive</strong><span>Complete current project source</span></a>
+              <a class="download-link" href="https://github.com/LvisXVI/modspire"><strong>Browse the repository</strong><span>Code, assets, tests, and project files</span></a>
             </div>
           </article>
           <article class="download-card">
             <h3>Learn and explore</h3>
             <p>Find setup notes, feature guides, troubleshooting, and every published release.</p>
             <div class="download-links">
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/wiki"><strong>📖 GitHub Wiki</strong><span>Guides and patch log</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/releases"><strong>🗃️ All releases</strong><span>Builds and archived versions</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/issues"><strong>🐛 Issues</strong><span>Report a problem or follow progress</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/discussions"><strong>💡 Discussions</strong><span>Share ideas with the project</span></a>
+              <a class="download-link" href="https://github.com/LvisXVI/modspire/wiki"><strong>GitHub Wiki</strong><span>Guides and patch log</span></a>
+              <a class="download-link" href="https://github.com/LvisXVI/modspire/releases"><strong>All releases</strong><span>Builds and archived versions</span></a>
+              <a class="download-link" href="https://github.com/LvisXVI/modspire/issues"><strong>Issues</strong><span>Report a problem or follow progress</span></a>
+              <a class="download-link" href="https://github.com/LvisXVI/modspire/discussions"><strong>Discussions</strong><span>Share ideas with the project</span></a>
             </div>
           </article>
         </div>
@@ -926,15 +1161,15 @@
           <p>Read the guides, inspect the source, review release history, or explore the project’s licensing and test limits.</p>
         </div>
         <div class="doc-grid">
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span><strong>Getting started</strong><small>Set up a pack and connect optional AI.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span><strong>Mod search</strong><small>Catalog filters, suggestions, and selection.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/interfaces-and-designs.md"><span><strong>Interfaces and designs</strong><small>Four layouts, themes, backgrounds, and glass.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span><strong>AI and privacy</strong><small>Provider routes, data flow, and limitations.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span><strong>Troubleshooting</strong><small>Common fixes, tests, and local builds.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/wiki/Patch%E2%80%90log"><span><strong>Patch log</strong><small>Release history and recent project updates.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/README.md"><span><strong>Repository README</strong><small>Feature overview and development commands.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md"><span><strong>Test disclaimer</strong><small>Compatibility and community-test status.</small></span><span class="arrow">↗</span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md"><span><strong>Licensing notices</strong><small>App license and bundled component terms.</small></span><span class="arrow">↗</span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span><strong>Getting started</strong><small>Set up a pack and connect optional AI.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span><strong>Mod search</strong><small>Catalog filters, suggestions, and selection.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/interfaces-and-designs.md"><span><strong>Interfaces and designs</strong><small>Four layouts, themes, backgrounds, and glass.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span><strong>AI and privacy</strong><small>Provider routes, data flow, and limitations.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span><strong>Troubleshooting</strong><small>Common fixes, tests, and local builds.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/wiki/Patch%E2%80%90log"><span><strong>Patch log</strong><small>Release history and recent project updates.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/README.md"><span><strong>Repository README</strong><small>Feature overview and development commands.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md"><span><strong>Test disclaimer</strong><small>Compatibility and community-test status.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md"><span><strong>Licensing notices</strong><small>App license and bundled component terms.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
         </div>
         <div class="notice"><strong>Project status:</strong> Modspire is an independent community test project. Original app files are MIT licensed, while the bundled Sign in with ChatGPT DevKit has separate noncommercial terms, so the combined repository is source-available under multiple licences. Modspire organizes pack plans; it does not install every mod or confirm that Minecraft launches.</div>
         <div class="notice"><strong>Model compatibility:</strong> The app has not been tested with every local model or cloud agent. Check the connected provider’s privacy and usage terms, review suggestions, and test your pack in Minecraft.</div>
@@ -943,12 +1178,23 @@
     <footer class="footer">
       <div class="wrap">
         <div class="footer-main">
-          <div><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">✦</span><span>Modspire</span></a><p>An independent Minecraft Java modpack planning studio. Not affiliated with or endorsed by Microsoft, Mojang, Modrinth, CurseForge, or OpenAI.</p></div>
+          <div><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span><span>Modspire</span></a><p>An independent Minecraft Java modpack planning studio. Not affiliated with or endorsed by Microsoft, Mojang, Modrinth, CurseForge, or OpenAI.</p></div>
           <div class="footer-links"><a href="https://github.com/LvisXVI/modspire">GitHub</a><a href="https://github.com/LvisXVI/modspire/wiki">Wiki</a><a href="https://github.com/LvisXVI/modspire/releases/latest">Releases</a><a href="https://github.com/LvisXVI/modspire/blob/main/LICENSE">License</a></div>
         </div>
         <div class="copyright">© <span id="year">2026</span> Modspire community project · Built for pack planners</div>
       </div>
     </footer>
+    <dialog class="command-dialog" id="command-dialog" aria-labelledby="command-title">
+      <form method="dialog" class="command-top"><span id="command-title">Command menu</span><button class="command-close" aria-label="Close command menu">Esc</button></form>
+      <label class="command-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="command-filter" type="search" placeholder="Find a page or action…" aria-label="Filter commands" autocomplete="off"></label>
+      <div class="command-list" role="listbox" aria-label="Site commands">
+        <button type="button" class="command-item" data-command="demo"><span>Open interactive demo</span><kbd>↵</kbd></button>
+        <button type="button" class="command-item" data-command="search"><span>Search sample mods</span><kbd>/</kbd></button>
+        <button type="button" class="command-item" data-command="download"><span>Download Windows build</span><kbd>↗</kbd></button>
+        <button type="button" class="command-item" data-command="source"><span>Browse project source</span><kbd>↗</kbd></button>
+        <button type="button" class="command-item" data-command="wiki"><span>Read the project wiki</span><kbd>↗</kbd></button>
+      </div>
+    </dialog>
     <script>
       const menuButton = document.querySelector(".menu-toggle");
       const nav = document.querySelector("#site-nav");
@@ -965,6 +1211,51 @@
           menuButton.setAttribute("aria-label", "Open navigation");
         }
       });
+      const commandDialog = document.querySelector("#command-dialog");
+      const commandFilter = document.querySelector("#command-filter");
+      function openCommandMenu() {
+        if (!commandDialog.open) commandDialog.showModal();
+        commandFilter.value = "";
+        commandFilter.dispatchEvent(new Event("input"));
+        requestAnimationFrame(() => commandFilter.focus());
+      }
+      document.querySelectorAll("[data-open-commands]").forEach(button => button.addEventListener("click", openCommandMenu));
+      document.addEventListener("keydown", event => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+          event.preventDefault();
+          openCommandMenu();
+          return;
+        }
+        const typing = event.target.matches("input,textarea,select,[contenteditable='true']");
+        if (event.key === "/" && !typing && !commandDialog.open) {
+          event.preventDefault();
+          document.querySelector('[data-demo-tab="search"]').click();
+          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
+          setTimeout(() => document.querySelector("#demo-search-input").focus(), motionPreference.matches ? 0 : 350);
+        }
+      });
+      commandFilter.addEventListener("input", () => {
+        const query = commandFilter.value.trim().toLowerCase();
+        document.querySelectorAll(".command-item").forEach(item => { item.hidden = query && !item.textContent.toLowerCase().includes(query); });
+      });
+      document.querySelectorAll("[data-command]").forEach(button => button.addEventListener("click", () => {
+        const command = button.dataset.command;
+        commandDialog.close();
+        if (command === "demo") {
+          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
+        } else if (command === "search") {
+          document.querySelector('[data-demo-tab="search"]').click();
+          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
+          setTimeout(() => document.querySelector("#demo-search-input").focus(), motionPreference.matches ? 0 : 350);
+        } else {
+          const destinations = {
+            download: "https://github.com/LvisXVI/modspire/releases/latest",
+            source: "https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip",
+            wiki: "https://github.com/LvisXVI/modspire/wiki"
+          };
+          window.open(destinations[command], "_blank", "noopener,noreferrer");
+        }
+      }));
       const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
       const revealTargets = document.querySelectorAll(".reveal,.section-heading,.demo-shell,.video-panel,.hero-stats,.feature-card,.capability,.workflow,.step,.callout,.download-card,.doc-link,.footer");
       if ("IntersectionObserver" in window && !motionPreference.matches) {

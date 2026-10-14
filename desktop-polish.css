@@ -1,0 +1,113 @@
+/* Shared desktop polish. Keeps each UI mode's theme, structure, and app state intact. */
+:root { --desktop-focus:var(--accent,var(--green,#69b8ff)); --desktop-fast:110ms; }
+body.ui-modern { --desktop-focus:var(--modern-accent); }
+body.ui-v3 { --desktop-focus:var(--v3-accent); }
+body.ui-v4 { --desktop-focus:var(--v4-accent); }
+
+body { font-family:"Segoe UI Variable Text","Segoe UI",Inter,sans-serif; }
+button,select,input,textarea { font-family:inherit; }
+.app-shell { min-width:0; }
+.sidebar { border-right:1px solid color-mix(in srgb,var(--line) 88%,transparent); }
+.sidebar .brand { padding-bottom:30px; }
+.nav-item { min-height:38px; border:1px solid transparent; border-radius:8px!important; font-size:12px; transition:background-color var(--desktop-fast) ease,border-color var(--desktop-fast) ease,color var(--desktop-fast) ease,transform var(--desktop-fast) ease!important; }
+.nav-item:hover { transform:translateX(1px); }
+.nav-item.active { border-color:color-mix(in srgb,var(--desktop-focus) 20%,transparent); }
+.sidebar-icon { width:17px; height:17px; }
+
+.topbar { min-height:70px; height:auto; gap:14px; padding-inline:24px; }
+.title-drag-region { min-width:0; }
+.project-title-row { min-width:0; }
+.pack-title { max-width:min(38vw,390px); font-family:"Segoe UI Variable Text","Segoe UI",sans-serif; font-size:19px; letter-spacing:-.025em; }
+.top-actions { align-items:center; gap:6px; }
+.setup-strip { min-height:50px; height:auto; gap:12px; padding-inline:24px; }
+.setup-strip label { gap:8px; }
+.setup-strip select,.provider-select,.chat-model-control select { min-height:34px; }
+.bottom-bar { min-height:36px; height:auto; padding-inline:24px; }
+
+body :is(button,.button,.text-button,select,input,textarea,.nav-item,.chat-model-control,.log-picker) { -webkit-tap-highlight-color:transparent; }
+body :is(button,.button,.text-button,.nav-item,.mode-chip,.suggestion,.assistant-choice,.add-mod,.popular-add,.theme-option,.wallpaper-option,.v3-scene-card,.v4-button,.modern-primary-button,.modern-secondary-button) { transition-duration:var(--desktop-fast)!important; }
+body button:active,body .button:active { transform:translateY(1px)!important; filter:brightness(.96); }
+body :is(button,.button,.text-button,a,select,input,textarea,[tabindex]):focus-visible { outline:2px solid color-mix(in srgb,var(--desktop-focus) 82%,white)!important; outline-offset:2px!important; box-shadow:0 0 0 3px color-mix(in srgb,var(--desktop-focus) 18%,transparent)!important; }
+body :is(input,textarea,select) { transition:border-color var(--desktop-fast) ease,background-color var(--desktop-fast) ease,box-shadow var(--desktop-fast) ease!important; }
+
+.panel-heading { min-height:64px; padding:13px 17px; }
+.panel-heading h2 { font-size:14px; letter-spacing:-.015em; }
+.panel-heading p { line-height:1.4; }
+.search-row { align-items:center; gap:8px; padding:12px 14px 8px; }
+.search-box { min-height:42px; gap:8px; padding-inline:11px 7px; border-radius:9px; transition:border-color var(--desktop-fast) ease,box-shadow var(--desktop-fast) ease,background-color var(--desktop-fast) ease; }
+.search-box:focus-within { border-color:color-mix(in srgb,var(--desktop-focus) 58%,var(--line)); box-shadow:0 0 0 3px color-mix(in srgb,var(--desktop-focus) 11%,transparent); }
+.search-box input { min-height:38px; padding-block:7px; font-size:12px; }
+.desktop-search-shortcut { flex:none; padding:3px 6px; border:1px solid color-mix(in srgb,var(--line) 90%,transparent); border-radius:5px; background:color-mix(in srgb,var(--panel2) 88%,transparent); color:var(--muted); font:9px "Cascadia Mono","JetBrains Mono",Consolas,monospace; }
+.search-box #mod-search-clear { display:grid; flex:none; width:25px; height:25px; place-items:center; padding:0; border:1px solid color-mix(in srgb,var(--line) 92%,transparent); border-radius:6px; background:transparent; color:var(--muted); font-size:17px; line-height:1; }
+.search-box #mod-search-clear[hidden] { display:none!important; }
+.search-box #mod-search-clear:hover { border-color:var(--desktop-focus); color:var(--text); }
+.search-box #search-button { flex:none; width:29px; height:29px; border-radius:7px; font-size:14px; }
+.provider-select { min-width:128px; }
+.selected-filter-row input { min-height:34px; border-radius:8px; }
+
+.chat-messages { scrollbar-gutter:stable; overscroll-behavior:contain; }
+.message { align-items:flex-start; gap:11px; }
+.message-content { min-width:0; }
+.bubble { max-width:min(92%,1080px); padding:13px 15px; font-size:13px; line-height:1.62; }
+.bubble p+p { margin-top:9px; }
+.bubble :is(code,pre),.mod-meta,.version,.mono,.chat-mod-version { font-family:"Cascadia Mono","JetBrains Mono",Consolas,monospace; }
+.bubble :is(code,pre) { border:1px solid color-mix(in srgb,var(--line) 86%,transparent); border-radius:6px; background:color-mix(in srgb,var(--panel2) 88%,transparent); }
+.bubble code { padding:.12em .38em; font-size:.9em; }
+.bubble pre { overflow:auto; padding:12px 14px; line-height:1.55; }
+.composer-hint,.chat-footnote { letter-spacing:.005em; }
+.chat-form { transition:border-color var(--desktop-fast) ease,box-shadow var(--desktop-fast) ease,background-color var(--desktop-fast) ease; }
+.chat-form:focus-within { border-color:color-mix(in srgb,var(--desktop-focus) 54%,var(--line)); box-shadow:0 0 0 3px color-mix(in srgb,var(--desktop-focus) 9%,transparent); }
+.chat-form textarea#chat-input { font-size:13px; line-height:1.55; }
+.chat-model-control { min-width:0; }
+.chat-model-control select { max-width:min(44vw,310px); }
+.suggestion,.chat-header-action,.attach-button,.voice-button,.send-button { transition-duration:var(--desktop-fast)!important; }
+
+.mod-results,.selected-list,.lab-content,.modern-dashboard,.v4-dashboard { scrollbar-gutter:stable; overscroll-behavior:contain; }
+.mod-card { transition:border-color var(--desktop-fast) ease,background-color var(--desktop-fast) ease,box-shadow var(--desktop-fast) ease; }
+.mod-name strong { letter-spacing:-.01em; }
+.mod-meta { font-size:9px; }
+.add-mod,.popular-add { min-width:30px; min-height:30px; }
+.selected-section { min-height:126px; }
+.selected-heading { padding:12px 15px 9px; }
+
+.lab-content { gap:12px; padding:14px; }
+.lab-card { border-width:1px!important; border-radius:11px!important; box-shadow:none!important; transition:border-color var(--desktop-fast) ease,background-color var(--desktop-fast) ease!important; }
+.lab-card:hover { border-color:color-mix(in srgb,var(--desktop-focus) 36%,var(--line))!important; }
+.lab-card-head { gap:10px; }
+.lab-card-head h3 { font-size:12px; letter-spacing:-.015em; }
+.lab-card-head p,.lab-footnote { line-height:1.5; }
+.compass-meter,.v4-category-track { height:5px; overflow:hidden; border-radius:99px; }
+.compass-meter>div,.v4-category-track i { border-radius:inherit; transition:width 180ms ease; }
+.compass-stats { gap:7px; }
+.compass-stats>div { border-radius:7px; }
+.modern-chart,.v3-category-chart { contain:layout paint; }
+
+.settings-card,.test-card,.design-card,.mod-selection-dialog,.mod-details-card { scrollbar-gutter:stable; }
+.window-controls { gap:5px; }
+.window-controls button { width:34px; height:30px; border-radius:7px; transition:background-color var(--desktop-fast) ease,color var(--desktop-fast) ease,transform var(--desktop-fast) ease; }
+.window-controls button:last-child:hover { background:#c83a42; color:#fff; }
+
+* { scrollbar-width:thin; scrollbar-color:transparent transparent; }
+*:hover { scrollbar-color:color-mix(in srgb,var(--desktop-focus) 36%,var(--line)) transparent; }
+::-webkit-scrollbar { width:9px; height:9px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { border:3px solid transparent; border-radius:9px; background:transparent; background-clip:padding-box; }
+*:hover::-webkit-scrollbar-thumb { background-color:color-mix(in srgb,var(--desktop-focus) 36%,var(--line)); }
+
+@media(max-width:1000px) {
+  .topbar { padding-inline:16px; }
+  .setup-strip { gap:8px; padding-inline:16px; }
+  .top-actions { gap:4px; }
+  .top-actions>.button { padding-inline:9px; }
+}
+@media(max-width:760px) {
+  .topbar { min-height:62px; padding-inline:12px; }
+  .setup-strip { padding-inline:12px; }
+  .search-box { min-width:0; }
+  .desktop-search-shortcut { display:none; }
+  .lab-content { gap:9px; padding:10px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  body :is(button,.button,.text-button,.nav-item,.mode-chip,.suggestion,.assistant-choice,.add-mod,.popular-add,.theme-option,.wallpaper-option,.v3-scene-card,.v4-button,.modern-primary-button,.modern-secondary-button),
+  body :is(input,textarea,select),.search-box,.chat-form,.mod-card,.lab-card { transition-duration:.01ms!important; }
+}

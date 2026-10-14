@@ -2,6 +2,13 @@
 
 Notable user-facing changes are documented here. This project follows Keep a Changelog conventions.
 
+## [0.2.89] - 2026-10-14
+
+### Changed
+- Refined desktop spacing, typography, focus states, hover feedback, scrollbars, chat surfaces, and Pack Lab meters across all four UI modes.
+- Added Ctrl+K and `/` shortcuts for Modrinth search, plus an inline clear control; both preserve the existing search workflow.
+- Included the shared polish layer in the local web version and portable Windows build.
+
 ## [0.2.88] - 2026-10-14
 
 ### Added

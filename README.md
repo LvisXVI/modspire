@@ -5,32 +5,28 @@ An independent, free Windows desktop app for planning Minecraft Java modpacks. D
 This is an independent project. It is not affiliated with or endorsed by Modbot, Modrinth, CurseForge, Microsoft, Mojang, or OpenAI. It takes inspiration from prompt-led modpack workflows without using Modbot branding or assets.
 
 ## Features
+AI Integration With:
+ChatGPT Personal Subscription
+Ollama
+OpenAI API Key
+OmniRoute
+...
+PackLab, See General Pack Diagnostics
+Mod-Creator (Non Tested)
+Ai Chat
+4 ui´s
+different designs + backrounds
+Crash Report reader
+Modrinth integration + Pack Importer
+Theoretical Curseforce Integration IF u have an API key.
+Web Version
+PackLab:
+https://private-user-images.githubusercontent.com/244184864/673328603-e1637de9-18c4-4717-a53d-48dfe151d745.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTE5ODAwNzIsIm5iZiI6MTc5MTk3OTc3MiwicGF0aCI6Ii8yNDQxODQ4NjQvNjczMzI4NjAzLWUxNjM3ZGU5LTE4YzQtNDcxNy1hNTNkLTQ4ZGZlMTUxZDc0NS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYxMDE0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MTAxNFQxMjA5MzJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zM2I4MTE4Yzg1ZmQwNTU2NWMxODE4MmFmNTgzMGMyY2M3NGZhY2ZmOGY5Zjc3ZWM3ODMxYjYyZDhhZGJjYTBjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.dzf8E4gWPz2LJMo1S1vYeO5cr9FtQEU7o13VjGq5L_Y
+4 Uis:
+https://private-user-images.githubusercontent.com/244184864/673329201-1962a865-6125-457d-9c5a-155c3e26695f.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTE5ODAwNzIsIm5iZiI6MTc5MTk3OTc3MiwicGF0aCI6Ii8yNDQxODQ4NjQvNjczMzI5MjAxLTE5NjJhODY1LTYxMjUtNDU3ZC05YzVhLTE1NWMzZTI2Njk1Zi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYxMDE0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MTAxNFQxMjA5MzJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1jODE2NWFjZjgzMTdmNjI2M2NkMjgzMGVmZTNiOTBiMzM5NmExNTM4ZWM2ZWM2MmRmM2JjOGM4ZGQ4ODIxZjkzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.5ducyTaFuWThvA9EpaBX7y-5wyfpVJjtdgx5wJGsVzI
+Classic UI as Example:
+https://private-user-images.githubusercontent.com/244184864/673329678-794e51f0-e814-4658-86b2-72b4c9440266.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3OTE5ODAwNzIsIm5iZiI6MTc5MTk3OTc3MiwicGF0aCI6Ii8yNDQxODQ4NjQvNjczMzI5Njc4LTc5NGU1MWYwLWU4MTQtNDY1OC04NmIyLTcyYjRjOTQ0MDI2Ni5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYxMDE0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MTAxNFQxMjA5MzJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0wNzUwNDIxMTM5ZjAwZDg0MWM1NDBiMTQ4ZjM3MzI5ZjUwMWUzYzRkYzk1ZDBiMDEyM2Y5YjNlNDhhNWFmNWMwJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.rt1f4knFqu-0sCrflfwvMYrsjiG7HWKGPIysHBG_4qA
 
-- Local-only username and separate modpack projects, with each pack's own version, selection, and chat history
-- Switchable German and English interface; AI replies and compatibility reports follow the selected language
-- Modpack selector in the top setup strip alongside Minecraft version and modloader
-- Context-aware chat suggestions under every reply, multi-select AI choice chips, multi-facet Modrinth search, and optional video-frame analysis
-- Modrinth search without a key; CurseForge search falls back to Modrinth unless you configure your own CurseForge key
-- Search results load in 48-item batches and continue scrolling until the selected Modrinth catalog is exhausted
-- Import a Modrinth share code, public modpack link, or `.mrpack` as a new editable project with mod names, Minecraft version, and loader
-- Optional automatic Minecraft version and modloader selection based on Modrinth catalog results for the requested theme
-- Check several mod candidates and add them together, or add the full filtered pack foundation in one click
-- Chat suggestions add to the active pack immediately from the card or plus button; minus removes a mod without a second confirmation
-- Visual-mod search combines multiple Modrinth search terms with visual category facets and continues paging as you scroll
-- Two-column mod cards in the regular window and fullscreen layout
-- A sidebar AI Mod Creator entry for planning a new Java mod and drafting its code structure
-- Four selectable interface layouts: the original workshop, the modern pack dashboard, UI Version 3, and UI Version 4
-- UI Version 3 includes a clean Pro Studio style and six selectable Minecraft world scenes with matching accent colors
-- Modern dashboard navigation stays visible on desktop and opens the same chat, mod search, and pack tools as the sidebar
-- ChatGPT sign-in with explicit plan-sharing consent, optional OpenAI or Claude providers, local Ollama/Bionic models, and OmniRoute-compatible OpenAI endpoints
-- OmniRoute automatic model routing in the chat model picker (cloud icon); the `auto` mode delegates model selection to the connected OmniRoute router
-- Mod suggestions are parsed and searched by the app itself, so local and cloud models can open the same selectable Modrinth results without model-specific tool calling
-- Automatic compatibility reports and a manual test-run button with suggested safe fixes
-- Multiple distinct designs: White and Blue, Fluid Glass, transparent Crystal Glass, Translucent, animated Polarlicht, Redstone-Labor, Smaragdhain, Nether-Schmiede, and Ender-Riss. Backgrounds are selected separately; Minecraft wallpapers support a persistent motion toggle, while Translucent keeps the desktop visible without backdrop blur.
-- Chat scrolling remains available with the mouse wheel while the scrollbar stays hidden; translucent designs use reinforced text contrast
-- Design editor available from both the sidebar and the top toolbar, with hover descriptions positioned beside the icon rail
-- Compact icon sidebar, hover descriptions beside the icon rail, and fullscreen mode with the F11 shortcut
-- Local project export, hover explanations, and a Windows portable build
 
 ## Build and AI access
 

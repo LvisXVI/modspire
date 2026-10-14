@@ -1,6 +1,6 @@
 # Public test project notice
 
-Modpack-Werkstatt is an independent test project for evaluation and experimentation. It is not production-ready, security-certified, or guaranteed to work with every Minecraft setup, local model, cloud model, or agent.
+Modspire is an independent test project for evaluation and experimentation. It is not production-ready, security-certified, or guaranteed to work with every Minecraft setup, local model, cloud model, or agent.
 
 ## Compatibility and reliability
 

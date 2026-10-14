@@ -1437,7 +1437,7 @@ $('username-setup-form').addEventListener('submit',async event=>{
   try{
     const profile=await window.workshop.setUsername($('username-input').value);
     state.settings={...state.settings,...profile};setProfileIdentity(profile.username);$('username-setup-overlay').hidden=true;syncStartupGate();updateSettingsState();renderChat();
-    if(profile.desktopShortcut)setStatus(`Desktop-Verknüpfung „${profile.username} – Modpack-Werkstatt“ mit ${profileInitial(profile.username)}-Icon erstellt`);
+    if(profile.desktopShortcut)setStatus(`Desktop-Verknüpfung „${profile.username} – Modspire“ mit ${profileInitial(profile.username)}-Icon erstellt`);
     if(state.chatgpt.status==='connected'&&state.chatgpt.sharing)refreshChatGPTStatus().catch(()=>{});else $('startup-connect').focus();
   }catch(error){$('username-input').setCustomValidity(error.message);$('username-input').reportValidity();}
   finally{button.disabled=false;}

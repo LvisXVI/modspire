@@ -8,7 +8,7 @@
     <a href="docs/wiki/README.md"><img alt="Project wiki" src="https://img.shields.io/badge/docs-project%20wiki-1c3b50"></a>
   </p>
   <p>
-    <a href="docs/media/modspire-promo-v0.2.88.mp4">▶️ Watch the 23-second app tour</a> ·
+    <a href="https://lvisxvi.github.io/modspire/">▶️ Watch the 23-second app tour</a> ·
     <a href="https://github.com/LvisXVI/modspire/releases/latest">⬇️ Download for Windows</a> ·
     <a href="https://github.com/LvisXVI/modspire/wiki">📚 Read the wiki</a>
   </p>
@@ -16,9 +16,9 @@
 
 ## 🎬 See Modspire in action
 
-Click the preview to open the MP4 in GitHub's video viewer.
+Click the preview to open the hosted video player. GitHub's file browser cannot preview large MP4 files.
 
-<p align="center"><a href="docs/media/modspire-promo-v0.2.88.mp4"><img src="assets/brand/modspire-promo-poster.png" alt="▶ Play the Modspire app tour" width="100%"></a></p>
+<p align="center"><a href="https://lvisxvi.github.io/modspire/"><img src="assets/brand/modspire-promo-poster.png" alt="▶ Play the Modspire app tour" width="100%"></a></p>
 
 The tour uses a real recording of Modspire. The feature gallery below also shows the actual app interface; those panels are screenshots rather than generated mockups.
 

@@ -16,4 +16,4 @@ Welcome to the Modspire guide. These pages describe the app in this repository; 
 
 Modspire is an independent Windows studio for planning Minecraft Java modpacks. It searches catalogs and organizes projects; it does not download every mod, install a Minecraft loader, or prove that a pack launches successfully. Check the [project README](../../README.md), [community test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md), and [third-party notices](../../THIRD-PARTY-NOTICES.md) for scope and licensing details.
 
-🎬 **Want a quick tour?** [Watch the 23-second Modspire preview](../media/modspire-promo-v0.2.88.mp4) or open the [GitHub release](https://github.com/LvisXVI/modspire/releases/tag/v0.2.88).
+🎬 **Want a quick tour?** [Watch the 23-second Modspire preview](https://lvisxvi.github.io/modspire/) or open the [GitHub release](https://github.com/LvisXVI/modspire/releases/tag/v0.2.88).

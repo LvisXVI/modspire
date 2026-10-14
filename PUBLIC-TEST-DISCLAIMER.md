@@ -1,6 +1,6 @@
 # Public test project notice
 
-Modpack-Werkstatt is an independent, non-profit test project. It is provided for evaluation and experimentation and is not production-ready, security-certified, or guaranteed to work with every Minecraft setup, local model, cloud model, or agent.
+Modpack-Werkstatt is an independent test project for evaluation and experimentation. It is not production-ready, security-certified, or guaranteed to work with every Minecraft setup, local model, cloud model, or agent.
 
 ## Compatibility and reliability
 
@@ -15,6 +15,6 @@ Pack projects are stored locally. When the user submits a prompt, selected image
 
 ## Licensing and affiliation
 
-The original application files use the MIT License, while bundled third-party components retain their own licenses. In particular, the included Sign in with ChatGPT DevKit is noncommercial; consult [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and its bundled license before redistribution. This project is not affiliated with or endorsed by Mojang, Microsoft, Modrinth, CurseForge, OpenAI, Anthropic, or OmniRoute.
+The original application files use the MIT License, while bundled third-party components retain their own licenses. In particular, the included Sign in with ChatGPT DevKit permits only the noncommercial purposes defined in its bundled licence; it explicitly says nonprofit status alone is not enough. Independently written client integrations remain separately authored software, but this does not change the DevKit's terms. Consult [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and the bundled licence before redistribution. This project is not affiliated with or endorsed by Mojang, Microsoft, Modrinth, CurseForge, OpenAI, Anthropic, or OmniRoute.
 
 Use is at your own risk. The application is provided without warranty; see [LICENSE](LICENSE).

@@ -50,7 +50,7 @@ const defaultThemeColors = { accent: '#398ce0', surface: '#f8faff', background: 
 let themeColors = { ...defaultThemeColors };
 let currentTheme = 'blue';
 let currentWallpaper = localStorage.getItem('mw-wallpaper') || (localStorage.getItem('mw-theme') === 'voxel' ? 'voxel' : 'none');
-let themeSurfaceOpacity = Math.max(38, Math.min(100, Number(localStorage.getItem('mw-theme-opacity')) || 72));
+let themeSurfaceOpacity = Math.max(82, Math.min(100, Number(localStorage.getItem('mw-theme-opacity')) || 88));
 let wallpaperMotionEnabled = localStorage.getItem('mw-wallpaper-motion') !== 'false';
 let selectedUserAvatar = localStorage.getItem('mw-user-avatar') || '';
 let skinUsername = localStorage.getItem('mw-skin-username') || '';
@@ -1481,7 +1481,7 @@ $('design-overlay').addEventListener('click',event=>{if(event.target===$('design
 document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{const theme=button.dataset.themeChoice;applyTheme(theme,themeColors);if(theme!=='blue')$('color-config').hidden=true}));
 document.querySelectorAll('[data-wallpaper-choice]').forEach(button=>button.addEventListener('click',()=>applyWallpaper(button.dataset.wallpaperChoice)));
 $('toggle-color-config').onclick=()=>{$('color-config').hidden=!$('color-config').hidden};
-function setThemeSurfaceOpacity(value){themeSurfaceOpacity=Math.max(38,Math.min(100,Number(value)||72));document.body.style.setProperty('--theme-surface-opacity',`${themeSurfaceOpacity}%`);$('theme-opacity-value').textContent=`${themeSurfaceOpacity}%`;localStorage.setItem('mw-theme-opacity',String(themeSurfaceOpacity))}
+function setThemeSurfaceOpacity(value){themeSurfaceOpacity=Math.max(82,Math.min(100,Number(value)||88));document.body.style.setProperty('--theme-surface-opacity',`${themeSurfaceOpacity}%`);$('theme-opacity-value').textContent=`${themeSurfaceOpacity}%`;$('theme-opacity').value=String(themeSurfaceOpacity);localStorage.setItem('mw-theme-opacity',String(themeSurfaceOpacity))}
 $('theme-opacity').addEventListener('input',event=>setThemeSurfaceOpacity(event.target.value));
 $('wallpaper-motion').addEventListener('change',event=>applyWallpaperMotion(event.target.checked));
 function readThemeColors(){return{accent:$('theme-accent').value,surface:$('theme-surface').value,background:$('theme-background').value}}

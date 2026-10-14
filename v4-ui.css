@@ -425,3 +425,100 @@ html body.ui-v4 #chat-panel.is-mod-creator:not([hidden])>.chat-footnote {grid-co
   html body.ui-v3 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit,
   html body.ui-v4 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit {margin-left:auto!important}
 }
+
+/* Conversation surfaces share one theme palette across all four UI layouts.
+   The older per-theme and Modern UI rules used unrelated light/dark defaults,
+   which made the chat look white or blue regardless of the chosen theme. */
+html body[data-theme] {
+  --chat-panel:#10202b;
+  --chat-stage:#0d1b25;
+  --chat-assistant:#162b38;
+  --chat-user:#1b3c50;
+  --chat-composer:#142733;
+  --chat-field:#0c1b25;
+  --chat-line:#355365;
+  --chat-ink:#f1f6fa;
+  --chat-muted:#b7c8d3;
+  --chat-accent:#75c7ff;
+}
+html body[data-theme="blue"] {--chat-panel:#14283b;--chat-stage:#102337;--chat-assistant:#1a3349;--chat-user:#214a68;--chat-composer:#172f43;--chat-field:#0e2132;--chat-line:#3a5f7d;--chat-accent:#7ec5ff}
+html body[data-theme="fluid"] {--chat-panel:#102b35;--chat-stage:#0c232c;--chat-assistant:#163641;--chat-user:#1e4d59;--chat-composer:#14303a;--chat-field:#0b2029;--chat-line:#35616b;--chat-accent:#76d9df}
+html body[data-theme="clear"] {--chat-panel:rgba(12,39,61,.96);--chat-stage:rgba(9,31,49,.94);--chat-assistant:rgba(17,52,77,.96);--chat-user:rgba(27,74,105,.96);--chat-composer:rgba(13,43,66,.97);--chat-field:rgba(7,29,47,.97);--chat-line:#477493;--chat-accent:#8bd6ff}
+html body[data-theme="translucent"] {--chat-panel:rgba(10,42,55,.96);--chat-stage:rgba(7,32,43,.94);--chat-assistant:rgba(15,54,66,.96);--chat-user:rgba(24,77,89,.96);--chat-composer:rgba(11,47,59,.97);--chat-field:rgba(6,32,42,.97);--chat-line:#3c727b;--chat-accent:#83e1dd}
+html body[data-theme="aurora"] {--chat-panel:#152938;--chat-stage:#10212e;--chat-assistant:#1b3542;--chat-user:#29475d;--chat-composer:#172e3c;--chat-field:#0e202c;--chat-line:#496b7c;--chat-accent:#a7c5ff}
+html body[data-theme="redstone"] {--chat-panel:#2d1b21;--chat-stage:#24151b;--chat-assistant:#3b2228;--chat-user:#542b32;--chat-composer:#321e24;--chat-field:#211419;--chat-line:#71454d;--chat-accent:#ff9b82}
+html body[data-theme="ender"] {--chat-panel:#211d37;--chat-stage:#19172b;--chat-assistant:#2c2647;--chat-user:#403667;--chat-composer:#25203e;--chat-field:#18162a;--chat-line:#62558d;--chat-accent:#c2a9ff}
+html body[data-theme="emerald"] {--chat-panel:#142a25;--chat-stage:#0f211d;--chat-assistant:#1b382f;--chat-user:#255140;--chat-composer:#172f28;--chat-field:#0d1f1a;--chat-line:#3e6b59;--chat-accent:#8ce0b5}
+html body[data-theme="nether"] {--chat-panel:#321c1c;--chat-stage:#241313;--chat-assistant:#422321;--chat-user:#612d27;--chat-composer:#371e1c;--chat-field:#211211;--chat-line:#78443b;--chat-accent:#ffae78}
+
+html body[data-theme] #chat-panel:not([hidden]),
+html body[data-theme] #chat-panel>.panel-heading,
+html body[data-theme] #chat-panel>.chat-messages,
+html body[data-theme] #chat-panel #chat-form,
+html body[data-theme] #chat-panel>.chat-footnote {
+  background-color:var(--chat-panel)!important;
+  background-image:none!important;
+  border-color:var(--chat-line)!important;
+  color:var(--chat-ink)!important;
+  text-shadow:none!important;
+}
+html body[data-theme] #chat-panel {color-scheme:dark!important}
+html body.ui-modern[data-theme] #chat-panel:not([hidden]) {background-image:linear-gradient(155deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 82%,var(--chat-accent)))!important}
+html body.ui-v3[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 10% 0%,color-mix(in srgb,var(--chat-accent) 16%,transparent),transparent 45%),linear-gradient(160deg,var(--chat-panel),var(--chat-stage))!important}
+html body.ui-v4[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 94% 0%,color-mix(in srgb,var(--chat-accent) 13%,transparent),transparent 48%),linear-gradient(135deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 76%,var(--chat-stage)))!important}
+html body[data-theme] #chat-panel>.chat-messages {background-color:var(--chat-stage)!important}
+html body[data-theme] #chat-panel .chat-messages>.message:not(.user-message) .bubble {
+  background-color:var(--chat-assistant)!important;
+  background-image:none!important;
+  border-color:var(--chat-line)!important;
+  color:var(--chat-ink)!important;
+  text-shadow:none!important;
+}
+html body[data-theme] #chat-panel .chat-messages>.user-message .bubble {
+  background-color:var(--chat-user)!important;
+  background-image:none!important;
+  border-color:color-mix(in srgb,var(--chat-accent) 44%,var(--chat-line))!important;
+  color:var(--chat-ink)!important;
+}
+html body[data-theme] #chat-panel :is(.bubble,.chat-form,.chat-messages,.panel-heading,#chat-input,.chat-footnote) {backdrop-filter:none;-webkit-backdrop-filter:none}
+html body[data-theme="clear"] #chat-panel,
+html body[data-theme="clear"] #chat-panel :is(.bubble,.chat-form,.chat-messages,.panel-heading,#chat-input,.chat-footnote),
+html body[data-theme="translucent"] #chat-panel,
+html body[data-theme="translucent"] #chat-panel :is(.bubble,.chat-form,.chat-messages,.panel-heading,#chat-input,.chat-footnote) {
+  backdrop-filter:blur(20px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(125%)!important;
+}
+html body[data-theme] #chat-panel #chat-form {
+  background-color:var(--chat-composer)!important;
+  border:1px solid var(--chat-line)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.035)!important;
+}
+html body[data-theme] #chat-panel #chat-input,
+html body[data-theme] #chat-panel #chat-form :is(input,select) {
+  background-color:var(--chat-field)!important;
+  border-color:var(--chat-line)!important;
+  color:var(--chat-ink)!important;
+  caret-color:var(--chat-accent)!important;
+  text-shadow:none!important;
+}
+html body[data-theme] #chat-panel #chat-input::placeholder {color:var(--chat-muted)!important;opacity:1!important}
+html body[data-theme] #chat-panel :is(.bubble p,.bubble li,.bubble strong,.bubble code,.bubble a,.panel-heading h2,.panel-heading p,.composer-footer,.composer-hint,.chat-footnote,.attach-row,#video-name,.chat-model-control) {color:var(--chat-ink)!important;text-shadow:none!important}
+html body[data-theme] #chat-panel :is(.composer-hint,.chat-footnote,#video-name,.chat-model-control>span) {color:var(--chat-muted)!important}
+html body[data-theme] #chat-panel :is(.suggestion,.button-quiet,.chat-header-action,.attach-button,.voice-button) {background-color:var(--chat-assistant)!important;border-color:var(--chat-line)!important;color:var(--chat-ink)!important}
+html body[data-theme] #chat-panel :is(.send-button,.button-primary) {background:linear-gradient(135deg,color-mix(in srgb,var(--chat-accent) 72%,#143146),var(--chat-user))!important;border-color:var(--chat-accent)!important;color:#fff!important}
+html body[data-theme] #chat-panel :is(button,select,textarea,a,[tabindex="0"]):focus-visible {outline:3px solid var(--chat-accent)!important;outline-offset:3px!important}
+html body[data-theme] #chat-panel :is(.bubble,.chat-footnote,.panel-heading,#chat-input,.chat-form) {opacity:1!important}
+
+/* Glass themes blur every primary UI surface, even when no wallpaper is selected.
+   Keep the tint dense enough that foreground text never sits directly over art. */
+html body[data-theme="clear"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.chat-messages,.bubble,.chat-form,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.mod-selection-dialog,.mod-details-card,.mod-preview-dialog,.creator-studio,.modern-dashboard,.modern-card,.v3-panel,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article,.v4-mod-row,.v4-category-row,.v4-activity-row),
+html body[data-theme="translucent"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.chat-messages,.bubble,.chat-form,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.mod-selection-dialog,.mod-details-card,.mod-preview-dialog,.creator-studio,.modern-dashboard,.modern-card,.v3-panel,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article,.v4-mod-row,.v4-category-row,.v4-activity-row) {
+  background-color:color-mix(in srgb,var(--theme-glass-surface,#0d2f4e) max(var(--theme-surface-opacity,94%),90%),transparent)!important;
+  background-image:none!important;
+  backdrop-filter:blur(20px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(125%)!important;
+  border-color:color-mix(in srgb,var(--custom-accent,#65c5f2) 38%,rgba(220,242,255,.62))!important;
+}
+html body.ui-modern[data-theme] #chat-panel:not([hidden]) {background-image:linear-gradient(155deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 82%,var(--chat-accent)))!important}
+html body.ui-v3[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 10% 0%,color-mix(in srgb,var(--chat-accent) 16%,transparent),transparent 45%),linear-gradient(160deg,var(--chat-panel),var(--chat-stage))!important}
+html body.ui-v4[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 94% 0%,color-mix(in srgb,var(--chat-accent) 13%,transparent),transparent 48%),linear-gradient(135deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 76%,var(--chat-stage)))!important}

@@ -15,7 +15,7 @@ const { chromium } = require('playwright');
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   try {
     const page = await browser.newPage();
-    await page.setContent('<body><aside class="sidebar">Navigation</aside><header class="topbar">Top</header><article class="panel" id="mods-panel">Classic</article><article class="modern-card">UI 2</article><article class="v3-panel">UI 3</article><article class="v4-panel">UI 4</article><article class="mod-card">Mod</article></body>');
+    await page.setContent('<body><aside class="sidebar">Navigation</aside><header class="topbar">Top</header><article class="panel" id="mods-panel">Classic</article><article class="modern-card">UI 2</article><article class="v3-panel">UI 3</article><article class="v4-panel">UI 4</article><article class="mod-card">Mod</article><article class="creator-studio">Creator</article></body>');
     await page.addStyleTag({ content: css });
     for (const mode of ['classic', 'modern', 'v3', 'v4']) {
       await page.evaluate(mode => {
@@ -58,6 +58,16 @@ const { chromium } = require('playwright');
     await page.evaluate(() => { document.body.dataset.theme = 'aurora'; });
     const auroraOpacity = Number(await page.locator('body').evaluate(node => getComputedStyle(node, '::after').opacity));
     assert.ok(auroraOpacity <= 0.5, `Polarlicht glow remains restrained instead of washing out the UI: ${auroraOpacity}`);
+    await page.evaluate(() => { document.body.dataset.theme = 'translucent'; delete document.body.dataset.wallpaper; });
+    const noWallpaperSurfaces = await page.evaluate(() => ['.sidebar','.topbar','#mods-panel','.modern-card','.v3-panel','.v4-panel','.mod-card','.creator-studio'].map(selector => {
+      const style = getComputedStyle(document.querySelector(selector));
+      return { selector, background: style.backgroundColor, blur: style.backdropFilter };
+    }));
+    for (const surface of noWallpaperSurfaces) {
+      const alpha = surface.background.startsWith('rgba(') ? Number(surface.background.match(/,\s*([\d.]+)\)$/)?.[1] ?? 1) : 1;
+      assert.ok(alpha >= .9, `Glass stays tinted and opaque with no wallpaper: ${JSON.stringify(surface)}`);
+      assert.match(surface.blur, /^blur\(/, `Glass blur remains enabled with no wallpaper: ${JSON.stringify(surface)}`);
+    }
     console.log('Glass surfaces stay readable and blurred across all UI modes; wallpapers, motion, and restrained Polarlicht glow pass.');
   } finally {
     await browser.close();

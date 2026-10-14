@@ -21,7 +21,8 @@
   const toEnglish = new Map(pairs);
   const toGerman = new Map(pairs.map(([de, en]) => [en, de]));
   const attributeNames = ['title', 'placeholder', 'aria-label', 'data-prompt', 'data-refine', 'data-tooltip-text'];
-  let locale = localStorage.getItem('mw-language') === 'en' ? 'en' : 'de';
+  // English is the first-run default; keep an explicit language choice across launches.
+  let locale = localStorage.getItem('mw-language') === 'de' ? 'de' : 'en';
   let applying = false;
 
   function translate(value, target = locale) {

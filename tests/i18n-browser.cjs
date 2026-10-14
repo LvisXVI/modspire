@@ -27,6 +27,7 @@ const { chromium } = require('playwright');
     }
     await page.addScriptTag({ content: source });
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
+    assert.equal(await page.evaluate(() => window.workshopI18n.locale), 'en', 'a fresh install should start in English');
     const result = await page.evaluate(async () => {
       const wait = () => new Promise(resolve => setTimeout(resolve, 60));
       let mutations = 0;

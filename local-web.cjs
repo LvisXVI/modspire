@@ -39,7 +39,7 @@ async function createLocalWebServer({root,invoke,preferences={},onEditorDisconne
       if(req.headers.host!==new URL(origin).host||!['127.0.0.1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress))return json(res,403,{error:'Local access only'});
       if(req.headers.origin&&req.headers.origin!==origin)return json(res,403,{error:'Invalid origin'});
       const url=new URL(req.url,origin);
-      if(url.pathname==='/favicon.ico'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'image/x-icon'});return res.end(await fs.readFile(path.join(root,'assets/modpack-werkstatt.ico')));}
+      if(url.pathname==='/favicon.ico'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'image/x-icon'});return res.end(await fs.readFile(path.join(root,'assets/modspire.ico')));}
       if(req.method==='POST'&&req.headers.origin!==origin)return json(res,403,{error:'Origin required'});
       if(url.pathname==='/session'&&req.method==='POST'){
         const token=req.headers.authorization?.replace(/^Bearer /,'');const expiry=launches.get(token);launches.delete(token);
@@ -50,7 +50,7 @@ async function createLocalWebServer({root,invoke,preferences={},onEditorDisconne
       }
       if(url.pathname==='/'&&req.method==='GET'){
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
-        return res.end('<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Modpack-Werkstatt · Lokal</title><link rel="stylesheet" href="/local-web.css"></head><body class="web-bootstrap"><main><span aria-hidden="true">◈</span><h1>Modpack-Werkstatt</h1><p id="web-bootstrap-status" role="status">Lokale Web-Version wird gestartet …</p></main><script src="/web-bootstrap.js"></script></body></html>');
+        return res.end('<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Modspire · Lokal</title><link rel="stylesheet" href="/local-web.css"></head><body class="web-bootstrap"><main><span aria-hidden="true">◈</span><h1>Modspire</h1><p id="web-bootstrap-status" role="status">Lokale Web-Version wird gestartet …</p></main><script src="/web-bootstrap.js"></script></body></html>');
       }
       const publicFile=['/web-bootstrap.js','/local-web.css'].includes(url.pathname);
       if(!publicFile&&!authenticated(req))return json(res,401,{error:'Local session required'});
@@ -87,7 +87,7 @@ async function createLocalWebServer({root,invoke,preferences={},onEditorDisconne
       }
       if(req.method!=='GET')return json(res,405,{error:'Method not allowed'});
       if(url.pathname==='/in-use'){
-        res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end('<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Modpack-Werkstatt</title><link rel="stylesheet" href="/local-web.css"><link rel="icon" href="/favicon.ico"></head><body class="web-bootstrap"><main><h1>Modpack-Werkstatt</h1><p>Diese Werkstatt ist bereits in einem anderen Browser-Tab geöffnet.<br>This workshop is already open in another browser tab.</p><p>Bitte arbeite dort weiter. / Please continue there.</p></main></body></html>');
+        res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end('<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Modspire</title><link rel="stylesheet" href="/local-web.css"><link rel="icon" href="/favicon.ico"></head><body class="web-bootstrap"><main><h1>Modspire</h1><p>Diese Werkstatt ist bereits in einem anderen Browser-Tab geöffnet.<br>This workshop is already open in another browser tab.</p><p>Bitte arbeite dort weiter. / Please continue there.</p></main></body></html>');
       }
       if(url.pathname==='/app'){
         const html=await fs.readFile(path.join(root,'index.html'),'utf8');res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});

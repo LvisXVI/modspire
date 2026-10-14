@@ -1,22 +1,22 @@
-# Mod search and pack selection
+# 🔎 Mod search and pack selection
 
-## Standard search
+## 🧭 Search the catalog
 
-The catalog view searches Modrinth by default. Search by mod title or terms, then refine with version, loader, category, and catalog controls. Results are paged as the list is scrolled; the catalog may have fewer results than the query suggests because filters and catalog availability apply.
+Modrinth is the default catalog and does not require an AI connection or API key. Search by a mod's exact title, project name, or gameplay goal, then narrow results with the Minecraft version, loader, category, and available catalog filters. Results load as you scroll; the number returned depends on the query, filters, and catalog availability.
 
-CurseForge search is optional and requires the user's own approved CurseForge API key. Without it the app falls back to Modrinth where possible.
+CurseForge search is optional and requires your own approved CurseForge API key. When it is not configured, use Modrinth.
 
-## AI-assisted search
+## ✨ Ask for suggestions
 
-Describe the feature or name the mod in chat. The assistant uses the active pack, selected game version, loader, and already selected mods as context. The app parses search intent and opens selectable catalog results; results should not rely on a model making a special tool call. Exact matches are preferred for exact requests; when no definitive match exists, related alternatives can be offered.
+In Pack Assistant, describe the feature you want or name the mod directly. The assistant can use your active project's Minecraft version, loader, and current selection as context. Catalog lookup is handled by Modspire, then matching results appear for you to review. Exact names are prioritized for specific requests; related alternatives can help when an exact project is unavailable.
 
-Use follow-up buttons such as **Mehr Erkundung**, **Alternativen**, or **Visual-Mods** to refine the current request. Buttons submit a chat request. Suggestions already in the pack are filtered out, and ranking controls can prioritize relevance or downloads.
+Follow-up choices such as **More Exploration**, **Alternatives**, or **Visual Mods** refine the request in chat. Suggestions already present in the pack are filtered where project identity can be matched. Use the picker’s sort control to compare relevance or popularity/download counts; catalog metrics can change over time.
 
-## Add and remove
+## ➕ Manage your selection
 
-- Click a result card or its plus control to add it directly.
-- Click the minus control on a selected result to remove it.
-- Use the pack tray to review, filter, copy, export, or clear the selection.
-- Dependencies may be suggested or added according to the current flow; review the final list.
+- Select a result card or its **+** control to add it.
+- Select **−** on a selected result to remove it.
+- Use **Your Pack** to review or filter the selection, copy its list, export it, or clear it.
+- Review dependency suggestions and compatibility notes before exporting.
 
-Catalog descriptions, compatibility, and download counts come from external services and can change. A matching search result is not a guarantee that the mod works in game.
+Mod descriptions, download counts, versions, and compatibility metadata come from external catalogs. A result is a candidate, not a guarantee that the mod works in your game.

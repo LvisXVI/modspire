@@ -1,27 +1,29 @@
-# AI, privacy, and limitations
+# 🧠 AI, privacy, and limitations
 
-## Provider choices
+## 🔌 Provider choices
 
 | Route | What it uses | Setup |
-|---|---|---|
-| Local Ollama/Bionic (LM Studio) | A model served by a local loopback endpoint | Install and run the model service, then choose a model in Settings |
-| OpenAI API | OpenAI API usage billed under the configured API account | Add an API key in Settings |
-| Claude API | Anthropic API usage billed under the configured API account | Add an API key in Settings |
-| OmniRoute | A compatible router endpoint and its configured models | Configure the local/remote endpoint, key, and model or `auto` |
-| ChatGPT account sharing | The bundled Sign in with ChatGPT DevKit, when present | Explicit account sign-in and plan-sharing consent; subject to its separate licence and service terms |
+| --- | --- | --- |
+| Local Ollama / Bionic (LM Studio) | A model served by a local endpoint | Run the model service, then choose its endpoint and model in Settings. |
+| OpenAI API | API usage billed by the configured OpenAI account | Add your own API key in Settings. |
+| Anthropic API | API usage billed by the configured Anthropic account | Add your own API key in Settings. |
+| OmniRoute | A compatible router and the providers configured inside it | Configure the endpoint, any required key, and a model or automatic routing. |
+| ChatGPT account access | The bundled Sign in with ChatGPT DevKit, if present | Sign in explicitly; availability and use are subject to service terms and the component's separate licence. |
 
-Automatic provider selection only uses routes that the app can detect as configured. It does not create provider accounts, obtain credits, or guarantee a model has remaining quota.
+Automatic selection uses routes the app can detect as configured. It cannot create accounts, add credits, or guarantee remaining quota or uptime.
 
-## Data flow
+## 🔒 What leaves your device
 
-Pack projects and design preferences are stored locally. Submitting a chat prompt or selected media sends that content to the selected AI provider. Mod catalog searches are sent to Modrinth or, when configured, CurseForge. Credentials are stored through the app's protected local settings path when supported. Do not put secrets, personal data, or private pack files in GitHub issues or public commits.
+Pack projects and appearance preferences are stored locally. When you submit a chat message, its text and any attached media are sent to the selected AI route. Catalog searches go to Modrinth or, when configured, CurseForge. Video frames are extracted locally and sent only when you submit the message. The desktop app protects saved provider credentials with Windows DPAPI-backed Electron `safeStorage` where available.
 
-## Compatibility
+Review the privacy and usage terms of each provider. Do not put credentials, personal data, or private pack files in public source commits or issue reports.
 
-The app has not been tested with every local model or cloud agent. Tool calling, structured output, image input, streaming, context length, and speed differ by model. The mod search layer handles much of catalog lookup independently of model tool calling, but responses and recommendations can still be wrong. Always review suggestions and test a pack in Minecraft.
+## 🧪 Compatibility and accuracy
 
-Video frames are extracted locally and only sent when the user submits the message. The app does not claim that a generated mod or pack has been installed or launched unless a separate test actually verifies it.
+The app has not been tested with every local model or cloud agent. Tool calling, structured output, image input, streaming, context length, and speed vary by provider and model. Modspire performs catalog lookup itself, but suggestions and compatibility notes can still be wrong. Review each result and test the pack in Minecraft.
 
-## Licences
+The app does not claim a mod was installed or a pack launched unless that action was separately implemented and verified. See the [community test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md).
 
-Original app files are MIT licensed. The included ChatGPT DevKit has separate noncommercial terms; see the root [third-party notices](../../THIRD-PARTY-NOTICES.md) and the DevKit's own licence. This bundled repository is not an OSI-compliant open-source release while that restricted component is included.
+## ⚖️ Licensing
+
+Original app files are MIT licensed. The bundled ChatGPT DevKit has separate noncommercial terms. Because the repository includes that restricted component, the combined project is source-available under multiple licences rather than an OSI-compliant open-source release. Read [LICENSE](../../LICENSE) and [third-party notices](../../THIRD-PARTY-NOTICES.md) before redistributing.

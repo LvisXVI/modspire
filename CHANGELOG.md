@@ -2,6 +2,17 @@
 
 Notable user-facing changes are documented here. This project follows Keep a Changelog conventions.
 
+## [0.2.91] - 2026-10-14
+
+### Added
+- Added an in-app updater for the portable Windows build. It checks GitHub Releases, streams download progress, verifies the release SHA-256 digest, preserves a rollback copy, and restarts into the new version.
+- Added a short Modspire startup sequence and refined desktop section, chat, and control transitions.
+- Refined the GitHub Pages experience with a staged hero entrance, tactile button feedback, consistent icon sizing, and smoother demo-row changes.
+
+### Changed
+- App and website motion remains enabled regardless of the operating system's reduced-motion preference, as requested.
+- Improved the landing page's editorial hierarchy and control polish while retaining its app demo, downloads, source, release, and wiki links.
+
 ## [0.2.90] - 2026-10-14
 
 ### Fixed

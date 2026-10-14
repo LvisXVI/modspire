@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.90",
+  "version": "0.2.91",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -30,6 +30,7 @@
       "i18n.js",
       "diagnostics.cjs",
       "setup-discovery.cjs",
+      "updater.cjs",
       "ollama-stream.cjs",
       "diagnostics-ui.js",
       "index.html",

@@ -207,7 +207,7 @@ body.ui-v3 .mod-picker-results .mod-preview-tile{height:172px!important;min-heig
 body.ui-v3 .v3-style-toggle,body.ui-v3 .v3-appearance{border-color:var(--v3-line);background:color-mix(in srgb,var(--v3-inset) 86%,transparent)}body.ui-v3 .v3-style-toggle button{color:var(--v3-muted)}body.ui-v3 .v3-style-toggle button.active{background:var(--v3-accent);color:#07141b}.ui-v3 .v3-appearance-heading>div:first-child,.ui-v3 .v3-appearance-heading small{color:var(--v3-ink)}body.ui-v3 .v3-scene-card{min-height:72px;border-color:var(--v3-line);background:rgba(13,25,36,.76);color:var(--v3-ink)}body.ui-v3 .v3-scene-card small{color:var(--v3-muted)}body.ui-v3 .v3-scene-card.active{border-color:var(--v3-accent);background:color-mix(in srgb,var(--v3-accent) 14%,var(--v3-card))}body.ui-v3 .v3-scene-card>i{border-color:var(--v3-line);background:var(--v3-inset);color:var(--v3-accent)}
 @media(max-width:1000px){body.ui-v3 .modern-content{padding:15px 16px 10px}.ui-v3 .modern-grid{grid-template-columns:minmax(0,1.2fr) minmax(230px,.8fr);gap:11px}.ui-mode-options:has(#ui-mode-v3){grid-template-columns:1fr}.v3-appearance-heading{align-items:flex-start;flex-direction:column}}
 @media(max-width:700px){body.ui-v3 .sidebar{width:58px!important;flex-basis:58px!important;padding-inline:3px!important}.ui-v3 .sidebar>.nav-item{width:48px;height:45px;min-height:45px}.ui-v3 .modern-grid{grid-template-columns:1fr;grid-template-rows:minmax(240px,auto) minmax(175px,auto) minmax(260px,auto) minmax(215px,auto)}.ui-v3 .modern-hero{align-items:flex-start}.ui-v3 .modern-content{padding:12px 10px}.ui-v3 .v3-scene-card{min-width:164px}.ui-v3 .ui-mode-card{padding:15px}}
-@media(prefers-reduced-motion:reduce){body.ui-v3::before,.ui-v3 .modern-dashboard,.ui-v3 .modern-card,.ui-v3 .modern-card::after,.ui-v3 .workspace-grid>.panel::after,.ui-v3 button,.ui-v3 .sidebar>.nav-item{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
 
 /* UI Version 3 owns a distinct studio dashboard; the original dashboard remains exclusive to UI 2. */
 body.ui-v3 .workspace-grid[data-view="project"]{grid-template-rows:minmax(0,1fr);overflow:auto;overscroll-behavior:contain;padding:20px clamp(18px,2vw,30px);scrollbar-color:color-mix(in srgb,var(--v3-accent) 48%,var(--v3-line)) transparent;scrollbar-width:thin}
@@ -321,7 +321,7 @@ body.ui-v3 :is(.v3-action,.v3-quick-deck button,.v3-round-action,.v3-link,.v3-ch
 @media(max-height:760px){body.ui-v3 .workspace-grid[data-view="project"]{padding-block:12px}.v3-dashboard{gap:10px}.v3-overview-grid{grid-template-rows:minmax(185px,1fr) minmax(185px,1fr);gap:10px}.v3-panel{padding:13px 15px}.v3-quick-deck{min-height:44px}}
 @media(max-width:1000px){.v3-overview-grid{grid-template-columns:minmax(0,1fr) minmax(240px,.8fr);gap:10px}.v3-welcome{align-items:flex-start;flex-direction:column}.v3-welcome-actions{align-self:flex-end}}
 @media(max-width:760px){body.ui-v3 .workspace-grid[data-view="project"]{padding:12px}.v3-overview-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(4,minmax(210px,auto))}.v3-welcome h1{font-size:23px}.v3-welcome-actions{align-self:stretch}.v3-welcome-actions .v3-action{flex:1}.v3-quick-deck{overflow:auto}.v3-quick-deck>span{display:none}.v3-quick-deck button{flex:none}}
-@media(prefers-reduced-motion:reduce){.v3-dashboard,.v3-panel,.v3-action,.v3-mod-row,.v3-chart-bar{animation:none!important;transition:none!important}}
+
 
 /* UI 3: a workbench layout with a darker conversation stage and tighter,
    individually scrollable pack inventory; it intentionally differs from UI 2. */
@@ -367,7 +367,7 @@ body.ui-v3 #chat-panel #chat-form{width:calc(100% - 32px)!important;max-width:11
 body.ui-v3 #chat-panel #chat-input{min-height:56px!important;background:transparent!important;color:var(--v3-ink)!important}
 body.ui-v3 #chat-panel .chat-footnote{padding:0 18px 10px!important;color:var(--v3-muted)!important}
 body.ui-v3 #chat-panel .avatar.assistant-avatar,body.ui-v3 #chat-panel .heading-icon{border-radius:11px 16px 11px 16px!important;border:1px solid color-mix(in srgb,var(--v3-accent) 39%,var(--v3-line))!important;background:linear-gradient(145deg,color-mix(in srgb,var(--v3-accent) 22%,var(--v3-card)),var(--v3-inset))!important}
-@media(prefers-reduced-motion:reduce){body.ui-v3 #chat-panel *{scroll-behavior:auto!important}}
+
 /* Final image-material and wide-message overrides run after legacy UI rules. */
 body.ui-v3 :is(.mod-card-icon-wrap,.mod-preview-tile,.mod-preview-dialog,.mod-details-icon-wrap){background:radial-gradient(ellipse at 50% 35%,color-mix(in srgb,var(--v3-accent) 18%,var(--v3-card)),var(--v3-inset) 72%)!important;border:1px solid color-mix(in srgb,var(--v3-accent) 32%,var(--v3-line))!important}
 body.ui-v3 :is(.mod-card .mod-icon,.mod-card-icon-wrap img,.mod-preview-tile img,#mod-details-icon){display:block!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;background:transparent!important;mix-blend-mode:normal!important}

@@ -38,6 +38,7 @@ const { createLocalWebServer, METHODS } = require('../local-web.cjs');
     assert.match(html,/web-bridge.js/);
     const source=fs.readFileSync(path.join(root,'preload.cjs'),'utf8');
     for (const match of source.matchAll(/(\w+):[^\n]*ipcRenderer\.invoke\('([^']+)'/g)) {
+      if (match[1] === 'checkForUpdates' || match[1] === 'downloadUpdate' || match[1] === 'installUpdate') continue;
       if(!match[2].startsWith('window:')&&!match[2].startsWith('web:')) assert.equal(METHODS[match[1]],match[2],`browser exposes ${match[1]}`);
     }
     const controller=new AbortController();

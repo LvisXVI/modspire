@@ -26,7 +26,7 @@ const { chromium } = require('playwright');
     await page.getByRole('tab', { name: /Mod search/ }).click();
     await page.locator('#demo-results .demo-mod').filter({ hasText: 'Tectonic' }).locator('button').click();
     assert.equal(await page.locator('#demo-pack-count').textContent(), '3 mods selected');
-    assert.equal(await page.locator('#demo-pack-tray .demo-pack-item').last().evaluate(node => getComputedStyle(node).animationName), 'demo-chip-in', 'pack additions receive a small entry animation');
+    assert.equal(await page.locator('#demo-pack-tray .demo-pack-item').last().evaluate(node => getComputedStyle(node).animationName), 'demo-row-arrive', 'pack additions receive a small entry animation');
 
     await page.getByRole('tab', { name: 'Designs' }).click();
     await page.locator('[data-demo-theme="End Rift"]').click();
@@ -38,7 +38,7 @@ const { chromium } = require('playwright');
     await page.locator('#demo-prompt-input').fill('More exploration and biomes');
     await page.locator('#demo-prompt button[type="submit"]').click();
     assert.equal(await page.locator('.demo-message').count(), 3, 'the demo assistant adds both the prompt and its sample reply to the initial example');
-    assert.equal(await page.locator('.demo-message').last().evaluate(node => getComputedStyle(node).animationName), 'demo-message-in');
+    assert.equal(await page.locator('.demo-message').last().evaluate(node => getComputedStyle(node).animationName), 'demo-row-arrive');
 
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = 'auto';
@@ -56,9 +56,10 @@ const { chromium } = require('playwright');
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.reload();
-    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).scrollBehavior), 'auto', 'reduced-motion users retain instant, predictable navigation');
-    assert.equal(await page.locator('html').evaluate(node => node.classList.contains('motion-ready')), false, 'scroll reveal animations stay disabled when reduced motion is requested');
-    assert.equal(await page.locator('.hero-art').evaluate(node => getComputedStyle(node).getPropertyValue('--scroll-parallax').trim()), '', 'scroll parallax is not activated when reduced motion is requested');
-    console.log('GitHub Pages scroll reveals, progress, active navigation, interactive demo transitions, and reduced-motion behavior passed.');
+    await page.waitForFunction(() => document.documentElement.classList.contains('motion-ready'));
+    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).scrollBehavior), 'smooth', 'site motion stays active regardless of the operating-system motion preference');
+    assert.equal(await page.locator('html').evaluate(node => node.classList.contains('motion-ready')), true, 'scroll reveal animations remain active when reduced motion is requested');
+    assert.notEqual(await page.locator('.hero-art').evaluate(node => getComputedStyle(node).getPropertyValue('--scroll-parallax').trim()), '', 'scroll parallax remains active when reduced motion is requested');
+    console.log('GitHub Pages scroll reveals, progress, active navigation, interactive demo transitions, and persistent motion passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

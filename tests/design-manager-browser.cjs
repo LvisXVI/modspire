@@ -22,7 +22,7 @@ const {createDesignManager,STORAGE_KEY}=require('../design-manager.cjs');
   assert.ok(html.includes('data-v4-action="creator"')&&html.includes('data-v4="creator"'),'UI 4 exposes the Mod Designer as a first-class navigation item');
   assert.ok(ui.includes('id="ui-mode-v4"'),'fourth design is selectable');
   for(const token of ['--modern-accent','--modern-line','--modern-ink','--modern-muted'])assert.ok(css.includes(token),'theme switcher should define accessible theme tokens');
-  assert.match(css,/body\.ui-modern .*?\.sidebar/);assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);
+  assert.match(css,/body\.ui-modern .*?\.sidebar/);assert.doesNotMatch(css,/prefers-reduced-motion/,'the app keeps its motion system enabled regardless of OS preference');assert.match(css,/focus-visible/);
   assert.match(html,/<script src="design-manager\.cjs"><\/script><script src="v3-ui\.js"><\/script><script src="v4-ui\.js"><\/script><script src="modern-ui\.js"><\/script>/);
 
   const browser=await chromium.launch({channel:'chrome',headless:true});

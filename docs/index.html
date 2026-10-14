@@ -248,7 +248,7 @@
       .copyright { margin-top:26px; color:#65758d; font-size:11px; }
       .reveal { animation:rise .7s both; }
       @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-      @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
+
       @media (max-width:900px) {
         .hero-grid { grid-template-columns:1fr; gap:34px; }
         .hero { padding-top:62px; }
@@ -480,10 +480,7 @@
         .step-number { margin-bottom:16px; }
         .download-card.primary-card::after { opacity:.5; }
       }
-      @media (prefers-reduced-motion: reduce) {
-        .motion-ready .reveal-target { opacity:1; transform:none; filter:none; transition:none; }
-        .poster-link,.hero-poster,.feature-shot { transform:none !important; }
-      }
+
       /* Organic glass direction: layered, tinted surfaces with soft reflected light. */
       :root {
         font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
@@ -720,10 +717,7 @@
         .demo-theme-swatch { height:52px; }
         .demo-footer { align-items:flex-start;flex-direction:column;padding:14px 16px; }
       }
-      @media (prefers-reduced-motion: reduce) {
-        .demo-view.active { animation:none; }
-        .hero-art:hover .hero-poster { transform:none; }
-      }
+
       /* Modspire / Studio OS: a precise dark canvas with real product imagery. */
       :root {
         color-scheme:dark;
@@ -936,12 +930,31 @@
         .capability-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px;}.workflow {grid-template-columns:1fr 1fr;}.step {min-height:145px;padding:15px 12px;}.step + .step {border-left:1px solid var(--line);}.step:nth-child(3) {border-left:0;border-top:1px solid var(--line);}.step:nth-child(4) {border-top:1px solid var(--line);}.callout,.download-layout {grid-template-columns:1fr;}.provider-list {justify-content:flex-start;}.doc-grid {grid-template-columns:1fr 1fr;}.video-panel {padding:5px;}.video-caption {font-size:9px;}
       }
       @media (max-width:420px) { .wrap {width:calc(100% - 28px);}.hero h1 {font-size:clamp(38px,10vw,46px);}.hero-platform {grid-template-columns:1fr;}.hero-hud {width:70%;}.hud-graph {height:88px;}.demo-stats {grid-template-columns:1fr;}.demo-heading {display:block;}.demo-heading .demo-chip {margin-top:8px;}.demo-toolbar {display:grid;grid-template-columns:1fr;}.demo-search-field {min-width:0;}.demo-select {width:100%;}.demo-mod {grid-template-columns:29px minmax(0,1fr) auto;gap:6px;padding:6px;}.demo-mod-icon {width:29px;height:29px;}.demo-mod small {font-size:7px;}.demo-design-button {min-height:106px;padding:8px;}.doc-grid,.capability-grid {grid-template-columns:1fr;} }
-      @media (prefers-reduced-motion: reduce) {
-        .graph-lines path,.dependency-canvas .cable {animation:none;}
-        .motion-ready .reveal-target {opacity:1;transform:none;filter:none;transition:none;}
-        .demo-view.active {animation:none;}
-        html {scroll-behavior:auto;}
-      }
+
+      /* Studio-specific interaction finish: crisp controls, considered icon rhythm, and a staged first impression. */
+      @keyframes opening-type { from { opacity:0;transform:translateY(15px);filter:blur(3px); } to { opacity:1;transform:translateY(0);filter:none; } }
+      @keyframes art-arrive { from { opacity:0;filter:blur(5px); } to { opacity:1;filter:none; } }
+      .hero-grid > .reveal:first-child > * { animation:opening-type .56s cubic-bezier(.2,.75,.25,1) both; }
+      .hero-grid > .reveal:first-child > :nth-child(2) { animation-delay:.07s; }
+      .hero-grid > .reveal:first-child > :nth-child(3) { animation-delay:.14s; }
+      .hero-grid > .reveal:first-child > :nth-child(4) { animation-delay:.21s; }
+      .hero-art { animation:art-arrive .72s .15s cubic-bezier(.2,.75,.25,1) both; }
+      .button,.platform-choice,.command-trigger,.demo-tab,.demo-design-button,.demo-mini-button,.nav-links a { position:relative;transition:transform .16s cubic-bezier(.2,.75,.25,1),border-color .16s ease,background-color .16s ease,color .16s ease,box-shadow .16s ease; }
+      .button,.platform-choice,.command-trigger { border-radius:999px;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%); }
+      .button:hover,.platform-choice:hover,.command-trigger:hover,.demo-tab:hover,.demo-design-button:hover,.demo-mini-button:hover { transform:translateY(-2px);border-color:color-mix(in srgb,var(--cyan) 52%,var(--line));box-shadow:0 9px 24px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.12); }
+      .button:active,.platform-choice:active,.command-trigger:active,.demo-tab:active,.demo-design-button:active,.demo-mini-button:active { transform:translateY(1px) scale(.985);filter:brightness(1.08); }
+      .button:focus-visible,.platform-choice:focus-visible,.command-trigger:focus-visible,.demo-tab:focus-visible,.demo-design-button:focus-visible,.demo-mini-button:focus-visible,.nav a:focus-visible { outline:2px solid var(--cyan);outline-offset:3px; }
+      .icon,.inline-icon { display:inline-grid;place-items:center;flex:none; }
+      .icon svg,.inline-icon { width:17px;height:17px; }
+      .section-tag,.mono-label,.step-number,.hero-caption,.demo-kicker,.release-note { font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;letter-spacing:.09em; }
+      .section-heading { padding-bottom:15px;border-bottom:1px solid var(--line); }
+      .feature-card,.capability,.bento-card,.download-card,.doc-link { border-radius:18px; }
+      .capability:hover,.doc-link:hover,.download-card:hover { transform:translateY(-3px);border-color:color-mix(in srgb,var(--cyan) 36%,var(--line)); }
+      .demo-shell,.hero-poster,.hero-hud,.video-panel { border-radius:22px; }
+      .demo-view.active { animation:panel-arrive .3s cubic-bezier(.2,.75,.25,1) both; }
+      .demo-mod,.demo-pack-item,.demo-message { animation:demo-row-arrive .24s cubic-bezier(.2,.75,.25,1) both; }
+      @keyframes demo-row-arrive { from { opacity:0;transform:translateY(6px); } to { opacity:1;transform:translateY(0); } }
+      html { scroll-behavior:smooth; }
     </style>
   </head>
   <body>
@@ -968,7 +981,7 @@
             <h1>Plan the pack.<br><span>Keep it yours.</span></h1>
             <p class="hero-copy">A focused desktop workspace for finding the right mods, shaping a pack, and keeping the plan in your hands. Local-first. AI optional.</p>
             <div class="hero-platform" role="group" aria-label="Choose a download">
-              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.2.90</span></small></a>
+              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.2.91</span></small></a>
               <a class="platform-choice" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><span>Project source</span><kbd>ZIP</kbd><small>Complete repository</small></a>
             </div>
             <div class="hero-utilities"><button class="command-trigger" type="button" data-open-commands><span>Open command menu</span><span class="key-combo"><kbd>Ctrl</kbd><kbd>K</kbd></span></button><span class="release-note">AI optional <i></i> Pack stays local</span></div>
@@ -1130,7 +1143,7 @@
       <section class="section wrap" id="downloads">
         <div class="section-heading">
           <div><p class="section-tag">Get the current build</p><h2>Start your next pack.</h2></div>
-          <p>Version <strong id="release-version">0.2.90</strong> · Windows portable app · Current source available on GitHub</p>
+          <p>Version <strong id="release-version">0.2.91</strong> · Windows portable app · Current source available on GitHub</p>
         </div>
         <div class="download-layout">
           <article class="download-card primary-card">
@@ -1230,8 +1243,8 @@
         if (event.key === "/" && !typing && !commandDialog.open) {
           event.preventDefault();
           document.querySelector('[data-demo-tab="search"]').click();
-          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
-          setTimeout(() => document.querySelector("#demo-search-input").focus(), motionPreference.matches ? 0 : 350);
+          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
+          setTimeout(() => document.querySelector("#demo-search-input").focus(), 350);
         }
       });
       commandFilter.addEventListener("input", () => {
@@ -1242,11 +1255,11 @@
         const command = button.dataset.command;
         commandDialog.close();
         if (command === "demo") {
-          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
+          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
         } else if (command === "search") {
           document.querySelector('[data-demo-tab="search"]').click();
-          document.querySelector("#demo").scrollIntoView({ behavior: motionPreference.matches ? "auto" : "smooth", block: "start" });
-          setTimeout(() => document.querySelector("#demo-search-input").focus(), motionPreference.matches ? 0 : 350);
+          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
+          setTimeout(() => document.querySelector("#demo-search-input").focus(), 350);
         } else {
           const destinations = {
             download: "https://github.com/LvisXVI/modspire/releases/latest",
@@ -1256,9 +1269,8 @@
           window.open(destinations[command], "_blank", "noopener,noreferrer");
         }
       }));
-      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
       const revealTargets = document.querySelectorAll(".reveal,.section-heading,.demo-shell,.video-panel,.hero-stats,.feature-card,.capability,.workflow,.step,.callout,.download-card,.doc-link,.footer");
-      if ("IntersectionObserver" in window && !motionPreference.matches) {
+      if ("IntersectionObserver" in window) {
         document.documentElement.classList.add("motion-ready");
         const revealObserver = new IntersectionObserver(entries => {
           for (const entry of entries) {
@@ -1295,7 +1307,7 @@
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         progress.style.transform = `scaleX(${maxScroll > 0 ? Math.min(1,Math.max(0,window.scrollY / maxScroll)) : 0})`;
         topbar.classList.toggle("scrolled", window.scrollY > 24);
-        if (heroArt && !motionPreference.matches) heroArt.style.setProperty("--scroll-parallax", `${Math.max(-24,Math.min(0,-window.scrollY * .055))}px`);
+        if (heroArt) heroArt.style.setProperty("--scroll-parallax", `${Math.max(-24,Math.min(0,-window.scrollY * .055))}px`);
       }
       window.addEventListener("scroll", () => {
         if (scrollFrame) return;
@@ -1303,7 +1315,7 @@
       }, { passive: true });
       updateScrollChrome();
       const sectionLinks = [...document.querySelectorAll('#site-nav a[href^="#"]')].filter(link => document.querySelector(link.getAttribute("href")));
-      if ("IntersectionObserver" in window && sectionLinks.length && !motionPreference.matches) {
+      if ("IntersectionObserver" in window && sectionLinks.length) {
         const sectionObserver = new IntersectionObserver(entries => {
           const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
           if (!visible) return;
@@ -1314,7 +1326,7 @@
         }, { rootMargin:"-18% 0px -66% 0px", threshold:[0,.15,.35,.6] });
         for (const link of sectionLinks) sectionObserver.observe(document.querySelector(link.getAttribute("href")));
       }
-      if (heroArt && !motionPreference.matches && window.matchMedia("(pointer: fine)").matches) {
+      if (heroArt && window.matchMedia("(pointer: fine)").matches) {
         heroArt.addEventListener("pointermove", event => {
           const bounds = heroArt.getBoundingClientRect();
           const x = (event.clientX - bounds.left) / bounds.width - .5;
@@ -1358,7 +1370,7 @@
         }
         const count = demoPack.size;
         countLabel.textContent = count;
-        if (!motionPreference.matches && countLabel.animate) countLabel.animate([{ transform:"scale(1)" },{ transform:"scale(1.2)", offset:.55 },{ transform:"scale(1)" }], { duration:340, easing:"cubic-bezier(.2,.8,.2,1)" });
+        if (countLabel.animate) countLabel.animate([{ transform:"scale(1)" },{ transform:"scale(1.2)", offset:.55 },{ transform:"scale(1)" }], { duration:340, easing:"cubic-bezier(.2,.8,.2,1)" });
         document.querySelector("#demo-pack-count").textContent = `${count} ${count === 1 ? "mod selected" : "mods selected"}`;
         for (const button of document.querySelectorAll("[data-demo-add]")) {
           const selected = demoPack.has(button.dataset.demoAdd);

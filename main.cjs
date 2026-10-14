@@ -10,6 +10,7 @@ const { createDiagnostics } = require('./diagnostics.cjs');
 const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
+const { fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('./updater.cjs');
 // Keep packaged upgrades on their original project and credential folder after the product rename.
 if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData', path.join(app.getPath('appData'), 'Modpack-Werkstatt'));
 const workshopHandlers = new Map();
@@ -42,6 +43,7 @@ let chatGPTClientPromise;
 let selectedChatGPTModel;
 let projectWriteQueue = Promise.resolve();
 let mainWindow;
+let checkedUpdate = null, stagedUpdate = null;
 const voiceProcesses = new Map();
 
 function stopVoiceProcess(webContentsId) {
@@ -1291,6 +1293,41 @@ handleWorkshop('app:open-external', async (_event, url) => {
   const parsed = new URL(url);
   if (parsed.protocol !== 'https:') throw new Error('Nur HTTPS-Links dürfen geöffnet werden.');
   await shell.openExternal(parsed.href);
+});
+
+function requirePackagedWindowsUpdater(event) {
+  if (!app.isPackaged || process.platform !== 'win32' || event.fromLocalWeb || !event.senderFrame?.url?.startsWith('file://')) throw new Error('Der automatische Updater ist nur in der portablen Windows-App verfügbar.');
+}
+handleWorkshop('updates:check', async event => {
+  requirePackagedWindowsUpdater(event);
+  checkedUpdate = await fetchLatestRelease({ currentVersion: app.getVersion() });
+  return checkedUpdate;
+});
+handleWorkshop('updates:download', async (event) => {
+  requirePackagedWindowsUpdater(event);
+  if (!checkedUpdate?.updateAvailable) throw new Error('Prüfe zuerst, ob ein neues Release verfügbar ist.');
+  const updateDirectory = path.join(app.getPath('userData'), 'updates');
+  const downloaded = path.join(updateDirectory, `${checkedUpdate.asset.name}.verified`);
+  const currentExe = path.resolve(process.execPath);
+  const stagedExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.modspire-update`);
+  const backupExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.previous`);
+  await fs.mkdir(updateDirectory, { recursive: true });
+  await downloadVerifiedAsset({ url: checkedUpdate.asset.url, destination: downloaded, expectedDigest: checkedUpdate.asset.digest, expectedSize: checkedUpdate.asset.size, onProgress: progress => { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('updates:progress', progress); } });
+  await fs.rm(stagedExe, { force: true });
+  await fs.copyFile(downloaded, stagedExe, require('node:fs').constants.COPYFILE_EXCL);
+  stagedUpdate = { currentExe, stagedExe, backupExe, release: checkedUpdate };
+  return { version: checkedUpdate.version, bytes: checkedUpdate.asset.size, ready: true };
+});
+handleWorkshop('updates:install', async event => {
+  requirePackagedWindowsUpdater(event);
+  if (!stagedUpdate) throw new Error('Es liegt kein geprüftes Update zur Installation bereit.');
+  const scriptPath = path.join(app.getPath('userData'), 'updates', 'install-update.ps1');
+  await fs.writeFile(scriptPath, buildPortableSwapScript({ ...stagedUpdate, pid: process.pid }), { encoding: 'utf8', mode: 0o600 });
+  const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', scriptPath], { detached: true, windowsHide: true, stdio: 'ignore' });
+  await new Promise((resolve, reject) => { child.once('spawn', resolve); child.once('error', reject); });
+  child.unref();
+  setTimeout(() => app.quit(), 350);
+  return { restarting: true };
 });
 
 function finishLocalWebReturn(server){

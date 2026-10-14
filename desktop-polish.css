@@ -107,7 +107,3 @@ body :is(input,textarea,select) { transition:border-color var(--desktop-fast) ea
   .desktop-search-shortcut { display:none; }
   .lab-content { gap:9px; padding:10px; }
 }
-@media(prefers-reduced-motion:reduce) {
-  body :is(button,.button,.text-button,.nav-item,.mode-chip,.suggestion,.assistant-choice,.add-mod,.popular-add,.theme-option,.wallpaper-option,.v3-scene-card,.v4-button,.modern-primary-button,.modern-secondary-button),
-  body :is(input,textarea,select),.search-box,.chat-form,.mod-card,.lab-card { transition-duration:.01ms!important; }
-}

@@ -5,7 +5,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-Multi_Provider_Router-2563eb?style=flat-square)](https://github.com)
 
 ### 🛠️ Core Features & Integrations
-[![PackLab](https://img.shields.io/badge/PackLab-Diagnostics-22c55e?style=flat-square&logo=target)]()
+[![PackLab](https://img.shields.io/badge/PackLab-Diagnostics-22c55e?style=flat-square&logo=target)](https://github.com/LvisXVI/own-modbot/blob/28c860059fb900fda86624fdcc5f694492762c29/Screenshot%202026-10-14%20144418.png)
 [![Design Manager](https://img.shields.io/badge/Design_Manager-Themes_%26_Backgrounds-d946ef?style=flat-square&logo=artstation&logoColor=white)](https://github.com/user-attachments/assets/a9355454-2560-4b63-aac1-0431e1cbf118)
 [![Modrinth](https://img.shields.io/badge/Modrinth-Integrated-1bd96a?style=flat-square&logo=modrinth&logoColor=black)]()
 [![CurseForge](https://img.shields.io/badge/CurseForge-API_Key_Required-f16436?style=flat-square&logo=curseforge&logoColor=white)]()

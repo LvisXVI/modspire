@@ -12,8 +12,7 @@
 [![Crash Reporter](https://img.shields.io/badge/Crash_Reports-Analyzer-ef4444?style=flat-square)]()
 [![Mod Creator](https://img.shields.io/badge/Mod_Creator-Experimental-f59e0b?style=flat-square)]()
 [![UI Switcher](https://img.shields.io/badge/UI_Modes-4_Layouts-6366f1?style=flat-square)]()
-[![Local Web](https://img.shields.io/badge/Local_Web_Version-127.0.0.1-0ea5e9?style=flat-square)]()
-
+[![Local Web](https://img.shields.io/badge/Local_Web_Version-127.0.0.1-0ea5e9?style=flat-square)](https://github.com/LvisXVI/own-modbot/blob/e513a3d2486de74e64e97211f7f636bb8821717e/Screenshot%202026-10-14%20144817.png)
 
 <img width="1024" height="572" alt="100d99f7-d40d-4fbd-bdd2-74fec1227ce0" src="https://github.com/user-attachments/assets/aee2caf5-e3e0-44da-a6da-f1d61d495f3a" />
 

@@ -1,4 +1,4 @@
-# Modpack-Werkstatt Wiki
+# Modspire Wiki
 
 This folder is the repository's versioned wiki. Pages describe the behavior of the checked-in app; they do not promise that external services, models, or Minecraft mods remain available or compatible.
 
@@ -13,4 +13,4 @@ This folder is the repository's versioned wiki. Pages describe the behavior of t
 
 ## Scope
 
-Modpack-Werkstatt is an independent Minecraft modpack planning tool. It searches catalogs and organizes pack projects; it does not download/install every mod, install a Minecraft loader, or prove a pack works in a launched game. See the root [README](../../README.md) and [public test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md).
+Modspire is an independent Minecraft modpack planning tool. It searches catalogs and organizes pack projects; it does not download/install every mod, install a Minecraft loader, or prove a pack works in a launched game. See the root [README](../../README.md) and [public test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md).

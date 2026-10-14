@@ -12,7 +12,7 @@ const {_electron,chromium}=require('playwright');
   try{
     app=await _electron.launch({args:[runner],timeout:20000});const desktop=await app.firstWindow();
     await desktop.waitForSelector('#launch-web',{state:'attached'});
-    await desktop.evaluate(()=>{for(const [key,value]of Object.entries({'mw-demo-mode':'true','mw-local-model-notice-seen':'yes','mw-curseforge-notice-seen':'yes','mw-ui-mode':'v4','mw-theme':'clear'}))localStorage.setItem(key,value)});
+    await desktop.evaluate(()=>{for(const [key,value]of Object.entries({'mw-demo-mode':'true','mw-local-model-notice-seen':'yes','mw-curseforge-notice-seen':'yes','mw-ui-mode':'v4','mw-theme':'clear'}))localStorage.setItem(key,value);localStorage.removeItem('mw-language')});
     await desktop.reload();await desktop.waitForFunction(()=>document.querySelector('#pack-name').value==='Web integration QA');
     await desktop.locator('#nav-chat').click();
     assert.equal(await desktop.locator('#chat-model-wrap').isVisible(),true,'native model selection remains visible without credentials');
@@ -38,12 +38,13 @@ const {_electron,chromium}=require('playwright');
       await page.locator('#nav-lab').click();assert.equal(await page.locator('#lab-panel').isVisible(),true);
     }
     await page.locator('#nav-chat').click();
-    await page.locator('#language-toggle').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');
+    assert.equal(await page.locator('html').getAttribute('lang'),'en','fresh web sessions start in English');
     assert.match(await page.locator('#launch-web').getAttribute('title'),/desktop/);
-    await page.locator('#language-toggle').click();
+    await page.locator('#language-toggle').click();assert.equal(await page.locator('html').getAttribute('lang'),'de');
+    await page.locator('#language-toggle').click();assert.equal(await page.locator('html').getAttribute('lang'),'en');
     await page.evaluate(async()=>{const previous=await workshop.loadProject();await workshop.createProject('Temporary web pack');await workshop.switchProject(previous.id)});
     await page.locator('#pack-name').fill('Browser Pack saved');
-    await page.waitForFunction(()=>document.querySelector('#save-status').textContent==='Gespeichert');
+    await page.waitForFunction(()=>document.querySelector('#save-status').textContent==='Saved');
     assert.equal((await page.evaluate(()=>workshop.loadProject())).name,'Browser Pack saved');
     const project=await page.evaluate(async()=>{const project=await workshop.loadProject();await workshop.exportProject(project);return project});
     assert.equal(JSON.parse(fs.readFileSync(exportFile,'utf8')).project.name,'Browser Pack saved',`native export works from browser: ${JSON.stringify(rpcTrace)}`);
@@ -52,7 +53,7 @@ const {_electron,chromium}=require('playwright');
     const blocked=await page.evaluate(async()=>{state.pendingModSearches=1;try{await WorkshopReturnLocalWeb();return false}catch{return true}finally{state.pendingModSearches=0}});
     assert.equal(blocked,true,'pending mod searches cannot be abandoned during handoff');
     await page.evaluate(()=>{state.pendingModSearches=1});
-    await desktop.locator('.local-web-card button').click();await desktop.waitForFunction(()=>document.querySelector('.local-web-card p').textContent.includes('Warte bitte'));
+    await desktop.locator('.local-web-card button').click();await desktop.waitForFunction(()=>document.querySelector('.local-web-card p').textContent.includes('Wait for the current reply'));
     await page.evaluate(()=>{state.pendingModSearches=0});
     const restored=await page.evaluate(async()=>{const original=workshop.saveProject;workshop.saveProject=async()=>{throw Error('Expected QA failure')};try{await WorkshopReturnLocalWeb()}catch{}finally{workshop.saveProject=original}return !document.body.inert&&!state.webHandoff});assert.equal(restored,true,'failed handoff restores interaction');
     await page.evaluate(()=>{

@@ -4,11 +4,15 @@
 
 The `vendor/siwc-runtime.cjs` bundle and `vendor/siwc-local` directory include
 the Sign in with ChatGPT DevKit. Its own licence and third-party notices are
-included in that directory. The DevKit licence permits use and distribution
-for noncommercial purposes only. It does not meet the Open Source Definition
-and does not grant commercial rights. That restriction applies to those
-DevKit materials even though the original Modpack-Werkstatt files use the MIT
-licence.
+included in that directory. That licence permits use and distribution only
+for the noncommercial purposes defined there; it expressly says nonprofit
+status alone does not make a purpose noncommercial. The restriction applies
+to the DevKit materials even though original Modpack-Werkstatt files use the
+MIT licence. Independently authored client integrations do not become DevKit
+code solely by calling an API, but this does not broaden the rights granted
+for the bundled DevKit. The combined repository is source-available under
+multiple licences and is not OSI-compliant open source while the DevKit is
+included.
 
 ## Other dependencies
 

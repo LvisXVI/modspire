@@ -1,0 +1,64 @@
+{
+  "name": "modpack-werkstatt",
+  "version": "0.2.86",
+  "description": "Windows desktop app for building Minecraft modpacks with AI assistance.",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node tests/run-all.cjs",
+    "dist": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12",
+    "esbuild": "0.25.0",
+    "playwright": "^1.64.0"
+  },
+  "build": {
+    "appId": "de.modpackwerkstatt.app",
+    "productName": "Modpack-Werkstatt",
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "mrpack.cjs",
+      "catalog-search.cjs",
+      "design-manager.cjs",
+      "v3-ui.js",
+      "v4-ui.js",
+      "renderer.js",
+      "modern-ui.js",
+      "i18n.js",
+      "diagnostics.cjs",
+      "setup-discovery.cjs",
+      "ollama-stream.cjs",
+      "diagnostics-ui.js",
+      "index.html",
+      "styles.css",
+      "visual-fixes.css",
+      "modern-ui.css",
+      "v3-ui.css",
+      "v4-ui.css",
+      "assets/**/*",
+      "package.json",
+      "vendor/**/*",
+      "!vendor/siwc-runtime.mjs",
+      "local-web.cjs",
+      "web-bridge.js",
+      "web-bootstrap.js",
+      "local-web-ui.js",
+      "local-web.css"
+    ],
+    "win": {
+      "icon": "assets/modpack-werkstatt.ico",
+      "target": [
+        "portable"
+      ],
+      "artifactName": "Modpack-Werkstatt-${version}-Private.${ext}"
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "author": "Modpack-Werkstatt contributors",
+  "license": "MIT"
+}

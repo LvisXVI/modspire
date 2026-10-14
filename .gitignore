@@ -1,0 +1,16 @@
+node_modules/
+release/
+release-*/
+work/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.asar
+*.exe
+*.zip
+*.7z
+component.tgz
+.performance-qa-runner.cjs

@@ -122,7 +122,10 @@
       .video-panel { padding:14px; border:1px solid var(--line); border-radius:30px; background:linear-gradient(135deg,rgba(20,35,55,.9),rgba(15,23,40,.82)); }
       .video-panel video { display:block; width:100%; max-height:680px; aspect-ratio:16/9; border-radius:19px; background:#050811; object-fit:contain; }
       .video-caption { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; padding:16px 7px 3px; color:var(--muted); font-size:13px; }
-      .demo-shell { overflow:hidden; border:1px solid rgba(145,185,235,.23); border-radius:26px; background:#0c1422; box-shadow:0 28px 90px rgba(0,0,0,.34); }
+      .demo-shell { overflow:hidden; border:1px solid rgba(145,185,235,.23); border-radius:26px; background:#0c1422; box-shadow:0 28px 90px rgba(0,0,0,.34); transition:border-color .2s ease; }
+      .demo-shell[data-demo-active-theme="Crystal Glass"] { --cyan:#9be1ff; --blue:#8eb7ff; --violet:#aaa2ff; border-color:rgba(155,225,255,.55); }
+      .demo-shell[data-demo-active-theme="Lush Caves"] { --cyan:#9ff0b3; --blue:#82d8ba; --violet:#b8d78e; border-color:rgba(159,240,179,.48); }
+      .demo-shell[data-demo-active-theme="End Rift"] { --cyan:#d6a6ff; --blue:#9c9bff; --violet:#ef90df; border-color:rgba(214,166,255,.5); }
       .demo-top { display:flex; min-height:56px; align-items:center; justify-content:space-between; gap:16px; padding:0 19px; border-bottom:1px solid var(--line); background:#111b2c; }
       .demo-brand { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; }
       .demo-brand-mark { display:grid; width:29px; height:29px; place-items:center; border:1px solid rgba(128,241,230,.32); border-radius:10px; background:rgba(57,177,182,.14); color:var(--cyan); }
@@ -331,7 +334,7 @@
           <div><p class="section-tag">🕹️ Try the studio</p><h2>Take Modspire for a small spin.</h2></div>
           <p>Click through a hands-on preview of the workspace. Explore the assistant, search sample mods, and build a tiny pack right here.</p>
         </div>
-        <div class="demo-shell" aria-label="Interactive Modspire sample app">
+        <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
           <div class="demo-top"><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true">✦</span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 Fabric</span></div>
           <div class="demo-body">
             <nav class="demo-sidebar" aria-label="Demo workspace sections" role="tablist">
@@ -630,6 +633,7 @@
       document.querySelector("#demo-clear").addEventListener("click", () => { demoPack.clear(); renderDemoPack(); renderDemoResults(); });
       document.querySelectorAll("[data-demo-theme]").forEach(button => button.addEventListener("click", () => {
         document.querySelectorAll("[data-demo-theme]").forEach(theme => theme.setAttribute("aria-pressed", String(theme === button)));
+        document.querySelector(".demo-shell").dataset.demoActiveTheme = button.dataset.demoTheme;
         document.querySelector("#demo-theme-status").textContent = `${button.dataset.demoTheme} selected`;
       }));
       document.querySelector("#demo-prompt").addEventListener("submit", event => {

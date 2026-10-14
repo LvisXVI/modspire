@@ -5,21 +5,36 @@ An independent, free Windows desktop app for planning Minecraft Java modpacks. D
 This is an independent project. It is not affiliated with or endorsed by Modbot, Modrinth, CurseForge, Microsoft, Mojang, or OpenAI. It takes inspiration from prompt-led modpack workflows without using Modbot branding or assets.
 
 ## Features
+
 AI Integration With:
+
 ChatGPT Personal Subscription
+
 Ollama
+
 OpenAI API Key
+
 OmniRoute
 ...
+
 PackLab, See General Pack Diagnostics
+
 Mod-Creator (Non Tested)
+
 Ai Chat
+
 4 ui´s
+
 different designs + backrounds
+
 Crash Report reader
+
 Modrinth integration + Pack Importer
+
 Theoretical Curseforce Integration IF u have an API key.
+
 Web Version
+
 PackLab:
 <img width="1316" height="736" alt="Screenshot 2026-10-14 134951" src="https://github.com/user-attachments/assets/0c031a82-3125-441d-9ea1-3a6ccdb31638" />
 

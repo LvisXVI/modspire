@@ -2,6 +2,8 @@
 
 Notable user-facing changes are documented here. This project follows Keep a Changelog conventions.
 
+For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
+
 ## [0.2.91] - 2026-10-14
 
 ### Added
@@ -41,3 +43,8 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 ### Changed
 - Start new installations in English while preserving an explicitly saved language choice.
+
+## [0.2.86] - 2026-10-14
+
+### Added
+- Published the first preserved public release with four UI layouts, theme and animated-background controls, AI-assisted pack planning, Modrinth search and imports, optional CurseForge search, Pack Lab diagnostics, crash-log analysis, a local browser view, and the experimental Mod Creator blueprint.

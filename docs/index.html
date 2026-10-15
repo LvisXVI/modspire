@@ -1324,7 +1324,9 @@
         scrollFrame = requestAnimationFrame(updateScrollChrome);
       }, { passive: true });
       updateScrollChrome();
-      const sectionLinks = [...document.querySelectorAll('#site-nav a[href^="#"]')].filter(link => document.querySelector(link.getAttribute("href")));
+      // The primary nav tracks section location. The repeated Download CTA shares
+      // its target with the Download link and must not receive a second current state.
+      const sectionLinks = [...document.querySelectorAll('#site-nav a[href^="#"]:not(.button)')].filter(link => document.querySelector(link.getAttribute("href")));
       if ("IntersectionObserver" in window && sectionLinks.length) {
         const sectionObserver = new IntersectionObserver(entries => {
           const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];

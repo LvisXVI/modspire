@@ -77,7 +77,7 @@ The **Web Version** button opens the same workspace in the default browser at a 
 
 ## 📚 Project docs
 
-The [project wiki](docs/wiki/README.md) covers setup, providers, search, design modes, privacy, troubleshooting, and development. The [community test disclaimer](PUBLIC-TEST-DISCLAIMER.md) and [third-party notices](THIRD-PARTY-NOTICES.md) explain the project's limits and bundled dependencies.
+The [project wiki](docs/wiki/README.md) covers the [feature patch log](docs/wiki/patch-log.md), setup, providers, search, design modes, privacy, troubleshooting, and development. The [community test disclaimer](PUBLIC-TEST-DISCLAIMER.md) and [third-party notices](THIRD-PARTY-NOTICES.md) explain the project's limits and bundled dependencies.
 
 ## ⚖️ Licensing
 

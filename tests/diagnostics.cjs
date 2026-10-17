@@ -21,5 +21,13 @@ try {
   assert.equal(report.entries.at(-1).message, 'recovered');
   assert.equal(redact('https://x.test/?code=private&token=private'), 'https://x.test/?code=[REDACTED]&token=[REDACTED]');
   assert.ok(redact('a'.repeat(15000)).length <= 12000);
+  const recentDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'workshop-diagnostics-tail-'));
+  try {
+    fs.writeFileSync(path.join(recentDirectory, 'app.log'), Array.from({ length: 150 }, (_, index) => JSON.stringify({ message: 'entry-' + index })).join('\n') + '\n');
+    const recent = createDiagnostics(recentDirectory, 'test').snapshot().entries;
+    assert.equal(recent.length, 100, 'snapshot keeps only the displayed tail');
+    assert.equal(recent[0].message, 'entry-50');
+    assert.equal(recent.at(-1).message, 'entry-149');
+  } finally { fs.rmSync(recentDirectory, { recursive: true, force: true }); }
   console.log('Crash reporter: errors, rotation, incomplete writes, and credential redaction passed.');
 } finally { fs.rmSync(directory, { recursive: true, force: true }); }

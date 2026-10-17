@@ -2,7 +2,12 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require('playwright');
-const {buildModrinthSearch}=require('../catalog-search.cjs');
+const {buildModrinthSearch,mapModrinthSearchHit}=require('../catalog-search.cjs');
+
+const mapped=mapModrinthSearchHit({project_id:'example',title:'Example',description:'Summary',author:'Author',downloads:123,follows:45,date_created:'2026-01-01T00:00:00Z',date_modified:'2026-02-01T00:00:00Z',slug:'example'}, {minecraftVersion:'1.21.1',loader:'fabric'});
+assert.equal(mapped.follows,45,'search normalization should retain Modrinth follower counts for follower sorting');
+assert.equal(mapped.datePublished,'2026-01-01T00:00:00Z','search normalization should retain project creation time for newest sorting');
+assert.equal(mapped.dateModified,'2026-02-01T00:00:00Z','search normalization should retain project update time for updated sorting');
 
 (async()=>{
   for(const sort of ['relevance','downloads','follows','newest','updated']){
@@ -18,16 +23,18 @@ const {buildModrinthSearch}=require('../catalog-search.cjs');
   assert.deepEqual(JSON.parse(visual.searchParams.get('facets')),[['project_type:mod'],['versions:1.21.1'],['categories:fabric'],['categories:decoration','categories:utility','categories:game-mechanics']],'visual search should combine its text query with validated OR category facets');
   const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),source=fs.readFileSync(path.join(root,'renderer.js'),'utf8');
   const markup=html.match(/<details class="catalog-search"[\s\S]*?<\/details>/)[0];
+  const toolbarStart=html.indexOf('<div class="mod-results-toolbar">'),toolbarEnd=html.indexOf('<div class="results-hint-row">',toolbarStart),toolbar=html.slice(toolbarStart,toolbarEnd);
   const fn=source.slice(source.indexOf('async function runCatalogSearch('),source.indexOf('\nasync function searchMods('));
   const handlers=source.slice(source.indexOf("$('catalog-search-form').onsubmit"),source.indexOf("$('mod-search-modes').querySelectorAll"));
   const browser=await chromium.launch({channel:'chrome',headless:true});
   try{
     const page=await browser.newPage();await page.emulateMedia({reducedMotion:'reduce'});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.setContent('<body data-theme="blue">'+markup+'<select id="project-select"></select><select id="minecraft-version"></select><select id="loader"></select><div id="refinement-row"></div><div id="results-hint"></div><div id="mod-results"></div><button id="catalog-more" hidden>More</button></body>');
+    await page.setContent('<body data-theme="blue">'+toolbar+markup+'<select id="project-select"></select><select id="minecraft-version"></select><select id="loader"></select><div id="refinement-row"></div><div id="results-hint"></div><div id="mod-results"></div><button id="catalog-more" hidden>More</button></body>');
     await page.addStyleTag({path:path.join(root,'styles.css')});await page.addStyleTag({path:path.join(root,'visual-fixes.css')});
     await page.evaluate(({fn,handlers})=>{
+      const storage=new Map();Object.defineProperty(window,'localStorage',{configurable:true,value:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,String(value))}});
       window.$=id=>document.getElementById(id);window.state={project:{id:'preview',minecraftVersion:'1.20.1',loader:'forge'},searchGeneration:0,batchSelection:new Set(),currentView:'mods'};
-      window.calls=[];window.renderResults=items=>window.shown=items;window.setStatus=message=>window.statusText=message;window.workshopI18n={locale:'en'};
+      window.calls=[];window.renderResults=items=>window.shown=items;window.setStatus=message=>window.statusText=message;window.workshopI18n={locale:'en'};window.setModResultsLayout=()=>{};window.sortModResultItems=items=>items;
       window.workshop={searchMods:async input=>{calls.push(input);return input.offset? [{id:'48',provider:'modrinth'},{id:'49',provider:'modrinth'}]:Array.from({length:48},(_,id)=>({id:String(id),provider:'modrinth'}))}};
       new Function(fn+'\n'+handlers)();document.getElementById('catalog-search-panel').open=true;
     },{fn,handlers});

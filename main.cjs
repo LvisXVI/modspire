@@ -5,7 +5,7 @@ const crypto = require('node:crypto');
 const zlib = require('node:zlib');
 const { spawn } = require('node:child_process');
 const { readIndex: readMrpackIndex, modEntries: getMrpackModEntries, loaderFromDependencies } = require('./mrpack.cjs');
-const { buildModrinthSearch } = require('./catalog-search.cjs');
+const { buildModrinthSearch, mapModrinthSearchHit } = require('./catalog-search.cjs');
 const { createDiagnostics } = require('./diagnostics.cjs');
 const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
@@ -718,13 +718,11 @@ handleWorkshop('mods:search', async (_event, input) => {
   const limit = Math.min(50, Math.max(1, Math.floor(Number(input.limit) || 12)));
   if (provider === 'modrinth') {
     const requestedKind = ['mod', 'visual', 'shader', 'resourcepack'].includes(input.kind) ? input.kind : 'mod';
-    const projectType = requestedKind === 'shader' ? 'shader' : requestedKind === 'resourcepack' ? 'resourcepack' : 'mod';
     const url = buildModrinthSearch({ ...input, query, minecraftVersion: version, loader, limit, offset });
     const response = await fetch(url, { headers: { 'User-Agent': 'ModpackWerkstatt/0.2.3 (desktop app)' }, signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error(`Modrinth antwortet mit HTTP ${response.status}.`);
     const body = await response.json();
-    const route = projectType === 'mod' ? 'mod' : projectType;
-    return body.hits.map(m => ({ id: m.project_id, provider, kind: projectType, title: m.title, summary: m.description, author: m.author, downloads: m.downloads, relevance: Number(m.relevance_score)||0, icon: m.icon_url, gallery: Array.isArray(m.gallery) ? m.gallery.slice(0, 5) : [], url: `https://modrinth.com/${route}/${m.slug}`, categories: m.display_categories || [], compatibility: ['shader','resourcepack'].includes(projectType) ? version : `${version} · ${loader}`, source: requestedKind === 'shader' ? 'Modrinth · Shader' : requestedKind === 'resourcepack' ? 'Modrinth · Resource-Pack' : 'Modrinth' }));
+    return body.hits.map(hit => mapModrinthSearchHit(hit,{kind:requestedKind,minecraftVersion:version,loader}));
   }
   const gameVersion = encodeURIComponent(version);
   const url = `https://api.curseforge.com/v1/mods/search?gameId=432&classId=6&searchFilter=${encodeURIComponent(query)}&gameVersion=${gameVersion}&modLoaderType=${loaderId(loader)}&index=${offset}&pageSize=${limit}&sortField=2&sortOrder=desc`;
@@ -985,7 +983,7 @@ handleWorkshop('mods:weekly-favorites', async (_event, input = {}) => {
     url.searchParams.set('facets',JSON.stringify([['project_type:mod'],['versions:'+version],['categories:'+loader]]));
     url.searchParams.set('limit','100');url.searchParams.set('index','follows');
     const body=await fetchModrinthJson(url);
-    const projects=(body.hits||[]).map(item=>({id:item.project_id,provider:'modrinth',kind:'mod',title:item.title,slug:item.slug,summary:item.description,author:item.author,downloads:item.downloads,follows:item.follows||0,icon:item.icon_url,gallery:Array.isArray(item.gallery)?item.gallery.slice(0,5):[],url:'https://modrinth.com/mod/'+item.slug,categories:item.display_categories||[],compatibility:version+' · '+loader,source:'Modrinth'}));
+    const projects=(body.hits||[]).map(item=>mapModrinthSearchHit(item,{kind:'mod',minecraftVersion:version,loader}));
     cache=recordWeeklySnapshot(cache,projects,now);cache.queryKey=queryKey;
     const temporary=weeklyFavoritesPath()+'.tmp';
     await fs.writeFile(temporary,JSON.stringify(cache),{mode:0o600});await fs.rename(temporary,weeklyFavoritesPath());

@@ -931,3 +931,70 @@ html body .workspace-grid.single-view[data-view="mods"] #mods-panel .selected-li
 @media(prefers-reduced-motion:reduce){
   .workspace-grid>:not([hidden]),.modern-dashboard:not([hidden]),.v3-dashboard:not([hidden]){animation:none!important}
 }
+
+/* Mod catalog density controls: keep the quick scan tools visible in every theme. */
+html body #mods-panel .mod-results-toolbar{
+  flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:4px 18px 9px;border-bottom:1px solid var(--dialog-line,var(--line));
+  color:var(--dialog-muted,var(--muted));
+}
+html body #mods-panel .mod-results-layout{
+  display:flex;align-items:center;gap:5px;min-width:0;
+}
+html body #mods-panel .mod-results-layout>span,
+html body #mods-panel .results-sort-control{
+  color:var(--dialog-muted,var(--muted));font-size:11px;font-weight:650;
+}
+html body #mods-panel .mod-results-layout>span{margin-right:4px}
+html body #mods-panel .mod-results-layout button,
+html body #mods-panel .results-sort-control select{
+  min-height:32px;border:1px solid var(--dialog-line,var(--line));border-radius:10px;
+  background:var(--dialog-inset,var(--panel2));color:var(--dialog-ink,var(--text));
+  padding:6px 10px;font-family:inherit;font-size:11px;font-weight:600;line-height:1.2;cursor:pointer;
+}
+html body #mods-panel .mod-results-layout button[aria-pressed="true"]{
+  border-color:var(--green);background:color-mix(in srgb,var(--green) 18%,var(--dialog-inset,var(--panel2)));
+  color:var(--dialog-ink,var(--text));
+}
+html body #mods-panel .mod-results-layout button:hover,
+html body #mods-panel .results-sort-control select:hover{border-color:var(--green)}
+html body #mods-panel .mod-results-layout button:focus-visible,
+html body #mods-panel .results-sort-control select:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+html body #mods-panel .results-sort-control{display:flex;align-items:center;gap:8px;white-space:nowrap}
+html body #mods-panel .results-sort-control select{min-width:150px}
+html body #mods-panel #mod-results[data-layout="list"]{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;align-content:start!important;
+  gap:8px!important;padding:9px 18px 18px!important;overflow-y:auto!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"]>.mod-card{
+  display:grid!important;grid-template-columns:44px minmax(0,1fr) 38px!important;
+  align-items:center!important;gap:12px!important;min-height:92px!important;height:auto!important;
+  max-height:none!important;padding:11px 14px!important;border:1px solid var(--dialog-line,var(--line))!important;
+  border-radius:14px!important;background:var(--dialog-card,var(--panel))!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"]>.mod-card:hover{transform:translateY(-1px)!important}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-icon{width:40px!important;height:40px!important;border-radius:11px!important}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-card-main{
+  display:block!important;align-self:center!important;min-width:0!important;height:auto!important;
+  overflow:hidden!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-name{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;min-width:0!important}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-name strong{
+  overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-purpose{margin:3px 0 0!important}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-purpose>span{display:none!important}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-desc{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;
+  overflow:hidden!important;line-height:1.35!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-meta{
+  display:flex!important;flex-wrap:wrap!important;gap:4px 12px!important;margin-top:4px!important;
+}
+html body[data-theme] #mods-panel #mod-results[data-layout="list"] .mod-gallery-carousel{display:none!important}
+@media(max-width:760px){
+  html body #mods-panel .mod-results-toolbar{padding-inline:12px;flex-wrap:wrap}
+  html body #mods-panel .results-sort-control{margin-left:auto}
+  html body #mods-panel #mod-results[data-layout="list"]{padding-inline:12px!important}
+  html body[data-theme] #mods-panel #mod-results[data-layout="list"]>.mod-card{grid-template-columns:38px minmax(0,1fr) 34px!important;gap:9px!important;padding:10px!important}
+}

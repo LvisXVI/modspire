@@ -462,7 +462,22 @@ async function loadPopularMods() {
   if(popular.status==='rejected')setStatus('Beliebte Mods konnten nicht geladen werden: '+(popular.reason?.message||popular.reason));
   if(!state.project.turns.length)renderChat();
 }
+function setModResultsLayout(mode) {
+  const layout=mode==='cards'?'cards':'list',area=document.getElementById('mod-results');
+  if(area)area.dataset.layout=layout;
+  try{localStorage.setItem('mw-mod-results-layout',layout)}catch{}
+  document.querySelectorAll('#mod-results-layout [data-mod-layout]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.modLayout===layout)));
+}
+function sortModResultItems(items,sort) {
+  const ranked=[...(items||[])],numeric=value=>Number(value)||0,date=value=>{const parsed=Date.parse(value||'');return Number.isFinite(parsed)?parsed:0};
+  if(sort==='downloads')return ranked.sort((a,b)=>numeric(b.downloads)-numeric(a.downloads)||numeric(b.relevance)-numeric(a.relevance));
+  if(sort==='follows')return ranked.sort((a,b)=>numeric(b.follows)-numeric(a.follows)||numeric(b.relevance)-numeric(a.relevance));
+  if(sort==='newest')return ranked.sort((a,b)=>date(b.datePublished||b.published||b.dateCreated)-date(a.datePublished||a.published||a.dateCreated));
+  if(sort==='updated')return ranked.sort((a,b)=>date(b.dateModified||b.updated)-date(a.dateModified||a.updated));
+  return ranked.sort((a,b)=>numeric(b.matchedFacets)-numeric(a.matchedFacets)||numeric(b.relevance)-numeric(a.relevance)||numeric(b.downloads)-numeric(a.downloads));
+}
 function renderResults(items) {
+  items=sortModResultItems(items,$('catalog-sort')?.value||'relevance');
   window.lastResults = items;
   $('result-count').textContent = String(items.length);
   const existing=new Set(state.project.mods.map(mod=>`${mod.provider}:${mod.id}`));
@@ -1539,7 +1554,10 @@ $('search-button').onclick=()=>searchMods($('mod-search').value,false,{kind:stat
 $('catalog-search-form').onsubmit=event=>{event.preventDefault();runCatalogSearch()};
 $('catalog-more').onclick=()=>state.catalogSearch?runCatalogSearch(true):loadMoreModResults();
 for(const id of ['project-select','minecraft-version','loader'])$(id).addEventListener('change',()=>{state.catalogSearch=null;$('catalog-more').hidden=true;$('catalog-submit').disabled=false});
-for(const id of ['catalog-query','catalog-category','catalog-environment','catalog-sort','catalog-open-source'])$(id).addEventListener('change',()=>{state.catalogSearch=null;$('catalog-more').hidden=true;$('catalog-submit').disabled=false});
+for(const id of ['catalog-query','catalog-category','catalog-environment','catalog-open-source'])$(id).addEventListener('change',()=>{state.catalogSearch=null;$('catalog-more').hidden=true;$('catalog-submit').disabled=false});
+$('catalog-sort').addEventListener('change',()=>{if(state.catalogSearch){runCatalogSearch();return}renderResults(sortModResultItems(window.lastResults||[],$('catalog-sort').value))});
+document.querySelectorAll('#mod-results-layout [data-mod-layout]').forEach(button=>button.addEventListener('click',()=>setModResultsLayout(button.dataset.modLayout)));
+setModResultsLayout(localStorage.getItem('mw-mod-results-layout')||'list');
 $('mod-results').addEventListener('scroll',()=>{const area=$('mod-results');if(state.currentView==='mods'&&area.scrollHeight>area.clientHeight&&area.scrollHeight-area.scrollTop-area.clientHeight<320){if(state.catalogSearch)runCatalogSearch(true);else loadMoreModResults()}},{passive:true});
 $('mod-search-modes').querySelectorAll('[data-search-mode]').forEach(button=>button.addEventListener('click',()=>{const kind=button.dataset.searchMode;if(kind==='mods'){state.searchKind='mod';document.querySelectorAll('[data-search-mode]').forEach(item=>item.classList.toggle('active',item===button));$('results-hint').textContent='Normale Gameplay-, Technik-, Kampf- und Erkundungsmods suchen.';return}searchMods('',false,{kind})}));
 $('mod-search').addEventListener('focus',e=>{if(e.target.value.includes(' · '))e.target.value=''});

@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.93] - 2026-10-17
+
+### Improved
+- Added a persistent compact list/cards switch to the Modrinth catalog so large result sets are easier to scan without hiding descriptions, compatibility, download counts, or add/remove actions.
+- Moved catalog sorting into the visible results toolbar; relevance, downloads, followers, newest, and recently updated can be applied to current suggestions, while classic catalog searches also request the selected order from Modrinth.
+- Preserved Modrinth follower, creation, and update metadata through result normalization so every sort order has the data it needs.
+- Defaulted new catalog sessions to the compact list and saved the user's layout choice locally.
+- Kept gallery previews available in card mode and retained the existing detail dialog, filters, paging, and pack actions.
+
 ## [0.2.92] - 2026-10-17
 
 ### Added

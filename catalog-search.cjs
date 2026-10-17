@@ -24,4 +24,18 @@ function buildModrinthSearch(input = {}) {
   url.searchParams.set('limit', String(Math.min(50, Math.max(1, Math.floor(Number(input.limit) || 12)))));
   return url;
 }
-module.exports = { buildModrinthSearch };
+function mapModrinthSearchHit(hit = {}, input = {}) {
+  const requestedKind=['mod','visual','shader','resourcepack'].includes(input.kind)?input.kind:'mod';
+  const kind=['shader','resourcepack'].includes(requestedKind)?requestedKind:'mod';
+  const version=String(input.minecraftVersion||'1.21.1'),loader=String(input.loader||'fabric').toLowerCase();
+  const route=kind==='mod'?'mod':kind;
+  return {
+    id:String(hit.project_id||hit.id||''),provider:'modrinth',kind,title:hit.title||'',summary:hit.description||'',author:hit.author||'',
+    downloads:Number(hit.downloads)||0,follows:Number(hit.follows)||0,relevance:Number(hit.relevance_score)||0,
+    datePublished:hit.date_created||'',dateModified:hit.date_modified||'',icon:hit.icon_url||'',gallery:Array.isArray(hit.gallery)?hit.gallery.slice(0,5):[],
+    url:`https://modrinth.com/${route}/${hit.slug||''}`,categories:hit.display_categories||[],
+    compatibility:['shader','resourcepack'].includes(kind)?version:`${version} · ${loader}`,
+    source:requestedKind==='shader'?'Modrinth · Shader':requestedKind==='resourcepack'?'Modrinth · Resource-Pack':'Modrinth'
+  };
+}
+module.exports = { buildModrinthSearch, mapModrinthSearchHit };

@@ -726,7 +726,7 @@ function renderInlineModPicker(section,turn,items,english){
   const label=document.createElement('strong');label.textContent=english?'Choose suggestions':'Vorschläge auswählen';
   toolbar.append(makeChatModSortControl(turn,english));
   const mode=document.createElement('button');mode.type='button';mode.className='button button-quiet';mode.textContent=english?'Open large picker':'Großes Auswahlfenster';mode.onclick=()=>setModPickerView('window');toolbar.append(label,mode);
-  const cards=document.createElement('div');cards.className='mod-results mod-picker-results chat-mod-inline-results';
+  const cards=document.createElement('div');cards.className='mod-results mod-picker-results chat-mod-inline-results';cards.dataset.chatScrollKey='mod-suggestions';
   state.modPickerTurn=turn;state.modPickerSelection=syncSuggestedModsWithPack(turn);
   renderModCards(cards,items,{selection:state.modPickerSelection,compact:true,onToggle:(mod,selection)=>applyModPickerToggle(turn,mod,selection,picker,items,english)});
   const actions=document.createElement('div');actions.className='chat-mod-inline-actions';
@@ -1133,6 +1133,7 @@ function captureChatScrollPosition(area){
 function bindChatFollowLatest(area){
   if(area.dataset.followLatestBound==='true')return;
   area.dataset.followLatestBound='true';
+  area.addEventListener('mousedown',event=>{const button=event.target.closest?.('button');if(event.button===0&&button&&!button.disabled){event.preventDefault();button.focus({preventScroll:true})}});
   const insideNestedScroller=target=>{
     for(let node=target instanceof Element?target:target?.parentElement;node&&node!==area;node=node.parentElement){
       if(/^(auto|scroll|overlay)$/.test(getComputedStyle(node).overflowY)&&node.scrollHeight>node.clientHeight+1)return true;
@@ -1197,14 +1198,24 @@ function renderChatTurnCached(area,turn,index,context){
   const signature=JSON.stringify(turn),previous=cache.get(turn);
   let node;
   if(previous&&previous.signature===signature&&context.every((value,i)=>value===previous.context[i]))node=previous.node;
-  else{node=renderTurn(turn);cache.set(turn,{node,signature:JSON.stringify(turn),context})}
+  else{const nested=previous?[...previous.node.querySelectorAll('[data-chat-scroll-key]')].map(scroller=>({key:scroller.dataset.chatScrollKey,top:scroller.scrollTop,left:scroller.scrollLeft})):[];const focused=previous?.node.contains(document.activeElement)?document.activeElement:null;node=renderTurn(turn);if(previous)node.style.setProperty('animation','none','important');if(focused?.matches('[data-add]'))node._chatFocusSelector=`[data-add="${focused.dataset.add}"]`;else if(focused?.matches('.mod-picker-sort select'))node._chatFocusSelector='.mod-picker-sort select';node._chatNestedScroll=nested;cache.set(turn,{node,signature:JSON.stringify(turn),context})}
   if(node.dataset.chatTurnIndex!==String(index))node.dataset.chatTurnIndex=String(index);
   return node;
 }
 function reconcileChatChildren(area,nodes){
   const retained=new Set(nodes);
+  for(let index=0;index<nodes.length;index++){
+    const current=area.childNodes[index],next=nodes[index];
+    if(current===next)continue;
+    if(current&&!retained.has(current)&&next.parentNode!==area)area.replaceChild(next,current);
+    else area.insertBefore(next,current||null);
+  }
   for(const child of [...area.childNodes])if(!retained.has(child))child.remove();
-  for(let index=0;index<nodes.length;index++)if(area.childNodes[index]!==nodes[index])area.insertBefore(nodes[index],area.childNodes[index]||null);
+  for(const row of nodes)if(row._chatNestedScroll){
+    for(const snapshot of row._chatNestedScroll)for(const scroller of row.querySelectorAll('[data-chat-scroll-key]'))if(scroller.dataset.chatScrollKey===snapshot.key){scroller.scrollTop=snapshot.top;scroller.scrollLeft=snapshot.left}
+    delete row._chatNestedScroll;
+    if(row._chatFocusSelector){row.querySelector(row._chatFocusSelector)?.focus({preventScroll:true});delete row._chatFocusSelector;}
+  }
 }
 function renderChat() {
   const area = $('chat-messages');
@@ -1263,10 +1274,10 @@ function renderChat() {
   reconcileChatChildren(area,[initial,...turns,...(state.project.turns.length?[]:[suggestions,popular])]);
   if(pendingSelection&&state.modPickerView==='window'){pendingSelection.selectionOpened=true;queueSave();requestAnimationFrame(()=>openModSelection(pendingSelection,{forceWindow:true}))}
   if(!state.project.turns.length)area.querySelectorAll('.suggestion[data-prompt]').forEach(button=>button.onclick=()=>button.dataset.searchKind?searchInChatMode(button.dataset.searchKind):submitAssistantPrompt(button,button.dataset.prompt));
-  requestAnimationFrame(()=>{
-    restoreChatScrollPosition(area,scrollSnapshot);
-    if(initialChatRender)scheduleInitialChatScroll(area)
-  });
+  // Restore before another synchronous render or browser scroll event can capture
+  // an intermediate, clamped position from the DOM reconciliation.
+  restoreChatScrollPosition(area,scrollSnapshot);
+  if(initialChatRender)scheduleInitialChatScroll(area);
   area.querySelector('[data-open-mods]')?.addEventListener('click',()=>showView('mods'));
   area.querySelectorAll('[data-popular-rank]').forEach(button=>button.onclick=()=>{state.popularRankMode=button.dataset.popularRank;renderChat()});
   area.querySelectorAll('[data-popular-add]').forEach(button=>button.onclick=()=>addSelectedMod(list[Number(button.dataset.popularAdd)]));
@@ -1426,7 +1437,7 @@ function showView(view) {
   if(previousView!==view){const target=view==='project'?$('project-overview'):view==='chat'?$('chat-panel'):view==='mods'?$('mods-panel'):$('lab-panel');animateViewTransition(target)}
   document.querySelectorAll('.nav-item[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
   window.WorkshopModernUI?.render();
-  if(view==='chat'){chatFollowLatest=true;const area=$('chat-messages');requestAnimationFrame(()=>{area._scheduleLatestChatScroll?.();area.scrollTop=area.scrollHeight;if(!$('username-setup-overlay').hidden)$('username-input').focus();else if(!$('startup-login-overlay').hidden)$('startup-connect').focus();else $('chat-input').focus()})}
+  if(view==='chat'){chatFollowLatest=true;const area=$('chat-messages');requestAnimationFrame(()=>{area._scheduleLatestChatScroll?.();area.scrollTop=area.scrollHeight;if(!$('username-setup-overlay').hidden)$('username-input').focus();else if(!$('startup-login-overlay').hidden)$('startup-connect').focus();else $('chat-input').focus({preventScroll:true})})}
 }
 (()=>{const intro=$('launch-intro');if(!intro)return;requestAnimationFrame(()=>intro.classList.add('is-ready'));window.setTimeout(()=>intro.classList.add('is-leaving'),1550);window.setTimeout(()=>intro.remove(),2150)})();
 function openSettings() { $('settings-overlay').hidden=false;document.querySelectorAll('.nav-item').forEach(button=>button.classList.toggle('active',button.id==='nav-settings'));refreshChatGPTStatus().catch(()=>{});refreshLocalModels().catch(()=>{});if(state.settings.appVersion)$('updater-current-version').textContent=`v${state.settings.appVersion}`; }
@@ -1575,8 +1586,8 @@ async function runProfileImport(fromFile=false){
 }
 $('modrinth-import-form').addEventListener('submit',event=>{event.preventDefault();runProfileImport(false)});
 $('choose-mrpack').onclick=async()=>{try{const imported=await window.workshop.importModrinthFile();if(imported?.canceled)return;$('mrpack-file-status').textContent=`${imported.name} · ${imported.mods.length} Mods`;await applyImportedProfile(imported)}catch(error){setStatus(`Modrinth-Import fehlgeschlagen: ${error.message}`);alert(`Modrinth-Import fehlgeschlagen: ${error.message}`)}};
-$('nav-mod-creator').onclick=()=>{state.creatorMode=true;showView('chat');renderChat();$('chat-input').value=(window.workshopI18n?.locale||'de')==='en'?'I want to create a new Minecraft Java mod. Help me shape a clear, actionable specification and starter code for the best loader and Minecraft version. Ask for missing details first and do not add anything to my modpack.':'Ich möchte eine neue Minecraft-Java-Mod erstellen. Hilf mir, daraus eine klare, umsetzbare Mod-Spezifikation und ein passendes Code-Grundgerüst für den besten Modloader und die passende Minecraft-Version zu entwickeln. Frag zuerst nach den fehlenden Details und füge nichts zu meinem Modpack hinzu.';$('chat-input').focus();setStatus((window.workshopI18n?.locale||'de')==='en'?'AI Mod Creator · describe your idea and send':'KI-Mod-Creator · Idee beschreiben und absenden');};
-$('creator-context-exit').onclick=()=>{state.creatorMode=false;renderChat();$('chat-input').focus()};
+$('nav-mod-creator').onclick=()=>{state.creatorMode=true;showView('chat');renderChat();$('chat-input').value=(window.workshopI18n?.locale||'de')==='en'?'I want to create a new Minecraft Java mod. Help me shape a clear, actionable specification and starter code for the best loader and Minecraft version. Ask for missing details first and do not add anything to my modpack.':'Ich möchte eine neue Minecraft-Java-Mod erstellen. Hilf mir, daraus eine klare, umsetzbare Mod-Spezifikation und ein passendes Code-Grundgerüst für den besten Modloader und die passende Minecraft-Version zu entwickeln. Frag zuerst nach den fehlenden Details und füge nichts zu meinem Modpack hinzu.';$('chat-input').focus({preventScroll:true});setStatus((window.workshopI18n?.locale||'de')==='en'?'AI Mod Creator · describe your idea and send':'KI-Mod-Creator · Idee beschreiben und absenden');};
+$('creator-context-exit').onclick=()=>{state.creatorMode=false;renderChat();$('chat-input').focus({preventScroll:true})};
 $('cancel-new-pack').onclick=$('cancel-new-pack-secondary').onclick=()=>$('new-pack-overlay').hidden=true;
 $('new-pack-overlay').addEventListener('click',event=>{if(event.target===$('new-pack-overlay'))$('new-pack-overlay').hidden=true});
 $('new-pack-form').addEventListener('submit',createProjectFromForm);

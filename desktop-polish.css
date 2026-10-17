@@ -111,3 +111,19 @@ body :is(input,textarea,select) { transition:border-color var(--desktop-fast) ea
 /* OpenCode settings inherit each layout’s readable API-card text palette. */
 html body .opencode-card label.field-label, html body .opencode-card .field-note { color: inherit !important; opacity: 1; }
 html body .opencode-card select.profile-input { width: 100%; min-height: 38px; padding: 8px 12px; font: inherit; }
+
+/* Inline suggestions must use the same foreground/background pair as their dialog. */
+html body[data-theme] .chat-mod-inline-results > .compact-mod-card {
+  background: var(--dialog-card) !important;
+  background-image: none !important;
+  color: var(--dialog-ink) !important;
+  border-color: var(--dialog-line) !important;
+}
+html body[data-theme] .chat-mod-inline-results .compact-mod-card :is(.mod-name strong,.mod-desc,.mod-purpose > span,.source-tag,.match-tag) {
+  color: var(--dialog-ink) !important;
+  text-shadow: none !important;
+}
+html body[data-theme] .chat-mod-inline-results .compact-mod-card .mod-meta { color: var(--dialog-ink) !important; text-shadow: none !important; }
+html body[data-theme] .chat-mod-inline-results .compact-mod-card :is(.source-tag,.match-tag) { background: var(--dialog-inset) !important; border-color: var(--dialog-line) !important; }
+
+html body #chat-messages, html body #chat-messages .chat-mod-inline-results { overflow-anchor: none; }

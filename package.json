@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.95",
+  "version": "0.2.96",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -50,7 +50,8 @@
       "web-bridge.js",
       "web-bootstrap.js",
       "local-web-ui.js",
-      "local-web.css"
+      "local-web.css",
+      "opencode.cjs"
     ],
     "win": {
       "icon": "assets/modspire.ico",

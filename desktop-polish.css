@@ -107,3 +107,7 @@ body :is(input,textarea,select) { transition:border-color var(--desktop-fast) ea
   .desktop-search-shortcut { display:none; }
   .lab-content { gap:9px; padding:10px; }
 }
+
+/* OpenCode settings inherit each layout’s readable API-card text palette. */
+html body .opencode-card label.field-label, html body .opencode-card .field-note { color: inherit !important; opacity: 1; }
+html body .opencode-card select.profile-input { width: 100%; min-height: 38px; padding: 8px 12px; font: inherit; }

@@ -1,13 +1,13 @@
 # Modspire Patch Log
 
-This is a retrospective feature history for the project, from its first locally archived build through Modspire 0.2.95. It combines the surviving local build archive, public GitHub releases, the current source, and the project documentation.
+This is a retrospective feature history for the project, from its first locally archived build through Modspire 0.2.96. It combines the surviving local build archive, public GitHub releases, the current source, and the project documentation.
 
 ## How to read this history
 
 - The local archive contains builds beginning with **0.1.0**, followed by the **0.2.x** development line.
 - The first public GitHub release that is still available in the release history is **0.2.86**. The repository source history starts later, with the 0.2.87 source snapshot.
 - Individual change notes were not kept for every early local build. To avoid inventing which exact build introduced a feature, this log groups the early work into a development era and gives precise notes for the releases whose release records are available.
-- This page documents the project through **0.2.95**. It does not claim that every mod, Minecraft version, AI model, or provider is compatible.
+- This page documents the project through **0.2.96**. It does not claim that every mod, Minecraft version, AI model, or provider is compatible.
 
 ## First builds — 0.1.0 to 0.2.0
 
@@ -94,7 +94,14 @@ The release notes listed ChatGPT account access, Ollama, OpenAI API, and OmniRou
 - Unified the Modern UI assistant suggestion tray with the readable dark assistant surfaces.
 - Added regression coverage for theme mapping, dark UI 4 surfaces, and the scrollable chat/catalog workspaces.
 
-## Current scope and limits at 0.2.95
+## 0.2.96 — OpenCode connection
+
+- Added a local OpenCode server connection, protected server-password storage, connected-provider model discovery and chat selection.
+- Added managed startup for an installed OpenCode CLI; app-owned servers stop with Modspire.
+- OpenCode uses isolated, tool-denied sessions and the existing catalog/creator workflows.
+- Verified a real local Ollama/Qwen response through OpenCode 1.19.3. Its official free tier rejected external use; known restricted free models are disabled rather than promised as available.
+
+## Current scope and limits at 0.2.96
 
 Modspire plans packs, searches catalog metadata, and organizes selections. It does not download every mod automatically, install Minecraft loaders, or prove that a project launches successfully in Minecraft. CurseForge requires the user’s own API key. AI availability, privacy, cost, model capabilities, and compatibility depend on the connected account, provider, and local runtime; not every local model or agent has been tested. See [AI, privacy, and limits](ai-privacy.md), [getting started](getting-started.md), and the [community test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md).
 

@@ -4,6 +4,18 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.96] - 2026-10-17
+
+### Added
+- Added an optional local OpenCode connection with server address, protected password storage, connected-provider model discovery, and direct model selection in the chat.
+- Added a managed OpenCode server start button for an installed Windows CLI. App-owned servers use a generated protected password and stop when Modspire exits; existing servers are reused.
+- Routed OpenCode answers through the existing Pack Assistant, Mod Creator, catalog-suggestion parser, and compatibility report workflows, including the local browser view.
+
+### Safety and compatibility
+- OpenCode chat sessions use a separate directory, deny all tools, and are cleaned up after each response. Only loopback server addresses are accepted.
+- Restricted free OpenCode models are disabled: a live test of the official free tier rejected external use even through the OpenCode server. Connect a compatible provider inside OpenCode instead; provider charges and limits still apply.
+- Verified a real response through OpenCode 1.19.3 and local Ollama/Qwen, plus native server startup, settings persistence, errors and model selection.
+
 ## [0.2.95] - 2026-10-17
 
 ### Improved

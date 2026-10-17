@@ -8,7 +8,7 @@ const crypto = require('node:crypto');
 const METHODS = Object.freeze({
   getDiagnostics:'diagnostics:get',reportError:'diagnostics:report',openDiagnosticsFolder:'diagnostics:open-folder',exportDiagnostics:'diagnostics:export',
   getSettings:'settings:get',setUsername:'settings:set-username',setSecret:'settings:set-secret',
-  getLocalModels:'local-ai:models',saveLocalAi:'local-ai:save',saveOmniRoute:'omniroute:save',testOmniRoute:'omniroute:test',importLocalGguf:'local-ai:import-gguf',
+  startOpenCode:'opencode:start',saveOpenCode:'opencode:save',getOpenCodeModels:'opencode:models',getLocalModels:'local-ai:models',saveLocalAi:'local-ai:save',saveOmniRoute:'omniroute:save',testOmniRoute:'omniroute:test',importLocalGguf:'local-ai:import-gguf',
   getChatGPTStatus:'chatgpt:status',connectChatGPT:'chatgpt:connect',disconnectChatGPT:'chatgpt:disconnect',cancelChatGPTSignIn:'chatgpt:cancel-sign-in',openChatGPTUsage:'chatgpt:open-usage',
   readClipboard:'clipboard:read',writeClipboard:'clipboard:write',searchMods:'mods:search',getModDetails:'mods:details',resolveRequiredDependencies:'mods:required-dependencies',findBestSetup:'mods:best-setup',getGameVersions:'mods:versions',getPopularMods:'mods:popular',getWeeklyFavoriteMods:'mods:weekly-favorites',
   importModrinthProfile:'modrinth:import-profile',importModrinthFile:'modrinth:import-file',checkCompatibility:'compatibility:check',askAI:'chat:ask',

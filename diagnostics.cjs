@@ -25,16 +25,38 @@ function createDiagnostics(directory, version, maxBytes = 1024 * 1024) {
       return true;
     } catch (error) { console.warn('Diagnosebericht konnte nicht gespeichert werden:', error.message); return false; }
   }
+  function readRecentEntries(target, limit) {
+    let descriptor;
+    try {
+      const size = fs.statSync(target).size;
+      if (!size || limit <= 0) return [];
+      descriptor = fs.openSync(target, 'r');
+      const chunks = [];
+      let position = size;
+      let newlineCount = 0;
+      while (position > 0 && newlineCount <= limit) {
+        const length = Math.min(8192, position);
+        position -= length;
+        const chunk = Buffer.allocUnsafe(length);
+        const bytesRead = fs.readSync(descriptor, chunk, 0, length, position);
+        if (!bytesRead) break;
+        const contents = chunk.subarray(0, bytesRead);
+        chunks.unshift(contents);
+        for (const byte of contents) if (byte === 10) newlineCount++;
+      }
+      const lines = Buffer.concat(chunks).toString('utf8').split('\n').slice(-limit - 1);
+      const entries = [];
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try { entries.push(JSON.parse(line)); } catch { /* Interrupted writes are ignored. */ }
+      }
+      return entries.slice(-limit);
+    } catch { return []; }
+    finally { if (descriptor !== undefined) fs.closeSync(descriptor); }
+  }
   function snapshot() {
-    const entries = [];
-    for (const target of [previous, file]) {
-      try {
-        for (const line of fs.readFileSync(target, 'utf8').split('\n')) {
-          if (!line.trim()) continue;
-          try { entries.push(JSON.parse(line)); } catch { /* Interrupted final writes are ignored. */ }
-        }
-      } catch {}
-    }
+    const entries = readRecentEntries(file, 100);
+    if (entries.length < 100) entries.unshift(...readRecentEntries(previous, 100 - entries.length));
     return { directory, file, version, entries: entries.slice(-100) };
   }
   return { record, snapshot, directory, file };

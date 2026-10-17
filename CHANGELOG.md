@@ -4,6 +4,16 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.92] - 2026-10-17
+
+### Added
+- Added a weekly Modrinth favorites ranking in the Pack Assistant, with a switch to all-time follows and immediate add-to-pack actions. Modrinth exposes total follows rather than weekly deltas, so the app stores private local daily snapshots and shows a clear all-time fallback until a week of history is available.
+- Expanded the local Crash Analyzer with plain-language causes, log evidence, cautious mod attribution, and practical next checks; the chat handoff now includes the diagnosis details.
+
+### Improved
+- Crash diagnostics now read only the newest entries needed by the UI instead of parsing the entire log history on every refresh.
+- Kept the existing chat, catalog, and pack workflows intact while adding the favorites panel.
+
 ## [0.2.91] - 2026-10-14
 
 ### Added

@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld('workshop', {
   findBestSetup: query => ipcRenderer.invoke('mods:best-setup', query),
   getGameVersions: () => ipcRenderer.invoke('mods:versions'),
   getPopularMods: input => ipcRenderer.invoke('mods:popular', input),
+  getWeeklyFavoriteMods: input => ipcRenderer.invoke('mods:weekly-favorites', input),
   importModrinthProfile: input => ipcRenderer.invoke('modrinth:import-profile', input),
   importModrinthFile: () => ipcRenderer.invoke('modrinth:import-file'),
   checkCompatibility: project => ipcRenderer.invoke('compatibility:check', project),

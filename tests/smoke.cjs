@@ -256,8 +256,23 @@ const profileIconTools = require('../main.cjs');
   const diagnosisText = renderer.slice(diagnosisStart, diagnosisEnd).replace(/\s+$/, '');
   const diagnoseCrash = vm.runInNewContext('(' + diagnosisText.replace(/^function diagnoseCrash/, 'function') + ')', { state: { project: { mods: [{ title: 'Example Mod' }] } } });
   const diagnosis = diagnoseCrash('java.lang.OutOfMemoryError: Java heap space\nat Example Mod', 'latest.log');
-  assert.equal(diagnosis.findings[0].label, 'Speicherproblem');
+  assert.equal(diagnosis.findings[0].label, 'Speicher erschöpft');
+  assert.match(diagnosis.findings[0].reason, /Heap-/);
   assert.deepEqual(Array.from(diagnosis.relevant), ['Example Mod']);
+  const detailedDiagnoseCrash = vm.runInNewContext('(' + diagnosisText.replace(/^function diagnoseCrash/, 'function') + ')', { state: { project: { mods: [{ title: 'Sodium Extra', slug: 'sodiumextra' }, { title: 'Sodium', slug: 'sodium' }] } } });
+  const mixinDiagnosis = detailedDiagnoseCrash([
+    'Mixin apply failed mixins/sodium-extra.mixins.json:renderer from mod sodiumextra',
+    'Caused by: org.spongepowered.asm.mixin.transformer.throwables.MixinApplyError'
+  ].join('\n'), 'crash-report.txt');
+  assert.equal(mixinDiagnosis.findings[0].label, 'Mixin konnte nicht angewendet werden');
+  assert.equal(mixinDiagnosis.culprit, 'Sodium Extra');
+  assert.match(mixinDiagnosis.findings[0].reason, /Minecraft-Version oder Loader/);
+  assert.match(mixinDiagnosis.findings[0].evidence, /from mod sodiumextra/);
+  const dependencyDiagnosis = detailedDiagnoseCrash('ModResolutionException: Mod sodium-extra requires sodium 0.6.0 or later, but only 0.5.11 is present', 'latest.log');
+  assert.equal(dependencyDiagnosis.findings[0].label, 'Abhängigkeit oder Mod-Version unvereinbar');
+  assert.match(dependencyDiagnosis.findings[0].reason, /Abhängigkeit fehlt|Versionsanforderung|Mod-Satz nicht auflösen/);
+  assert.equal(dependencyDiagnosis.culprit, 'Mod-ID „sodium-extra“ (nicht in der aktuellen Auswahl erkannt)');
+  assert.equal(detailedDiagnoseCrash('Minecraft closed unexpectedly', 'latest.log').findings.length, 0);
   assert.match(preload, /writeClipboard: value => ipcRenderer\.invoke\('clipboard:write', value\)/);
   assert.match(renderer, /lines\.join\('\\n'\)/);
   assert.match(styles, /@keyframes aurora-ribbons/);
@@ -305,6 +320,19 @@ const profileIconTools = require('../main.cjs');
   global.fetch=async(url,options)=>{modelsRequest={url:String(url),headers:options.headers};return new Response(JSON.stringify({data:[{id:'auto'}]}),{status:200,headers:{'content-type':'application/json'}})};
   const omniStatus=await handlers.get('omniroute:test')();
   assert.deepEqual({url:modelsRequest.url,auth:modelsRequest.headers.Authorization,count:omniStatus.modelCount},{url:'http://127.0.0.1:20128/v1/models',auth:'Bearer test-omniroute-key',count:1});
+  const originalNow=Date.now;let favoritesRequest;
+  global.fetch=async url=>{favoritesRequest=String(url);return new Response(JSON.stringify({hits:[{project_id:'fav-mod',title:'Favorite Mod',slug:'favorite-mod',description:'A test mod',author:'Test',downloads:1234,follows:56,icon_url:'https://cdn.modrinth.com/test.png',gallery:[],display_categories:['adventure']}]}),{status:200,headers:{'content-type':'application/json'}})};
+  const favoriteRanking=await handlers.get('mods:weekly-favorites')({}, {minecraftVersion:'1.21.1',loader:'fabric'});
+  assert.match(favoritesRequest,/index=follows/,'favorite snapshots use Modrinth follow count instead of downloads');
+  assert.equal(JSON.parse(new URL(favoritesRequest).searchParams.get('facets'))[0][0],'project_type:mod');
+  assert.equal(favoriteRanking.ranking,'all-time','first launch falls back until daily history spans a week');
+  assert.equal(favoriteRanking.mods[0].follows,56);
+  assert.equal(favoriteRanking.mods[0].provider,'modrinth');
+  assert.equal(favoriteRanking.mods[0].kind,'mod');
+  const cachedRanking=await handlers.get('mods:weekly-favorites')({}, {minecraftVersion:'1.21.1',loader:'fabric'});
+  assert.equal(cachedRanking.mods[0].title,'Favorite Mod');
+  Date.now=originalNow;
+  console.log('Modrinth favorites are cached from follows-ranked, version-compatible projects.');
   await handlers.get('local-ai:save')({}, { baseUrl: 'http://127.0.0.1:11434', model: '', aiProvider: 'omniroute' });
   let omniRouteRequest;
   global.fetch = async (url, options) => {
@@ -367,7 +395,7 @@ const profileIconTools = require('../main.cjs');
   assert.equal(storedProjects.projects.find(project => project.id === initialStore.activeId).name, 'Überarbeitetes Pack');
   assert.equal(handlers.get('diagnostics:report')({}, { message: 'UI test error', stack: 'test stack' }), true);
   assert.ok(handlers.get('diagnostics:get')().entries.some(entry => entry.message === 'UI test error'));
-  for (const filename of ['projects.json', 'projects.json.' + process.pid + '.tmp', 'settings.json']) {
+  for (const filename of ['projects.json', 'projects.json.' + process.pid + '.tmp', 'settings.json','modrinth-weekly-favorites.json','modrinth-weekly-favorites.json.tmp']) {
     try { fs.unlinkSync(path.join(testDataPath, filename)); } catch {}
   }
   fs.rmSync(path.join(testDataPath, 'logs'), { recursive: true, force: true });

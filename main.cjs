@@ -11,6 +11,7 @@ const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
 const { fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('./updater.cjs');
+const { recordWeeklySnapshot, buildWeeklyFavoriteRanking, SNAPSHOT_INTERVAL_MS } = require('./weekly-favorites.cjs');
 // Keep packaged upgrades on their original project and credential folder after the product rename.
 if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData', path.join(app.getPath('appData'), 'Modpack-Werkstatt'));
 const workshopHandlers = new Map();
@@ -38,6 +39,7 @@ process.on('unhandledRejection', error => {
 const storePath = () => path.join(app.getPath('userData'), 'settings.json');
 const projectPath = () => path.join(app.getPath('userData'), 'project.json');
 const projectsPath = () => path.join(app.getPath('userData'), 'projects.json');
+const weeklyFavoritesPath = () => path.join(app.getPath('userData'), 'modrinth-weekly-favorites.json');
 Menu.setApplicationMenu(null);
 let chatGPTClientPromise;
 let selectedChatGPTModel;
@@ -970,6 +972,25 @@ handleWorkshop('mods:popular', async (_event, input) => {
   const url=`https://api.curseforge.com/v1/mods/search?gameId=432&classId=6&gameVersion=${encodeURIComponent(version)}&modLoaderType=${loaderId(loader)}&pageSize=8&sortField=2&sortOrder=desc`;
   const response=await fetch(url,{headers:{'x-api-key':apiKey,Accept:'application/json'},signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Error(`CurseForge antwortet mit HTTP ${response.status}.`);const body=await response.json();
   return (body.data||[]).map(m=>({id:String(m.id),provider,title:m.name,summary:m.summary||'',author:m.authors?.[0]?.name||'Unbekannt',downloads:m.downloadCount||0,icon:m.logo?.thumbnailUrl||'',gallery:Array.isArray(m.screenshots)?m.screenshots.map(image=>image.url||image.thumbnailUrl).filter(Boolean).slice(0,8):[],url:m.links?.websiteUrl||'',categories:(m.categories||[]).map(c=>c.name),compatibility:`${version} · ${loader}`,source:'CurseForge'}));
+});
+handleWorkshop('mods:weekly-favorites', async (_event, input = {}) => {
+  const version=String(input.minecraftVersion||'1.21.1'),loader=String(input.loader||'fabric').toLowerCase();
+  const queryKey=version+':'+loader;
+  let cache={};
+  try{cache=JSON.parse(await fs.readFile(weeklyFavoritesPath(),'utf8'))}catch{}
+  if(cache.queryKey!==queryKey)cache={};
+  const now=Date.now();
+  if(cache.queryKey!==queryKey||!Number(cache.fetchedAt)||now-Number(cache.fetchedAt)>=SNAPSHOT_INTERVAL_MS){
+    const url=new URL('https://api.modrinth.com/v2/search');
+    url.searchParams.set('facets',JSON.stringify([['project_type:mod'],['versions:'+version],['categories:'+loader]]));
+    url.searchParams.set('limit','100');url.searchParams.set('index','follows');
+    const body=await fetchModrinthJson(url);
+    const projects=(body.hits||[]).map(item=>({id:item.project_id,provider:'modrinth',kind:'mod',title:item.title,slug:item.slug,summary:item.description,author:item.author,downloads:item.downloads,follows:item.follows||0,icon:item.icon_url,gallery:Array.isArray(item.gallery)?item.gallery.slice(0,5):[],url:'https://modrinth.com/mod/'+item.slug,categories:item.display_categories||[],compatibility:version+' · '+loader,source:'Modrinth'}));
+    cache=recordWeeklySnapshot(cache,projects,now);cache.queryKey=queryKey;
+    const temporary=weeklyFavoritesPath()+'.tmp';
+    await fs.writeFile(temporary,JSON.stringify(cache),{mode:0o600});await fs.rename(temporary,weeklyFavoritesPath());
+  }
+  return buildWeeklyFavoriteRanking(cache,now,24);
 });
 function loaderId(loader) { return ({ forge: 1, fabric: 4, quilt: 5, neoforge: 6 })[loader] || 0; }
 

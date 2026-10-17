@@ -45,7 +45,8 @@ The tour uses a real recording of Modspire. The feature gallery below also shows
 - 🧩 Add candidates or a pack foundation in batches, inspect dependencies, and review compatibility notes.
 - 📦 Import a Modrinth share code, public pack link, or `.mrpack` into an editable project, then export your selection.
 - 🛠️ Develop a mod idea into a specification and starter-code outline with the AI Mod Creator.
-- 🧪 Review a project in Pack Lab with mod roles, category balance, snapshots, crash-log notes, and diagnostics.
+- 🧪 Review a project in Pack Lab with mod roles, category balance, snapshots, and a Crash Analyzer that explains likely causes, cites nearby log evidence, and names a mod only when the log supports it.
+- ⭐ Explore weekly Modrinth favorites beside all-time follows. Weekly growth is calculated from private local daily snapshots and falls back clearly to total follows until a full week is tracked.
 - 🖼️ Switch layouts, themes, and Minecraft backgrounds; save the appearance on this device.
 - 🖥️ Open the local web view from the desktop app and work with the same local projects.
 - 🧠 Choose ChatGPT account access, optional OpenAI or Anthropic API providers, local Ollama/Bionic models, and compatible OmniRoute endpoints.

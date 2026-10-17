@@ -8,6 +8,7 @@ const { readIndex: readMrpackIndex, modEntries: getMrpackModEntries, loaderFromD
 const { buildModrinthSearch, mapModrinthSearchHit } = require('./catalog-search.cjs');
 const { createDiagnostics } = require('./diagnostics.cjs');
 const { createSetupDiscovery } = require('./setup-discovery.cjs');
+const { normalizeOpenCodeUrl, listOpenCodeModels, askOpenCode } = require('./opencode.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
 const { fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('./updater.cjs');
@@ -17,7 +18,7 @@ if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData',
 const workshopHandlers = new Map();
 let localWeb;
 let nativeWebReturnPending=false,webReturnTimer;
-const webLockedActions = new Set(['project:save','projects:create','projects:switch','chat:ask','settings:set-secret','settings:set-username','local-ai:save']);
+const webLockedActions = new Set(['project:save','projects:create','projects:switch','chat:ask','opencode:start','opencode:save','settings:set-secret','settings:set-username','local-ai:save']);
 function handleWorkshop(channel,handler) {
   workshopHandlers.set(channel,handler);
   ipcMain.handle(channel,(event,...args)=>{
@@ -41,6 +42,7 @@ const projectPath = () => path.join(app.getPath('userData'), 'project.json');
 const projectsPath = () => path.join(app.getPath('userData'), 'projects.json');
 const weeklyFavoritesPath = () => path.join(app.getPath('userData'), 'modrinth-weekly-favorites.json');
 Menu.setApplicationMenu(null);
+let managedOpenCode, openCodeStarting;
 let chatGPTClientPromise;
 let selectedChatGPTModel;
 let projectWriteQueue = Promise.resolve();
@@ -428,7 +430,7 @@ handleWorkshop('voice:start', async (event, locale) => {
   return startWindowsVoiceRecognizer(event.sender, locale === 'en-US' ? 'en-US' : 'de-DE');
 });
 handleWorkshop('voice:stop', event => stopVoiceProcess(event.sender.id));
-app.on('before-quit', () => { for (const id of voiceProcesses.keys()) stopVoiceProcess(id); });
+app.on('before-quit', () => { managedOpenCode?.kill(); for (const id of voiceProcesses.keys()) stopVoiceProcess(id); });
 
 handleWorkshop('settings:get', async () => {
   const settings = await readSettings();
@@ -441,8 +443,63 @@ handleWorkshop('settings:get', async () => {
     }
     catch (error) { console.warn('Personalisierte Desktop-Verknüpfung konnte nicht erstellt werden:', error.message); }
   }
-  return { appVersion: app.getVersion(), username: typeof settings.username === 'string' ? settings.username : '', desktopShortcut, omniroute: omniRouteConfig(settings), hasOpenAIKey: !!settings.openai, hasClaudeKey: !!settings.claude, hasOmniRouteKey: !!settings.omnirouteKey, hasCurseForgeKey: !!settings.curseforge, encryptionAvailable: safeStorage.isEncryptionAvailable(), localAi: { baseUrl: settings.localAi?.baseUrl || 'http://127.0.0.1:11434', model: settings.localAi?.model || '', connected: false }, aiProvider: settings.aiProvider || 'auto' };
+  return { appVersion: app.getVersion(), username: typeof settings.username === 'string' ? settings.username : '', desktopShortcut, opencode: openCodeSettings(settings), hasOpenCodePassword: !!settings.opencodePassword, omniroute: omniRouteConfig(settings), hasOpenAIKey: !!settings.openai, hasClaudeKey: !!settings.claude, hasOmniRouteKey: !!settings.omnirouteKey, hasCurseForgeKey: !!settings.curseforge, encryptionAvailable: safeStorage.isEncryptionAvailable(), localAi: { baseUrl: settings.localAi?.baseUrl || 'http://127.0.0.1:11434', model: settings.localAi?.model || '', connected: false }, aiProvider: settings.aiProvider || 'auto' };
 });
+function openCodeSettings(settings) {
+  return { baseUrl: normalizeOpenCodeUrl(settings.opencode?.baseUrl), model: String(settings.opencode?.model || ''), username: String(settings.opencode?.username || 'opencode') };
+}
+async function openCodeConnection(settings) {
+  const directory = path.join(app.getPath('userData'), 'opencode-chat');
+  await fs.mkdir(directory, { recursive: true });
+  return { ...openCodeSettings(settings), directory, password: await secret('opencodePassword') };
+}
+handleWorkshop('opencode:save', async (_event, value = {}) => {
+  const settings = await readSettings();
+  const username = String(value.username || 'opencode').trim().slice(0, 120);
+  if (/[:\r\n]/.test(username)) throw Error('OpenCode username must not contain a colon or line break.');
+  settings.opencode = { baseUrl: normalizeOpenCodeUrl(value.baseUrl), username, model: String(value.model || '').slice(0, 240) };
+  await writeSettings(settings);
+  return { opencode: openCodeSettings(settings), hasOpenCodePassword: !!settings.opencodePassword };
+});
+handleWorkshop('opencode:models', async () => listOpenCodeModels(await openCodeConnection(await readSettings())));
+function findOpenCodeExecutable() {
+  const roots = [process.env.APPDATA && path.join(process.env.APPDATA, 'npm', 'node_modules', 'opencode-ai'), process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Programs', 'OpenCode')].filter(Boolean);
+  const candidates = [...String(process.env.PATH || '').split(path.delimiter).map(dir => path.join(dir, 'opencode.exe')), ...roots.flatMap(root => [path.join(root, 'bin', 'opencode.exe'), path.join(root, 'opencode.exe')])];
+  return candidates.find(candidate => { try { return require('node:fs').statSync(candidate).isFile(); } catch { return false; } });
+}
+async function startOpenCodeServer() {
+  const settings = await readSettings();
+  let connection = await openCodeConnection(settings);
+  try { return await listOpenCodeModels(connection); } catch {}
+  const executable = findOpenCodeExecutable();
+  if (!executable) throw Error('Install the OpenCode CLI first (npm install -g opencode-ai), or start your own local OpenCode server.');
+  const address = new URL(connection.baseUrl);
+  if (address.protocol !== 'http:') throw Error('Automatic OpenCode startup uses HTTP on loopback. Start your HTTPS server separately.');
+  if (!connection.password) {
+    if (!safeStorage.isEncryptionAvailable()) throw Error('Secure credential storage is unavailable. Start a password-protected OpenCode server separately.');
+    const password = crypto.randomBytes(32).toString('hex');
+    settings.opencodePassword = safeStorage.encryptString(password).toString('base64');
+    await writeSettings(settings);
+    connection = { ...connection, password };
+  }
+  if (managedOpenCode) throw Error('OpenCode is still starting. Wait a moment and test the connection again.');
+  const child = spawn(executable, ['serve', '--hostname', address.hostname.replace(/^\[|\]$/g, ''), '--port', address.port || '80'], { cwd: connection.directory, windowsHide: true, stdio: 'ignore', env: { ...process.env, OPENCODE_SERVER_PASSWORD: connection.password, OPENCODE_SERVER_USERNAME: connection.username } });
+  managedOpenCode = child;
+  child.once('exit', () => { if (managedOpenCode === child) managedOpenCode = undefined; });
+  await new Promise((resolve, reject) => { child.once('spawn', resolve); child.once('error', error => { if (managedOpenCode === child) managedOpenCode = undefined; reject(Error('OpenCode could not start: ' + error.message)); }); });
+  const deadline = Date.now() + 25000;
+  while (Date.now() < deadline && managedOpenCode === child) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    try { return await listOpenCodeModels(connection); } catch {}
+  }
+  child.kill();
+  throw Error('OpenCode did not become available. Check the port, server password and OpenCode installation.');
+}
+handleWorkshop('opencode:start', async () => {
+  if (!openCodeStarting) openCodeStarting = startOpenCodeServer().finally(() => { openCodeStarting = undefined; });
+  return openCodeStarting;
+});
+
 function normalizeLocalAiUrl(value) {
   let parsed;
   try { parsed = new URL(String(value || 'http://127.0.0.1:11434').trim()); } catch { throw new Error('Bitte gib eine gültige Ollama-Adresse ein.'); }
@@ -485,7 +542,7 @@ handleWorkshop('local-ai:models', async (_event, baseUrl) => {
 handleWorkshop('local-ai:save', async (_event, value = {}) => {
   const settings = await readSettings();
   settings.localAi = { baseUrl: normalizeLocalAiUrl(value.baseUrl), model: String(value.model || '').trim().slice(0, 120) };
-  settings.aiProvider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute'].includes(value.aiProvider) ? value.aiProvider : 'auto';
+  settings.aiProvider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute', 'opencode'].includes(value.aiProvider) ? value.aiProvider : 'auto';
   await writeSettings(settings);
   return { localAi: { ...settings.localAi, connected: false }, aiProvider: settings.aiProvider };
 });
@@ -692,12 +749,12 @@ handleWorkshop('omniroute:test', async () => {
   return { ok: true, modelCount: Array.isArray(body.data) ? body.data.length : 0, model: config.model, baseUrl: config.baseUrl };
 });
 handleWorkshop('settings:set-secret', async (_event, name, value) => {
-  if (!['openai', 'claude', 'omnirouteKey', 'curseforge'].includes(name)) throw new Error('Unbekannte Einstellung.');
+  if (!['openai', 'claude', 'omnirouteKey', 'opencodePassword', 'curseforge'].includes(name)) throw new Error('Unbekannte Einstellung.');
   if (!safeStorage.isEncryptionAvailable()) throw new Error('Windows kann den Schlüssel auf diesem Gerät gerade nicht sicher speichern.');
   const settings = await readSettings();
   if (value) settings[name] = safeStorage.encryptString(value).toString('base64'); else delete settings[name];
   await writeSettings(settings);
-  return { hasOpenAIKey: !!settings.openai, hasClaudeKey: !!settings.claude, hasOmniRouteKey: !!settings.omnirouteKey, hasCurseForgeKey: !!settings.curseforge, encryptionAvailable: true };
+  return { hasOpenCodePassword: !!settings.opencodePassword, hasOpenAIKey: !!settings.openai, hasClaudeKey: !!settings.claude, hasOmniRouteKey: !!settings.omnirouteKey, hasCurseForgeKey: !!settings.curseforge, encryptionAvailable: true };
 });
 handleWorkshop('clipboard:read', () => clipboard.readText());
 handleWorkshop('clipboard:write', (_event, value) => {
@@ -1107,7 +1164,7 @@ handleWorkshop('chat:ask', async (event, turns, context, attachments = [], reque
     input[input.length - 1].content = [{ type: 'input_text', text: input[input.length - 1].content }, ...frames.map(image_url => ({ type: 'input_image', image_url, detail: 'low' }))];
   }
   const settings = await readSettings();
-  const provider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute'].includes(settings.aiProvider) ? settings.aiProvider : 'auto';
+  const provider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute', 'opencode'].includes(settings.aiProvider) ? settings.aiProvider : 'auto';
   let client = null, session = { status: 'disconnected', sharing: false };
   let raw, accountError = null;
   if (provider === 'chatgpt' || provider === 'auto') {
@@ -1135,6 +1192,7 @@ handleWorkshop('chat:ask', async (event, turns, context, attachments = [], reque
   const openAiKey = provider === 'openai' ? await secret('openai') : '';
   const claudeKey = provider === 'claude' ? await secret('claude') : '';
   if (provider === 'claude' && !claudeKey) throw new Error('Speichere zuerst deinen Anthropic-API-Schlüssel in den Einstellungen oder wähle dort einen anderen KI-Dienst.');
+  if (provider === 'opencode') raw = await askOpenCode(await openCodeConnection(settings), instructions, input, { onProgress: reportProgress });
   if (!raw && omniRouteKey) {
     if (provider === 'auto' && accountError) reportProgress('Dein ChatGPT-Konto ist gerade nicht verfügbar. Ich prüfe OmniRoute mit automatischer Modellauswahl …');
     try { raw = await callOmniRouteApi(omniRouteKey, settings, instructions, input, { onProgress: reportProgress }); }
@@ -1163,7 +1221,7 @@ handleWorkshop('chat:ask', async (event, turns, context, attachments = [], reque
   const answer = applyExactModIntent(parseChatAnswer(raw, hasVideo), !hasVideo && latest?.role === 'user' ? latest.content : '');
   if (!hasVideo && latest?.role === 'user') answer.searchTerms = resolveSpokenModAlias(answer.searchTerms, latest.content, (turns || []).slice(0, -1), context);
   if(!answer.searchTerms.length&&/\[\[SEARCH:/i.test(raw)&&latest?.role==='user')answer.searchTerms=[String(latest.content||'').replace(/\n\[Video:[\s\S]*$/,'').replace(/\s+/g,' ').slice(0,120).trim()].filter(Boolean);
-  if (!answer.searchTerms.length && !hasVideo && latest?.role === 'user' && (provider === 'local' || (provider === 'auto' && !omniRouteKey && !!settings.localAi?.model))) {
+  if (!answer.searchTerms.length && !hasVideo && latest?.role === 'user' && (provider === 'opencode' || provider === 'local' || (provider === 'auto' && !omniRouteKey && !!settings.localAi?.model))) {
     answer.searchTerms = fallbackModSearchTerms(latest.content);
     if (answer.searchTerms.length) answer.text = answer.text.replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/gi, '$1').replace(/https?:\/\/\S+/gi, '').replace(/\s{2,}/g, ' ').trim();
   }
@@ -1215,7 +1273,7 @@ handleWorkshop('compatibility:check', async (_event, project) => {
   const input = [{ role: 'user', content: JSON.stringify({ minecraftVersion: version, loader, mods: inventory }) }];
   let raw;
   const settings = await readSettings();
-  const provider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute'].includes(settings.aiProvider) ? settings.aiProvider : 'auto';
+  const provider = ['auto', 'local', 'chatgpt', 'openai', 'claude', 'omniroute', 'opencode'].includes(settings.aiProvider) ? settings.aiProvider : 'auto';
   let client = null, session = { status: 'disconnected', sharing: false }, accountError = null;
   if (provider === 'chatgpt' || provider === 'auto') {
     try { client = await getChatGPTClient(); session = await client.getSession(); }
@@ -1237,7 +1295,8 @@ handleWorkshop('compatibility:check', async (_event, project) => {
     const openAiKey = provider === 'openai' ? await secret('openai') : '';
     const claudeKey = provider === 'claude' ? await secret('claude') : '';
     if (provider === 'claude' && !claudeKey) throw new Error('Speichere zuerst deinen Anthropic-API-Schlüssel in den Einstellungen.');
-    if (omniRouteKey) {
+    if (provider === 'opencode') raw = await askOpenCode(await openCodeConnection(settings), instructions, input);
+    if (!raw && omniRouteKey) {
       try { raw = await callOmniRouteApi(omniRouteKey, settings, instructions, input, { json: true }); }
       catch (error) { if (provider !== 'auto' || !settings.localAi?.model) throw error; accountError = error; }
     }

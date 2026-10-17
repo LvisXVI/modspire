@@ -50,7 +50,7 @@ The tour uses a real recording of Modspire. The feature gallery below also shows
 - ⭐ Explore weekly Modrinth favorites beside all-time follows. Weekly growth is calculated from private local daily snapshots and falls back clearly to total follows until a full week is tracked.
 - 🖼️ Switch layouts, themes, and Minecraft backgrounds; save the appearance on this device.
 - 🖥️ Open the local web view from the desktop app and work with the same local projects.
-- 🧠 Choose ChatGPT account access, optional OpenAI or Anthropic API providers, local Ollama/Bionic models, and compatible OmniRoute endpoints.
+- 🧠 Choose ChatGPT account access, optional OpenAI or Anthropic API providers, local Ollama/Bionic models, compatible OmniRoute endpoints, and a local OpenCode server.
 
 > **Project limits:** Modspire helps organize packs and review metadata. It does not download every mod, install a Minecraft loader, or prove that a pack starts in a game world. See the [community test disclaimer](PUBLIC-TEST-DISCLAIMER.md).
 
@@ -80,6 +80,8 @@ pnpm dist
 ```
 
 The portable executable is written to `release/`. The first launch asks for a local display name. That name is not an account and does not remove limits imposed by AI providers. CurseForge search requires the user's own approved API key; without one, search falls back to Modrinth.
+
+OpenCode is available as an explicitly selected chat route. Configure a provider in OpenCode, then connect it in Settings. Its restricted free tier is not generally available to external clients; see [OpenCode setup and limits](docs/wiki/ai-privacy.md#opencode-setup).
 
 ## 🌐 Local web view
 

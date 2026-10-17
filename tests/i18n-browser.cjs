@@ -17,8 +17,8 @@ const { chromium } = require('playwright');
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.route('https://workshop.test/', route => route.fulfill({
-      contentType: 'text/html',
-      body: '<html><body><button id="language-toggle"></button><div id="dynamic"></div></body></html>',
+      contentType: 'text/html; charset=utf-8',
+      body: '<html><body><button id="language-toggle"></button><div id="dynamic"></div><div id="themes"><strong>Milchglas-Türkis</strong><small>Kühlblaues Kristallglas · kräftiger Hintergrund-Blur und klare Lichtkanten</small><small>Türkis getöntes Milchglas · sanfter Hintergrund-Blur mit einstellbarer Deckkraft</small><small>Mehr Hintergrund</small></div></body></html>',
     }));
     await page.goto('https://workshop.test/');
     let source = fs.readFileSync(path.join(__dirname, '..', 'i18n.js'), 'utf8');
@@ -28,6 +28,9 @@ const { chromium } = require('playwright');
     await page.addScriptTag({ content: source });
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
     assert.equal(await page.evaluate(() => window.workshopI18n.locale), 'en', 'a fresh install should start in English');
+    assert.equal(await page.locator('#themes strong').textContent(), 'Frosted Teal', 'the teal glass name is translated for the English default');
+    assert.match(await page.locator('#themes').textContent(), /stronger wallpaper blur and crisp light edges/);
+    assert.match(await page.locator('#themes').textContent(), /softer background blur with adjustable surface opacity/);
     const result = await page.evaluate(async () => {
       const wait = () => new Promise(resolve => setTimeout(resolve, 60));
       let mutations = 0;

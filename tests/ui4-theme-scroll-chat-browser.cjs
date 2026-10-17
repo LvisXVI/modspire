@@ -17,15 +17,19 @@ const { chromium } = require('playwright');
 
     assert.equal(await page.locator('#v4-dashboard').evaluate(node => getComputedStyle(node).overflowY), 'auto', 'UI 4 overview has its own vertical scroll area');
     assert.ok(await page.locator('#v4-dashboard').evaluate(node => node.scrollHeight > node.clientHeight), 'long UI 4 overview content can be scrolled');
+    assert.equal(await page.locator('body').evaluate(node => getComputedStyle(node).colorScheme), 'dark', 'UI 4 uses dark native controls on its Deep Grove surfaces');
+    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-canvas').trim()), '#101c27', 'UI 4 keeps its dark slate canvas instead of inheriting UI 2 light surfaces');
+    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-ink').trim()), '#e8f2f8', 'UI 4 keeps high-contrast light text on the dark canvas');
     fs.mkdirSync(path.join(root, 'work'), { recursive: true });
     await page.screenshot({ path: path.join(root, 'work', 'ui-v4-theme-review.png') });
     const before = await page.locator('.v4-hero').evaluate(node => getComputedStyle(node).backgroundImage);
     await page.evaluate(() => {
       for (const [key, value] of Object.entries({ '--modern-ink':'#f7f3ff', '--modern-muted':'#c1b7d8', '--modern-bg':'#242036', '--modern-card':'#29243d', '--modern-inset':'#332d4a', '--modern-line':'#49405e', '--modern-accent':'#af7bff', '--modern-green':'#5bd3a4' })) document.documentElement.style.setProperty(key, value);
       document.body.dataset.theme = 'ender';
-      window.dispatchEvent(new CustomEvent('workshop-theme-changed', { detail: { theme: 'ender' } }));
+      window.dispatchEvent(new CustomEvent('workshop-theme-changed', { detail: { theme: 'ender', colors: { accent: '#af7bff' } } }));
     });
     assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-accent').trim()), '#af7bff', 'UI 4 follows the selected design accent');
+    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-canvas').trim()), '#171629', 'Ender changes the dark base while keeping the UI 4 palette readable');
     assert.notEqual(await page.locator('.v4-hero').evaluate(node => getComputedStyle(node).backgroundImage), before, 'UI 4 surfaces change with the active design');
     const v4Chat = await page.locator('#chat-panel').evaluate(node => ({ radius: getComputedStyle(node).borderRadius, background: getComputedStyle(node).backgroundImage }));
     await page.evaluate(() => document.body.classList.replace('ui-v4', 'ui-modern'));
@@ -37,9 +41,26 @@ const { chromium } = require('playwright');
     await page.evaluate(() => {
       document.documentElement.style.setProperty('--modern-bg', '#bfdced');
       document.documentElement.style.setProperty('--modern-canvas', 'rgba(7,25,46,.50)');
+      document.body.classList.replace('ui-modern', 'ui-v4');
       window.dispatchEvent(new CustomEvent('workshop-theme-changed'));
     });
-    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-canvas').trim()), 'rgba(7,25,46,.50)', 'glass UI 4 uses its dark canvas, not the pale wallpaper fallback behind light text');
+    assert.equal(await page.locator('html').evaluate(node => getComputedStyle(node).getPropertyValue('--v4-canvas').trim()), '#171629', 'light or translucent UI 2 tokens cannot wash out the UI 4 dark canvas');
+    const themeAccents = {blue:'#78bfff',fluid:'#76d9df',clear:'#8bd6ff',translucent:'#83e1dd',aurora:'#91dec7',redstone:'#ff9b82',ender:'#c2a9ff',emerald:'#8ce0b5',nether:'#ffae78'};
+    for (const [theme, accent] of Object.entries(themeAccents)) {
+      await page.evaluate(theme => { document.body.dataset.theme = theme; window.dispatchEvent(new CustomEvent('workshop-theme-changed', { detail: { theme } })); }, theme);
+      const palette = await page.evaluate(() => {
+        const root = getComputedStyle(document.documentElement);
+        const body = getComputedStyle(document.body);
+        const read = name => root.getPropertyValue(name).trim();
+        return { ink:read('--v4-ink'), muted:read('--v4-muted'), canvas:read('--v4-canvas'), surface:read('--v4-surface'), raised:read('--v4-surface-raised'), line:read('--v4-line'), accent:read('--v4-accent'), scheme:body.colorScheme };
+      });
+      assert.equal(palette.accent, accent, `${theme} maps its design accent into UI 4`);
+      assert.equal(palette.scheme, 'dark', `${theme} keeps native controls dark`);
+      assert.notEqual(palette.canvas, '#fbfbff', `${theme} never reuses UI 2's white canvas`);
+      assert.notEqual(palette.surface, '#fbfbff', `${theme} never reuses UI 2's white cards`);
+      assert.notEqual(palette.raised, palette.canvas, `${theme} separates the Deep Grove surface layers`);
+      assert.notEqual(palette.line, palette.surface, `${theme} keeps panel edges visible`);
+    }
     console.log('UI 4 palette synchronization, independently scrollable overview, distinct chat styling, and normal-chat actions passed.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

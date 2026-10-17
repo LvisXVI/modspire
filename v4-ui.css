@@ -51,7 +51,7 @@ html body.ui-v4[data-wallpaper-motion="off"]::before{animation:none!important;wi
 body[data-theme="blue"] .theme-motion-control,body[data-theme="fluid"] .theme-motion-control{color:#244360}
 
 /* UI 4 follows the active app palette and keeps its overview independently scrollable. */
-body.ui-v4{color-scheme:light;background:var(--v4-canvas);color:var(--v4-ink)}
+body.ui-v4{color-scheme:dark;background:var(--v4-canvas);color:var(--v4-ink)}
 body.ui-v4[data-theme="redstone"],body.ui-v4[data-theme="ender"],body.ui-v4[data-theme="nether"]{color-scheme:dark}
 body.ui-v4 .v4-dashboard{flex:1 1 auto;min-height:0;height:100%;max-height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-sizing:border-box;background:color-mix(in srgb,var(--v4-canvas) var(--theme-surface-opacity,72%),transparent);color:var(--v4-ink)}
 body.ui-v4 .v4-dashboard :is(.v4-header,.v4-rail,.v4-hero,.v4-stats article,.v4-panel,.v4-version-chip,.v4-pack-control select,.v4-mod-row,.v4-category-row,.v4-activity-row,.v4-activity-icon,.v4-round,.v4-button){border-color:var(--v4-line)}
@@ -338,6 +338,7 @@ html body.ui-v4 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner
 html body.ui-modern #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit {border-color:var(--modern-accent)!important;background:color-mix(in srgb,var(--modern-accent) 35%,#071522)!important;color:#fff!important}
 html body.ui-v3 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit {border-color:var(--v3-accent)!important;background:color-mix(in srgb,var(--v3-accent) 35%,#071522)!important;color:#fff!important}
 html body.ui-v4 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit {border-color:var(--v4-accent)!important;background:color-mix(in srgb,var(--v4-accent) 35%,#071522)!important;color:#fff!important}
+
 html body.ui-modern #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit:hover,
 html body.ui-v3 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit:hover,
 html body.ui-v4 #chat-panel.is-mod-creator:not([hidden])>.creator-context-banner>.creator-context-exit:hover {transform:translateY(-1px)!important;filter:brightness(1.08)!important}
@@ -466,6 +467,79 @@ html body[data-theme] #chat-panel {color-scheme:dark!important}
 html body.ui-modern[data-theme] #chat-panel:not([hidden]) {background-image:linear-gradient(155deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 82%,var(--chat-accent)))!important}
 html body.ui-v3[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 10% 0%,color-mix(in srgb,var(--chat-accent) 16%,transparent),transparent 45%),linear-gradient(160deg,var(--chat-panel),var(--chat-stage))!important}
 html body.ui-v4[data-theme] #chat-panel:not([hidden]) {background-image:radial-gradient(ellipse at 94% 0%,color-mix(in srgb,var(--chat-accent) 13%,transparent),transparent 48%),linear-gradient(135deg,var(--chat-panel),color-mix(in srgb,var(--chat-panel) 76%,var(--chat-stage)))!important}
+
+/* Final refinements: align every major surface in all four layouts while preserving
+   the individual visual identities and the shared app behavior. */
+html body.ui-v4 {color-scheme:dark!important;background:var(--v4-canvas)!important;color:var(--v4-ink)!important}
+html body.ui-v4 .sidebar {width:196px!important;flex:0 0 196px!important;padding:17px 11px!important;gap:7px!important;background:var(--v4-surface)!important;color:var(--v4-ink)!important}
+html body.ui-v4 .main-content {inset:0 0 0 196px!important;width:auto!important;margin:0!important}
+html body.ui-v4 .sidebar>.nav-item {display:flex!important;justify-content:flex-start!important;flex:0 0 auto!important;width:100%!important;max-width:none!important;height:auto!important;min-height:42px!important;margin:0!important;padding:8px 9px!important;gap:9px!important;box-sizing:border-box!important;text-align:left!important;white-space:nowrap!important;color:var(--v4-muted)!important}
+html body.ui-v4 .sidebar>.nav-item.active,html body.ui-v4 .sidebar>.nav-item:hover {background:color-mix(in srgb,var(--v4-accent) 14%,var(--v4-surface))!important;color:var(--v4-ink)!important;border-color:color-mix(in srgb,var(--v4-accent) 48%,var(--v4-line))!important}
+html body.ui-v4 .sidebar>.nav-item .nav-icon {width:24px!important;height:24px!important;flex:0 0 24px!important}
+html body.ui-v4 .sidebar>.nav-item .sidebar-icon {width:20px!important;height:20px!important}
+html body.ui-v4 :is(.topbar,.setup-strip,.bottom-bar) {background:color-mix(in srgb,var(--v4-surface) 96%,transparent)!important;background-image:none!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 .topbar :is(.eyebrow,.save-status),html body.ui-v4 .setup-strip label,html body.ui-v4 .compat-chip,html body.ui-v4 .bottom-bar {color:var(--v4-muted)!important;text-shadow:none!important}
+html body.ui-v4 .compat-chip {background:var(--v4-surface-raised)!important;border-color:var(--v4-line)!important;color:var(--v4-muted)!important}
+html body.ui-v4 .window-controls button {background:var(--v4-surface-raised)!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 .window-controls button:hover {background:color-mix(in srgb,var(--v4-accent) 18%,var(--v4-surface-raised))!important;border-color:var(--v4-accent)!important}
+html body.ui-v4 #pack-name.pack-title {background-color:var(--v4-surface-raised,#203847)!important;color:var(--v4-ink,#e8f2f8)!important;-webkit-text-fill-color:var(--v4-ink,#e8f2f8)!important;border-color:var(--v4-line,#3a5668)!important}
+html body.ui-v4 .button:not(.button-primary),html body.ui-v4 .button-quiet,html body.ui-v4 .auto-setup-toggle {background:var(--v4-surface-raised)!important;background-image:none!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 .button-primary,html body.ui-v4 .send-button {background:linear-gradient(120deg,var(--v4-accent),color-mix(in srgb,var(--v4-accent) 72%,var(--v4-accent-2)))!important;color:var(--v4-canvas)!important;border-color:var(--v4-accent)!important}
+html body.ui-v4 .panel:not(#chat-panel),html body.ui-v4 .panel:not(#chat-panel)>.panel-heading {background:var(--v4-surface)!important;background-image:none!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 .panel:not(#chat-panel)>.panel-heading :is(h1,h2,h3,p,strong,span) {color:var(--v4-ink)!important;text-shadow:none!important}
+html body.ui-v4 .panel:not(#chat-panel)>.panel-heading p,html body.ui-v4 .panel:not(#chat-panel)>.panel-heading .count-badge {color:var(--v4-muted)!important}
+html body.ui-v4 .panel:not(#chat-panel)>.panel-heading .count-badge {background:var(--v4-surface-raised)!important;border:1px solid var(--v4-line)!important}
+html body.ui-v4 #mods-panel :is(.search-row,.mod-search-modes,.mod-results-toolbar,.selected-section,.selected-heading,.selected-filter-row,.compatibility-panel,.catalog-search) {background:var(--v4-surface)!important;background-image:none!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 #mods-panel :is(.search-box,.provider-select,.results-sort-control select,.mod-results-layout button,.mode-chip,.catalog-search summary) {background:var(--v4-surface-raised)!important;background-image:none!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 #mods-panel :is(.mode-chip.active,.mod-results-layout button[aria-pressed="true"]) {background:color-mix(in srgb,var(--v4-accent) 23%,var(--v4-surface-raised))!important;color:var(--v4-ink)!important;border-color:var(--v4-accent)!important}
+html body.ui-v4 #mods-panel .mod-card {background:linear-gradient(145deg,var(--v4-surface-raised),var(--v4-surface))!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 #mods-panel .mod-card :is(.mod-name,.mod-name strong,.mod-desc,.mod-meta,.mod-card-main,.mod-card-main *) {color:var(--v4-ink)!important;text-shadow:none!important}
+html body.ui-v4 #mods-panel .mod-card :is(.mod-desc,.mod-meta) {color:var(--v4-muted)!important}
+html body.ui-v4 #mods-panel .empty-selected,html body.ui-v4 #mods-panel .compatibility-panel {background:var(--v4-surface-raised)!important;color:var(--v4-muted)!important;border-color:var(--v4-line)!important}
+html body.ui-v4 :is(.setup-strip select,#minecraft-version,#loader,#mod-search,#selected-filter,#catalog-query,#catalog-category,#catalog-environment,.catalog-filter-grid input,.catalog-filter-grid select) {background:var(--v4-surface-raised)!important;color:var(--v4-ink)!important;border-color:var(--v4-line)!important;color-scheme:dark!important;-webkit-text-fill-color:var(--v4-ink)!important}
+html body.ui-v4 :is(.setup-strip select,#minecraft-version,#loader,#mod-search,#selected-filter,#catalog-query,#catalog-category,#catalog-environment,.catalog-filter-grid input,.catalog-filter-grid select)::placeholder {color:var(--v4-muted)!important;-webkit-text-fill-color:var(--v4-muted)!important;opacity:1!important}
+html body.ui-v4 #chat-panel .chat-messages {width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important;padding-inline:clamp(20px,3.2vw,48px)!important}
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) {width:100%!important;max-width:none!important;margin-inline:0!important}
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) .message-content {flex:1 1 auto!important;width:100%!important;max-width:none!important;min-width:0!important}
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) .bubble {width:100%!important;max-width:none!important;box-sizing:border-box!important}
+html body.ui-v4 #chat-panel:not(.is-mod-creator) #chat-form {width:calc(100% - 48px)!important;max-width:none!important;margin:8px auto 14px!important;box-sizing:border-box!important}
+html body.ui-v4 #chat-panel.is-mod-creator #chat-form {width:calc(100% - 24px)!important;max-width:none!important}
+html body.ui-modern #chat-panel .chat-messages,
+html body.ui-v3 #chat-panel .chat-messages,
+html body.ui-v4 #chat-panel .chat-messages {width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important;padding-inline:clamp(20px,3.2vw,48px)!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message),
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message),
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) {width:100%!important;max-width:none!important;margin-inline:0!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message) .message-content,
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message) .message-content,
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) .message-content {flex:1 1 auto!important;width:100%!important;max-width:none!important;min-width:0!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message) .bubble,
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message) .bubble,
+html body.ui-v4 #chat-panel .chat-messages>.message:not(.user-message) .bubble {width:100%!important;max-width:none!important;box-sizing:border-box!important}
+html body.ui-modern #chat-panel:not(.is-mod-creator) #chat-form,
+html body.ui-v3 #chat-panel:not(.is-mod-creator) #chat-form,
+html body.ui-v4 #chat-panel:not(.is-mod-creator) #chat-form {width:calc(100% - 48px)!important;max-width:none!important;margin:8px auto 14px!important;box-sizing:border-box!important}
+@media(max-width:740px) {
+  html body.ui-v4 .sidebar {width:62px!important;flex-basis:62px!important;padding-inline:5px!important}
+  html body.ui-v4 .main-content {inset:0 0 0 62px!important}
+}
+@media(max-width:740px) {
+  html body.ui-v4 #chat-panel:not(.is-mod-creator) #chat-form {width:calc(100% - 28px)!important}
+}
+html body.ui-modern #chat-panel .chat-messages,
+html body.ui-v3 #chat-panel .chat-messages {width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important;padding-inline:clamp(20px,3.2vw,48px)!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message),
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message) {width:100%!important;max-width:none!important;margin-inline:0!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message) .message-content,
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message) .message-content {flex:1 1 auto!important;width:100%!important;max-width:none!important;min-width:0!important}
+html body.ui-modern #chat-panel .chat-messages>.message:not(.user-message) .bubble,
+html body.ui-v3 #chat-panel .chat-messages>.message:not(.user-message) .bubble {width:100%!important;max-width:none!important;box-sizing:border-box!important}
+html body.ui-modern #chat-panel:not(.is-mod-creator) #chat-form,
+html body.ui-v3 #chat-panel:not(.is-mod-creator) #chat-form {width:calc(100% - 48px)!important;max-width:none!important;margin:8px auto 14px!important;box-sizing:border-box!important}
+html body.ui-v4[data-theme="clear"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,#mods-panel,#mods-panel>.panel-heading,#mods-panel .search-row,#mods-panel .mod-search-modes,#mods-panel .mod-results-toolbar,#mods-panel .selected-section,#mods-panel .catalog-search,#mods-panel .mod-card,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article) {background-color:rgba(13,47,78,var(--theme-surface-opacity,88%))!important;backdrop-filter:blur(24px) saturate(135%)!important;-webkit-backdrop-filter:blur(24px) saturate(135%)!important}
+html body.ui-v4[data-theme="translucent"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,#mods-panel,#mods-panel>.panel-heading,#mods-panel .search-row,#mods-panel .mod-search-modes,#mods-panel .mod-results-toolbar,#mods-panel .selected-section,#mods-panel .catalog-search,#mods-panel .mod-card,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article) {background-color:rgba(18,81,111,var(--theme-surface-opacity,88%))!important;backdrop-filter:blur(16px) saturate(125%)!important;-webkit-backdrop-filter:blur(16px) saturate(125%)!important}
+html body.ui-v4[data-theme="clear"] :is(.window-controls button,.compat-chip),html body.ui-v4[data-theme="translucent"] :is(.window-controls button,.compat-chip) {background-color:rgba(18,81,111,var(--theme-surface-opacity,88%))!important;backdrop-filter:blur(16px) saturate(125%)!important;-webkit-backdrop-filter:blur(16px) saturate(125%)!important}
+html body.ui-v4[data-theme="clear"] .window-controls button,html body.ui-v4[data-theme="translucent"] .window-controls button {color:var(--v4-ink)!important}
 html body[data-theme] #chat-panel>.chat-messages {background-color:var(--chat-stage)!important}
 html body[data-theme] #chat-panel .chat-messages>.message:not(.user-message) .bubble {
   background-color:var(--chat-assistant)!important;
@@ -530,6 +604,11 @@ html body[data-theme] #chat-panel :is(.suggestion,.button-quiet,.chat-header-act
 html body[data-theme] #chat-panel :is(.send-button,.button-primary) {background:linear-gradient(135deg,color-mix(in srgb,var(--chat-accent) 72%,#143146),var(--chat-user))!important;border-color:var(--chat-accent)!important;color:#fff!important}
 html body[data-theme] #chat-panel :is(button,select,textarea,a,[tabindex="0"]):focus-visible {outline:3px solid var(--chat-accent)!important;outline-offset:3px!important}
 html body[data-theme] #chat-panel :is(.bubble,.chat-footnote,.panel-heading,#chat-input,.chat-form) {opacity:1!important}
+
+/* Without a wallpaper, keep glass panels opaque enough that the layout never
+   appears transparent against the desktop; wallpaper mode uses the slider. */
+html body.ui-v4[data-theme="clear"]:is(:not([data-wallpaper]),[data-wallpaper="none"]) :is(.sidebar,.topbar,.setup-strip,.bottom-bar,#mods-panel,#mods-panel>.panel-heading,#mods-panel .search-row,#mods-panel .mod-search-modes,#mods-panel .mod-results-toolbar,#mods-panel .selected-section,#mods-panel .catalog-search,#mods-panel .mod-card,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article) {background-color:#0d2f4e!important}
+html body.ui-v4[data-theme="translucent"]:is(:not([data-wallpaper]),[data-wallpaper="none"]) :is(.sidebar,.topbar,.setup-strip,.bottom-bar,#mods-panel,#mods-panel>.panel-heading,#mods-panel .search-row,#mods-panel .mod-search-modes,#mods-panel .mod-results-toolbar,#mods-panel .selected-section,#mods-panel .catalog-search,#mods-panel .mod-card,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article) {background-color:#12516f!important}
 
 /* Glass themes blur every primary UI surface, even when no wallpaper is selected.
    Keep the tint dense enough that foreground text never sits directly over art. */

@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.97] - 2026-10-17
+
+### Fixed
+- Preserved the inline mod-suggestion list position when adding/removing a mod or changing suggestion order.
+- Restored the chat viewport synchronously during updates so back-to-back renders cannot capture an intermediate collapsed position.
+- Prevented pointer focus from scrolling chat controls, retained relevant control focus, and limited message entrance animation to new rows.
+- Corrected washed-out inline suggestion descriptions, metadata and badges using a matched theme foreground/background pair.
+- Added browser and full Electron click regressions for chat/picker scrolling, plus 4.5:1 inline-card contrast coverage across four UIs and nine themes.
+
 ## [0.2.96] - 2026-10-17
 
 ### Added

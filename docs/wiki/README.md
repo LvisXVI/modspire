@@ -6,7 +6,7 @@ Welcome to the Modspire guide. These pages describe the app in this repository; 
 
 | Guide | What it covers |
 | --- | --- |
-| [🧾 Patch log](patch-log.md) | Retrospective feature history from the first archived build through 0.2.96. |
+| [🧾 Patch log](patch-log.md) | Retrospective feature history from the first archived build through 0.2.97. |
 | [🚀 Getting started](getting-started.md) | Create a pack, search, connect optional AI, and export. |
 | [🔎 Mod search and selection](mod-search.md) | Catalog search, AI suggestions, filters, sorting, and pack actions. |
 | [🎨 Interfaces and designs](interfaces-and-designs.md) | Four layouts, themes, wallpapers, glass, and motion. |

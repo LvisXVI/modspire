@@ -4,6 +4,17 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.95] - 2026-10-17
+
+### Improved
+- Refined all four desktop UI layouts while preserving the existing navigation, chat, catalog, creator, and Pack Lab workflows.
+- Matched UI 4 surfaces and accents to the selected world theme, keeping glass treatments blurred and readable instead of inheriting unrelated light surfaces.
+- Unified the Pack Assistant suggestion tray contrast in Modern UI and improved selected-theme color consistency in UI 4.
+
+### Fixed
+- Corrected low-contrast legacy controls and surfaces that appeared pale or washed out in UI 4.
+- Added regression coverage for all four layouts, theme-bound UI 4 colors, readable assistant controls, and scrollable content.
+
 ## [0.2.94] - 2026-10-17
 
 ### Improved

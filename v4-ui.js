@@ -9,6 +9,17 @@
   const english = () => (window.workshopI18n?.locale || document.documentElement.lang || 'de').toLowerCase().startsWith('en');
   const t = key => (english() ? copy.en : copy.de)[key] || key;
   const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const GROVE_PALETTES = Object.freeze({
+    blue:        {ink:'#e8f2f8',muted:'#aabdc9',canvas:'#101c27',surface:'#172936',raised:'#203847',line:'#3a5668',accent:'#78bfff',accent2:'#8bd6ff',gold:'#e7c986'},
+    fluid:       {ink:'#e6f5f4',muted:'#a8c9c9',canvas:'#0d2027',surface:'#142c33',raised:'#1d3941',line:'#355b62',accent:'#76d9df',accent2:'#91e7df',gold:'#e7cf92'},
+    clear:       {ink:'#e9f4fb',muted:'#aec4d2',canvas:'#0e1d2a',surface:'#172c3a',raised:'#203a4b',line:'#3d6076',accent:'#8bd6ff',accent2:'#b1e8ff',gold:'#e8d299'},
+    translucent:{ink:'#e7f4f5',muted:'#a9c6ca',canvas:'#0d2028',surface:'#142d35',raised:'#1d3b43',line:'#3a626b',accent:'#83e1dd',accent2:'#a2f1e8',gold:'#e5cc8d'},
+    aurora:      {ink:'#e9f2f4',muted:'#b2c3ca',canvas:'#111f28',surface:'#192d36',raised:'#24404a',line:'#45616c',accent:'#91dec7',accent2:'#a9e7dd',gold:'#e7d18d'},
+    redstone:    {ink:'#f5ecea',muted:'#c4aaa6',canvas:'#211719',surface:'#302024',raised:'#402a2d',line:'#654449',accent:'#ff9b82',accent2:'#ffc1a6',gold:'#f0c37d'},
+    ender:       {ink:'#f1edfc',muted:'#c0b6d7',canvas:'#171629',surface:'#24213a',raised:'#322d4c',line:'#51486e',accent:'#c2a9ff',accent2:'#d6c5ff',gold:'#ead493'},
+    emerald:     {ink:'#e8f5ef',muted:'#adccb9',canvas:'#10201b',surface:'#182e26',raised:'#244135',line:'#426756',accent:'#8ce0b5',accent2:'#a5f0cc',gold:'#e8d18d'},
+    nether:      {ink:'#fbefea',muted:'#ceb8ae',canvas:'#241816',surface:'#34231f',raised:'#46302a',line:'#6a4b40',accent:'#ffae78',accent2:'#ffd09b',gold:'#f3d28a'}
+  });
   const nav = action => {
     const actions = { project:'project', chat:'chat', mods:'mods', lab:'lab' };
     if (action === 'chat') (bridge.navigateChat || (() => bridge.navigate?.('chat')))();
@@ -21,18 +32,20 @@
   };
   function syncTheme(detail = {}) {
     const root = document.documentElement;
-    const read = (key, fallback) => getComputedStyle(root).getPropertyValue(key).trim() || fallback;
+    const theme = document.body.dataset.theme || detail.theme || 'blue';
+    const palette = GROVE_PALETTES[theme] || GROVE_PALETTES.blue;
     const colors = detail.colors || {};
+    const customAccent = /^#[\da-f]{6}$/i.test(colors.accent || '') ? colors.accent : '';
     const vars = {
-      '--v4-ink': read('--modern-ink', '#171925'),
-      '--v4-muted': read('--modern-muted', '#626a83'),
-      '--v4-canvas': read('--modern-canvas', read('--modern-bg', colors.background || '#eef1fb')),
-      '--v4-surface': read('--modern-card', colors.surface || '#f9faff'),
-      '--v4-surface-raised': read('--modern-inset', '#e9ecfa'),
-      '--v4-line': read('--modern-line', '#d7dafa'),
-      '--v4-accent': read('--modern-accent', colors.accent || '#4050ff'),
-      '--v4-accent-2': read('--modern-accent', colors.accent || '#4050ff'),
-      '--v4-gold': read('--modern-green', '#169b56')
+      '--v4-ink': palette.ink,
+      '--v4-muted': palette.muted,
+      '--v4-canvas': palette.canvas,
+      '--v4-surface': palette.surface,
+      '--v4-surface-raised': palette.raised,
+      '--v4-line': palette.line,
+      '--v4-accent': customAccent || palette.accent,
+      '--v4-accent-2': palette.accent2,
+      '--v4-gold': palette.gold
     };
     for (const [name, value] of Object.entries(vars)) root.style.setProperty(name, value);
   }

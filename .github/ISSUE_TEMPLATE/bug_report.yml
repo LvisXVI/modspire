@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible problem with Modspire.
+title: "[Bug]: "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Modspire version
+      placeholder: 0.2.95
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Windows version, UI mode and theme
+      placeholder: Windows 11, UI 4, Crystal Glass
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the expected result and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or relevant log excerpts
+      description: Remove API keys, tokens, private chat content and personal paths before uploading.
+  - type: input
+    id: provider
+    attributes:
+      label: AI provider and model, if relevant
+      description: Never include an API key.

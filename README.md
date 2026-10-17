@@ -1,6 +1,6 @@
 <div align="center">
   <img src="assets/brand/modspire-hero.png" alt="Modspire — Minecraft modpack studio" width="100%">
-  <p><strong>🌌 Your Minecraft Java modpack studio</strong><br>Plan a world, find the mods, and keep every pack project organized.</p>
+  <p><strong>🌌 Your Minecraft Java modpack studio</strong><br>Search Modrinth, build a shortlist, and inspect your Minecraft Java pack. Local-first. AI optional.</p>
   <p>
     <a href="https://github.com/LvisXVI/modspire/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/LvisXVI/modspire?label=latest%20release&color=79d7d3"></a>
     <img alt="Windows desktop app" src="https://img.shields.io/badge/platform-Windows-15263a?logo=windows&logoColor=white">
@@ -10,7 +10,8 @@
   <p>
     <a href="https://lvisxvi.github.io/modspire/">🌐 Open extended preview & interactive demo</a> ·
     <a href="https://github.com/LvisXVI/modspire/releases/latest">⬇️ Download for Windows</a> ·
-    <a href="https://github.com/LvisXVI/modspire/wiki">📚 Read the wiki</a>
+    <a href="https://github.com/LvisXVI/modspire/wiki">📚 Read the wiki</a> ·
+    <a href="https://github.com/LvisXVI/modspire/discussions">💬 Feedback & ideas</a>
   </p>
 </div>
 
@@ -52,6 +53,14 @@ The tour uses a real recording of Modspire. The feature gallery below also shows
 - 🧠 Choose ChatGPT account access, optional OpenAI or Anthropic API providers, local Ollama/Bionic models, and compatible OmniRoute endpoints.
 
 > **Project limits:** Modspire helps organize packs and review metadata. It does not download every mod, install a Minecraft loader, or prove that a pack starts in a game world. See the [community test disclaimer](PUBLIC-TEST-DISCLAIMER.md).
+
+## 🙌 Help shape Modspire
+
+Try the [interactive demo](https://lvisxvi.github.io/modspire/#demo), or download the [portable Windows app](https://github.com/LvisXVI/modspire/releases/latest). Start with a Minecraft version and loader, search for a mod, then add and remove a few candidates. Catalog search needs no AI account.
+
+Found something confusing? [Report a bug](https://github.com/LvisXVI/modspire/issues/new?template=bug_report.yml) or [share feedback](https://github.com/LvisXVI/modspire/discussions). Include your app version, UI/theme, what you expected, and what happened. Screenshots help; remove keys, names, paths, and other private details first.
+
+Want to contribute code, translations, or documentation? See [CONTRIBUTING.md](CONTRIBUTING.md). If Modspire is useful to you, sharing the [live preview](https://lvisxvi.github.io/modspire/) with a friend helps others discover it.
 
 ## 🧠 AI and local models
 

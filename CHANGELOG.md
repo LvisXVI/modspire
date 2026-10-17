@@ -4,6 +4,16 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.94] - 2026-10-17
+
+### Improved
+- Added a short, consistent transition when switching between the main desktop sections, with cleanup when navigation changes mid-animation.
+- Clarified the glass theme names and tuning: Crystal Glass is a cool-blue, stronger-blur surface; Frosted Teal uses a softer teal blur, and the opacity control now reaches its advertised minimum.
+- Updated theme descriptions, color swatches, and translations to match the actual appearance.
+
+### Fixed
+- Added browser regression coverage for section transitions, localized theme labels, and glass opacity/blur behavior.
+
 ## [0.2.93] - 2026-10-17
 
 ### Improved

@@ -8,14 +8,14 @@ body.ui-v4 .sidebar{border-radius:20px}body.ui-v4 .sidebar .nav-item.active,body
 
 
 /* Crystal and Translucent use tinted, blurred glass with a safe opacity floor in every UI. */
-body[data-theme="clear"]{--theme-glass-surface:#0d2f4e}
-body[data-theme="translucent"]{--theme-glass-surface:#12516f}
+body[data-theme="clear"]{--theme-glass-surface:#0d2f4e;--theme-glass-blur:24px}
+body[data-theme="translucent"]{--theme-glass-surface:#12516f;--theme-glass-blur:16px}
 html body[data-theme="clear"][data-wallpaper] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.bubble,.chat-form,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.modern-card,.v3-panel,.v4-dashboard,.v4-rail,.v4-hero,.v4-stats article,.v4-panel,.v4-mod-row,.v4-category-row,.v4-activity-row),
 html body[data-theme="translucent"][data-wallpaper] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.bubble,.chat-form,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.modern-card,.v3-panel,.v4-dashboard,.v4-rail,.v4-hero,.v4-stats article,.v4-panel,.v4-mod-row,.v4-category-row,.v4-activity-row){
   background-color:color-mix(in srgb,var(--theme-glass-surface) var(--theme-surface-opacity,88%),transparent)!important;
   background-image:none!important;
-  backdrop-filter:blur(18px) saturate(118%)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(118%)!important;
+  backdrop-filter:blur(var(--theme-glass-blur,20px)) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(var(--theme-glass-blur,20px)) saturate(125%)!important;
   border-color:color-mix(in srgb,var(--custom-accent,#65c5f2) 38%,rgba(220,242,255,.62))!important;
 }
 html body[data-theme="clear"] :is(h1,h2,h3,strong,label,.v4-brand,.v4-mod-copy),html body[data-theme="translucent"] :is(h1,h2,h3,strong,label,.v4-brand,.v4-mod-copy){color:#f4f9ff!important;text-shadow:0 1px 2px rgba(1,15,29,.7)!important}
@@ -535,7 +535,7 @@ html body[data-theme] #chat-panel :is(.bubble,.chat-footnote,.panel-heading,#cha
    Keep the tint dense enough that foreground text never sits directly over art. */
 html body[data-theme="clear"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.chat-messages,.bubble,.chat-form,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.mod-selection-dialog,.mod-details-card,.mod-preview-dialog,.creator-studio,.modern-dashboard,.modern-card,.v3-panel,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article,.v4-mod-row,.v4-category-row,.v4-activity-row),
 html body[data-theme="translucent"] :is(.sidebar,.topbar,.setup-strip,.bottom-bar,.panel,.panel-heading,.chat-messages,.bubble,.chat-form,.lab-card,.overview-card,.popular-section,.popular-card,.mod-card,.search-box,.settings-card,.design-card,.test-card,.startup-card,.api-card,.chat-mod-window,.chat-selected-section,.selected-mod,.more-suggestions,.mod-selection-dialog,.mod-details-card,.mod-preview-dialog,.creator-studio,.modern-dashboard,.modern-card,.v3-panel,.v4-dashboard,.v4-panel,.v4-rail,.v4-hero,.v4-stats article,.v4-mod-row,.v4-category-row,.v4-activity-row) {
-  background-color:color-mix(in srgb,var(--theme-glass-surface,#0d2f4e) max(var(--theme-surface-opacity,94%),90%),transparent)!important;
+  background-color:color-mix(in srgb,var(--theme-glass-surface,#0d2f4e) var(--theme-surface-opacity,88%),transparent)!important;
   background-image:none!important;
   backdrop-filter:blur(20px) saturate(125%)!important;
   -webkit-backdrop-filter:blur(20px) saturate(125%)!important;

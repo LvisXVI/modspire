@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.93",
+  "version": "0.2.94",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {

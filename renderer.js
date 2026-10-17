@@ -1400,10 +1400,29 @@ async function sendChat(raw, options={}) {
   }
   return true;
 }
+function animateViewTransition(target) {
+  if (!target) return;
+  target.classList.remove('view-entering');
+  target.getAnimations?.().forEach(animation => animation.cancel());
+  clearTimeout(target._viewTransitionTimer);
+  if (target._viewTransitionEnd) target.removeEventListener('animationend', target._viewTransitionEnd);
+  void target.offsetWidth;
+  target.classList.add('view-entering');
+  const finish = () => {
+    if (target._viewTransitionEnd !== finish) return;
+    target.classList.remove('view-entering');
+    target.removeEventListener('animationend', finish);
+    clearTimeout(target._viewTransitionTimer);
+    target._viewTransitionEnd = null;
+  };
+  target._viewTransitionEnd = finish;
+  target.addEventListener('animationend', finish);
+  target._viewTransitionTimer = setTimeout(finish, 360);
+}
 function showView(view) {
   const previousView=state.currentView;state.currentView=view;$('workspace-grid').dataset.view=view;$('workspace-grid').classList.toggle('single-view',view!=='project');
   $('project-overview').hidden=view!=='project';$('chat-panel').hidden=view!=='chat';$('mods-panel').hidden=view!=='mods';$('lab-panel').hidden=view!=='lab';if(view==='lab')renderLab();
-  if(previousView!==view){const target=view==='project'?$('project-overview'):view==='chat'?$('chat-panel'):view==='mods'?$('mods-panel'):$('lab-panel');target.classList.remove('view-entering');void target.offsetWidth;target.classList.add('view-entering');clearTimeout(target._viewTransitionTimer);target._viewTransitionTimer=setTimeout(()=>target.classList.remove('view-entering'),420)}
+  if(previousView!==view){const target=view==='project'?$('project-overview'):view==='chat'?$('chat-panel'):view==='mods'?$('mods-panel'):$('lab-panel');animateViewTransition(target)}
   document.querySelectorAll('.nav-item[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
   window.WorkshopModernUI?.render();
   if(view==='chat'){chatFollowLatest=true;const area=$('chat-messages');requestAnimationFrame(()=>{area._scheduleLatestChatScroll?.();area.scrollTop=area.scrollHeight;if(!$('username-setup-overlay').hidden)$('username-input').focus();else if(!$('startup-login-overlay').hidden)$('startup-connect').focus();else $('chat-input').focus()})}

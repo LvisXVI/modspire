@@ -16,7 +16,7 @@ const METHODS = Object.freeze({
   openLauncher:'launcher:open',openExternal:'app:open-external',startVoiceInput:'voice:start',stopVoiceInput:'voice:stop',returnToDesktop:'web:stop',reportWebReturnError:'web:return-error'
 });
 const EVENTS = Object.freeze({onLocalAiProgress:'local-ai:progress',onChatProgress:'chat:progress',onVoiceInputEvent:'voice:event',onPrepareWebReturn:'web:prepare-return'});
-const STATIC = new Set(['styles.css','visual-fixes.css','modern-ui.css','v3-ui.css','v4-ui.css','desktop-polish.css','renderer.js','i18n.js','design-manager.cjs','v3-ui.js','v4-ui.js','modern-ui.js','diagnostics-ui.js','desktop-polish.js','web-bridge.js','web-bootstrap.js','local-web-ui.js','local-web.css']);
+const STATIC = new Set(['styles.css','visual-fixes.css','modern-ui.css','v3-ui.css','v4-ui.css','desktop-polish.css','renderer.js','pack-tools.js','i18n.js','design-manager.cjs','v3-ui.js','v4-ui.js','modern-ui.js','diagnostics-ui.js','desktop-polish.js','web-bridge.js','web-bootstrap.js','local-web-ui.js','local-web.css']);
 const MIME={'.css':'text/css','.js':'text/javascript','.cjs':'text/javascript','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.ico':'image/x-icon','.woff2':'font/woff2','.woff':'font/woff','.gif':'image/gif'};
 const random=()=>crypto.randomBytes(32).toString('hex');
 

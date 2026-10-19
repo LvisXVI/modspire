@@ -4,6 +4,17 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.98] - 2026-10-19
+
+### Added
+- Undo and redo mod selection changes, including batch additions and clearing a pack, with toolbar controls and Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z or Ctrl+Y outside text inputs and dialogs.
+- Optional names for local pack snapshots in Pack Lab, with the existing quick-save fallback.
+- Include validated Modrinth and CurseForge project links in copied mod lists alongside Minecraft version, loader and dependency labels.
+
+### Fixed
+- Invalidate pending dependency responses when clearing or undoing the selection or restoring a snapshot, so an older result cannot restore removed mods.
+- Limit selection history to 30 steps in the current session and reset it when switching projects, Minecraft versions or loaders.
+
 ## [0.2.97] - 2026-10-17
 
 ### Fixed

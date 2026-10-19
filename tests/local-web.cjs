@@ -34,6 +34,7 @@ const { createLocalWebServer, METHODS } = require('../local-web.cjs');
     assert.equal((await fetch(`${origin}/package.json`,{headers:{cookie}})).status,404);
     assert.equal((await fetch(`${origin}/assets/%2e%2e%2fmain.cjs`,{headers:{cookie}})).status,404);
     assert.equal((await fetch(`${origin}/styles.css`,{headers:{cookie}})).status,200);
+    assert.equal((await fetch(`${origin}/pack-tools.js`,{headers:{cookie}})).status,200,'selection history is available in the local browser app');
     const html=await (await fetch(`${origin}/app`,{headers:{cookie}})).text();
     assert.match(html,/web-bridge.js/);
     const source=fs.readFileSync(path.join(root,'preload.cjs'),'utf8');

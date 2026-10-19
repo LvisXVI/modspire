@@ -34,9 +34,16 @@ const {_electron,chromium}=require('playwright');
       await page.locator('#nav-project').click();
       assert.equal(await page.locator(mode==='classic'?'#project-overview':mode==='modern'?'#modern-dashboard':`#${mode}-dashboard`).isVisible(),true,`${mode}: overview is reachable`);
       await page.locator('#nav-mods').click();assert.equal(await page.locator('#mods-panel').isVisible(),true);
+      await page.locator('#selected-list [data-remove]').click();
+      assert.equal(await page.evaluate(()=>state.project.mods.length),0,`${mode}: real removal changes the pack`);
+      await page.locator('#undo-selection').click();
+      assert.equal(await page.evaluate(()=>state.project.mods[0]?.id),'qa-marker',`${mode}: undo restores the real selection`);
       await page.locator('#nav-mod-creator').click();assert.equal(await page.locator('#creator-studio').isVisible(),true,`${mode}: designer is reachable`);
       await page.locator('#nav-lab').click();assert.equal(await page.locator('#lab-panel').isVisible(),true);
     }
+    await page.locator('#snapshot-name').fill('Browser QA variant');await page.locator('#save-snapshot').click();
+    await page.evaluate(()=>save());
+    assert.equal(await page.evaluate(async()=>(await workshop.loadProject()).snapshots.at(-1).name),'Browser QA variant','named snapshots persist through real desktop storage');
     await page.locator('#nav-chat').click();
     assert.equal(await page.locator('html').getAttribute('lang'),'en','fresh web sessions start in English');
     assert.match(await page.locator('#launch-web').getAttribute('title'),/desktop/);

@@ -1,13 +1,13 @@
 # Modspire Patch Log
 
-This is a retrospective feature history for the project, from its first locally archived build through Modspire 0.2.97. It combines the surviving local build archive, public GitHub releases, the current source, and the project documentation.
+This is a retrospective feature history for the project, from its first locally archived build through Modspire 0.2.98. It combines the surviving local build archive, public GitHub releases, the current source, and the project documentation.
 
 ## How to read this history
 
 - The local archive contains builds beginning with **0.1.0**, followed by the **0.2.x** development line.
 - The first public GitHub release that is still available in the release history is **0.2.86**. The repository source history starts later, with the 0.2.87 source snapshot.
 - Individual change notes were not kept for every early local build. To avoid inventing which exact build introduced a feature, this log groups the early work into a development era and gives precise notes for the releases whose release records are available.
-- This page documents the project through **0.2.97**. It does not claim that every mod, Minecraft version, AI model, or provider is compatible.
+- This page documents the project through **0.2.98**. It does not claim that every mod, Minecraft version, AI model, or provider is compatible.
 
 ## First builds — 0.1.0 to 0.2.0
 
@@ -108,7 +108,16 @@ The release notes listed ChatGPT account access, Ollama, OpenAI API, and OmniRou
 - Added focus handling without automatic scrolling and corrected inline-card text contrast across all four UIs and nine themes.
 - Added real click regressions in the browser and Electron app.
 
-## Current scope and limits at 0.2.97
+## 0.2.98 — safer pack editing and sharing
+
+- Undo and redo mod selection changes, including batch actions and clearing the pack. The current session retains up to 30 changes; another pack, Minecraft version, loader or app restart resets this history.
+- Use toolbar buttons or Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z and Ctrl+Y outside text fields and dialogs.
+- Give Pack Lab snapshots optional names, keeping the quick-save fallback and automatic backup before restoration.
+- Copy mod lists with project links, game version, loader and dependency labels.
+- Ignore stale dependency replies after undo, clearing or restoring a variant, and recalculate dependencies for the restored selection.
+- Verified all 47 test files, desktop/local-browser persistence, four UIs and the Windows portable build.
+
+## Current scope and limits at 0.2.98
 
 Modspire plans packs, searches catalog metadata, and organizes selections. It does not download every mod automatically, install Minecraft loaders, or prove that a project launches successfully in Minecraft. CurseForge requires the user’s own API key. AI availability, privacy, cost, model capabilities, and compatibility depend on the connected account, provider, and local runtime; not every local model or agent has been tested. See [AI, privacy, and limits](ai-privacy.md), [getting started](getting-started.md), and the [community test disclaimer](../../PUBLIC-TEST-DISCLAIMER.md).
 

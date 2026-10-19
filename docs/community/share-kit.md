@@ -11,6 +11,16 @@ Use these factual starting points for a personal introduction. Check the destina
 - Actual app tour: https://lvisxvi.github.io/modspire/#tour
 - Screenshot: https://raw.githubusercontent.com/LvisXVI/modspire/main/docs/screenshots/rounded/modrinth-search-and-selection.png
 
+## Latest update — 0.2.98 (2026-10-19)
+
+Release: https://github.com/LvisXVI/modspire/releases/tag/v0.2.98
+
+**English:** Modspire 0.2.98 makes pack editing easier to recover: undo/redo your selection, name saved pack variants, and copy mod lists with project links. Direct Modrinth search needs no AI account. Windows portable download and sample browser demo: https://lvisxvi.github.io/modspire/
+
+**Deutsch:** Modspire 0.2.98 ist da: Modauswahl rückgängig machen, Pack-Varianten benennen und Modlisten mit Links teilen. Die Modrinth-Suche braucht keinen KI-Account. Portable Windows-App und Browser-Demo: https://lvisxvi.github.io/modspire/
+
+The public browser demo remains sample-based and does not demonstrate every desktop feature in the new release. External Reddit/Discord/creator outreach has not been published.
+
 ## English introduction
 
 **Modspire: a local-first Minecraft Java modpack planner — looking for feedback**

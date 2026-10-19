@@ -234,7 +234,53 @@ async function createProjectFromForm(event){
     state.lastSearchQueries=[];window.lastResults=[];$('mod-search').value='';$('mod-results').replaceChildren();renderProjectSwitcher();renderSelected();renderChat();showView('chat');loadPopularMods();setStatus(`„${state.project.name}“ erstellt`);
   }catch(error){setStatus(`Modpack konnte nicht erstellt werden: ${error.message}`);alert(error.message)}
 }
+function renderSelectionHistory() {
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');
+  const available=window.WorkshopPackTools.history.observe(state.project);
+  for(const direction of ['undo','redo']){
+    const button=$(direction+'-selection');if(!button)continue;
+    button.disabled=!available[direction];
+    button.textContent=direction==='undo'?(english?'Undo':'Rückgängig'):(english?'Redo':'Wiederholen');
+    button.setAttribute('aria-label',english?`${button.textContent} mod selection change`:`Änderung der Modauswahl ${direction==='undo'?'rückgängig machen':'wiederholen'}`);
+  }
+  if($('snapshot-name')){
+    const label=english?'Snapshot name (optional)':'Name des Pack-Stands (optional)';
+    $('snapshot-name').placeholder=english?'e.g. Performance':'z. B. Performance';
+    $('snapshot-name').setAttribute('aria-label',label);
+    $('snapshot-name-label').textContent=label;
+  }
+}
+function stepSelectionHistory(direction) {
+  const mods=window.WorkshopPackTools.history.step(state.project,direction);
+  if(!mods)return;
+  // Invalidate pending dependency and compatibility replies before restoring roots.
+  state.dependencyGeneration++;state.compatibilityGeneration++;state.compatibilityReport=null;
+  state.project.mods=mods;state.batchSelection.clear();
+  queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat();reconcilePackDependencies();
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');
+  setStatus(direction==='undo'?(english?'Mod selection change undone':'Änderung der Modauswahl rückgängig gemacht'):(english?'Mod selection change redone':'Änderung der Modauswahl wiederholt'));
+}
+function initPackTools() {
+  $('undo-selection').onclick=()=>stepSelectionHistory('undo');
+  $('redo-selection').onclick=()=>stepSelectionHistory('redo');
+  $('copy-mod-list').onclick=async()=>{
+    const locale=window.workshopI18n?.locale||'de';
+    try{await window.workshop.writeClipboard(window.WorkshopPackTools.formatModList(state.project,locale));setStatus(locale.startsWith('en')?'Mod list with project links copied':'Modliste mit Projektlinks kopiert')}
+    catch(error){setStatus(error.message)}
+  };
+  document.addEventListener('keydown',event=>{
+    if(event.defaultPrevented||event.altKey||!(event.ctrlKey||event.metaKey))return;
+    const target=event.target;
+    if(target.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"]'))return;
+    if([...document.querySelectorAll('[aria-modal="true"]')].some(node=>!node.hidden&&node.getClientRects().length))return;
+    const key=event.key.toLowerCase();
+    const direction=key==='z'?(event.shiftKey?'redo':'undo'):key==='y'?'redo':null;
+    if(!direction)return;
+    event.preventDefault();stepSelectionHistory(direction);
+  });
+}
 function renderSelected() {
+  if(window.WorkshopPackTools)renderSelectionHistory();
   const list = $('selected-list');
   const english=(window.workshopI18n?.locale||'de').startsWith('en');
   $('selected-count').textContent = state.project.mods.length ? english?`${state.project.mods.length} mods selected`:`${state.project.mods.length} Mods ausgewählt` : english?'No mods selected yet':'Noch keine Mods ausgewählt';
@@ -331,14 +377,36 @@ function renderMoodboard(){
   notes.forEach(label=>chip(label,false));suggested.filter(term=>!notes.includes(term)).forEach(label=>chip(label,true));if(!target.children.length){const empty=document.createElement('span');empty.className='lab-empty';empty.textContent='Noch keine Ideen notiert.';target.append(empty)}
 }
 function saveSnapshot(name){
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');
+  const field=$('snapshot-name'),customName=String(name??field?.value??'').trim().slice(0,80);
   const data={};['id','name','minecraftVersion','loader','provider','mods','moodboard'].forEach(key=>{data[key]=JSON.parse(JSON.stringify(state.project[key]??(['mods','moodboard'].includes(key)?[]:null)))});
-  const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[],snapshot={id:crypto.randomUUID(),name:name||'Stand '+(all.length+1),createdAt:new Date().toISOString(),mods:state.project.mods.length,data};state.project.snapshots=[...all,snapshot].slice(-12);queueSave();renderSnapshots();setStatus('Pack-Stand „'+snapshot.name+'“ gesichert');
+  const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[],snapshot={id:crypto.randomUUID(),name:customName||(english?'Snapshot ':'Stand ')+(all.length+1),createdAt:new Date().toISOString(),mods:state.project.mods.length,data};state.project.snapshots=[...all,snapshot].slice(-12);if(field&&name==null)field.value='';queueSave();renderSnapshots();window.WorkshopModernUI?.render();setStatus(english?'Snapshot “'+snapshot.name+'” saved':'Pack-Stand „'+snapshot.name+'“ gesichert');
 }
 function renderSnapshots(){
-  const target=$('snapshot-list');if(!target)return;target.replaceChildren();const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[];
-  if(!all.length){const empty=document.createElement('p');empty.className='lab-empty';empty.textContent='Noch keine Pack-Stände gespeichert.';target.append(empty);return}
-  all.slice().reverse().forEach(snapshot=>{const row=document.createElement('div');row.className='snapshot-row';const label=document.createElement('span');label.textContent=snapshot.name+' · '+new Date(snapshot.createdAt).toLocaleString('de-DE')+' · '+snapshot.mods+' Mods';const button=document.createElement('button');button.type='button';button.className='text-button';button.textContent='Wiederherstellen';button.onclick=()=>{if(!confirm('Pack auf „'+snapshot.name+'“ zurücksetzen? Der aktuelle Stand bleibt als Sicherung erhalten.'))return;saveSnapshot('Vor Wiederherstellung');const copies=state.project.snapshots;state.project={...state.project,...snapshot.data,snapshots:copies};$('pack-name').value=state.project.name;selectMinecraftVersion(state.project.minecraftVersion);$('loader').value=state.project.loader;$('provider').value=state.project.provider;queueSave();renderSelected();renderChat();setStatus('„'+snapshot.name+'“ wiederhergestellt')};row.append(label,button);target.append(row)})
+  const target=$('snapshot-list');if(!target)return;
+  target.replaceChildren();
+  const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[];
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');
+  if(!all.length){const empty=document.createElement('p');empty.className='lab-empty';empty.textContent=english?'No pack snapshots saved yet.':'Noch keine Pack-Stände gespeichert.';target.append(empty);return}
+  all.slice().reverse().forEach(snapshot=>{
+    const row=document.createElement('div');row.className='snapshot-row';
+    const label=document.createElement('span');
+    label.textContent=snapshot.name+' · '+new Date(snapshot.createdAt).toLocaleString(english?'en-US':'de-DE')+' · '+snapshot.mods+' Mods';
+    const button=document.createElement('button');button.type='button';button.className='text-button';button.textContent=english?'Restore':'Wiederherstellen';
+    button.onclick=()=>{
+      if(!confirm(english?'Restore “'+snapshot.name+'”? The current state will be backed up.':'Pack auf „'+snapshot.name+'“ zurücksetzen? Der aktuelle Stand bleibt als Sicherung erhalten.'))return;
+      saveSnapshot(english?'Before restore':'Vor Wiederherstellung');
+      const copies=state.project.snapshots;
+      state.dependencyGeneration++;state.compatibilityGeneration++;state.compatibilityReport=null;state.batchSelection.clear();
+      state.project={...state.project,...JSON.parse(JSON.stringify(snapshot.data)),snapshots:copies};
+      $('pack-name').value=state.project.name;selectMinecraftVersion(state.project.minecraftVersion);$('loader').value=state.project.loader;$('provider').value=state.project.provider;
+      queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat();reconcilePackDependencies();
+      setStatus(english?'“'+snapshot.name+'” restored':'„'+snapshot.name+'“ wiederhergestellt');
+    };
+    row.append(label,button);target.append(row);
+  });
 }
+
 function diagnoseCrash(text,name){
   const lines=String(text).split(/\r?\n/),rules=[
     {pattern:/OutOfMemoryError|Could not reserve enough space|GC overhead limit exceeded/i,label:'Speicher erschöpft',reason:'Java konnte den benötigten Arbeitsspeicher nicht reservieren. Der Absturz ist ein Heap-/RAM-Fehler; der Logauszug allein beweist keine einzelne verursachende Mod.',fix:'Minecraft-RAM-Zuweisung und große Welt-, Shader- oder Content-Mods prüfen; Mods einzeln deaktivieren, falls der Fehler reproduzierbar bleibt.',weight:100},
@@ -1823,9 +1891,9 @@ document.addEventListener('focusout',event=>{if(event.target.closest('button,sel
 document.addEventListener('click',()=>hoverTooltip.classList.remove('visible'),true);
 document.addEventListener('scroll',()=>hoverTooltip.classList.remove('visible'),true);
 $('selected-filter').addEventListener('input',event=>{state.packFilter=event.target.value.trim();renderSelected()});
-$('copy-mod-list').onclick=async()=>{const english=(window.workshopI18n?.locale||'de').startsWith('en');const lines=state.project.mods.map(mod=>`• ${mod.title}${mod.dependency?(english?' (dependency)':' (Abhängigkeit)'):''}`);const text=`${state.project.name} · Minecraft ${state.project.minecraftVersion} · ${state.project.loader}\n${lines.join('\n')}`;try{await window.workshop.writeClipboard(text);setStatus(english?'Mod list copied':'Modliste kopiert')}catch(error){setStatus(error.message)}};
+initPackTools();
 $('export-pack-json').onclick=async()=>{try{const result=await window.workshop.exportProject(state.project);if(!result.canceled)setStatus((window.workshopI18n?.locale||'de').startsWith('en')?'Pack exported':'Modpack exportiert')}catch(error){setStatus(error.message)}};
-$('clear-selection').onclick=()=>{state.project.mods=[];queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat()};
+$('clear-selection').onclick=()=>{state.project.mods=[];state.compatibilityReport=null;queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat();reconcilePackDependencies()};
 $('chat-model-select').addEventListener('change',async()=>{const choice=$('chat-model-select').value;if(!choice)return;if(choice==='provider:auto'){$('ai-provider').value='auto';await saveAiProvider();return}if(choice==='provider:chatgpt'){$('ai-provider').value='chatgpt';await saveAiProvider();if(state.chatgpt.status!=='connected'||!state.chatgpt.sharing)openSettings();return}if(choice==='provider:claude'){$('ai-provider').value='claude';await saveAiProvider();return}if(choice==='provider:openai'){$('ai-provider').value='openai';await saveAiProvider();return}if(choice.startsWith('opencode:')){$('opencode-model').value=choice.slice('opencode:'.length);try{await saveOpenCodeSettings();$('ai-provider').value='opencode';await saveAiProvider()}catch(error){setStatus(error.message)}return}if(choice==='provider:omniroute'){$('ai-provider').value='omniroute';await saveAiProvider();return}const model=choice.slice('local:'.length);if(!model)return;state.settings.localAi={...(state.settings.localAi||{}),model};$('local-ai-model').value=model;$('ai-provider').value='local';await saveAiProvider()});
 window.addEventListener('workshop-language-changed',()=>{hoverTooltip.classList.remove('visible');renderSelected();renderResults(window.lastResults||[]);renderChat();syncChatModelPicker();syncFullscreenButton($('toggle-fullscreen').getAttribute('aria-pressed')==='true');if(state.currentView==='lab')renderLab()});
 $('test-pack').onclick=startTest;$('auto-fix').onclick=applyCompatibilityFixes;$('close-test').onclick=$('test-done').onclick=()=>$('test-overlay').hidden=true;

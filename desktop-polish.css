@@ -127,3 +127,12 @@ html body[data-theme] .chat-mod-inline-results .compact-mod-card .mod-meta { col
 html body[data-theme] .chat-mod-inline-results .compact-mod-card :is(.source-tag,.match-tag) { background: var(--dialog-inset) !important; border-color: var(--dialog-line) !important; }
 
 html body #chat-messages, html body #chat-messages .chat-mod-inline-results { overflow-anchor: none; }
+
+.selection-history-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 20px 8px; }
+html body[data-theme] .selection-history-actions .text-button { min-height: 30px; padding: 5px 10px; border: 1px solid var(--dialog-line); border-radius: 9px; background: var(--dialog-card) !important; color: var(--dialog-ink) !important; font-size: 11px; }
+html body .selection-history-actions .text-button:disabled { opacity: .5; cursor: default; }
+html body .selection-history-actions .text-button:focus-visible, html body #snapshot-name:focus-visible { outline: 2px solid var(--custom-accent); outline-offset: 2px; }
+.snapshot-name-field { display: grid; gap: 6px; margin: 0 0 12px; font-size: 11px; }
+html body .snapshot-name-field, html body #snapshot-name-label { color: inherit !important; }
+html body #snapshot-name { width: 100%; min-width: 0; min-height: 36px; padding: 8px 10px; border: 1px solid var(--dialog-line); border-radius: 9px; background: transparent !important; color: inherit !important; font: inherit; }
+html body #snapshot-name::placeholder { color: inherit; opacity: .8; }

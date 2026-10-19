@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.97",
+  "version": "0.2.98",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -26,6 +26,7 @@
       "v3-ui.js",
       "v4-ui.js",
       "renderer.js",
+      "pack-tools.js",
       "modern-ui.js",
       "i18n.js",
       "diagnostics.cjs",

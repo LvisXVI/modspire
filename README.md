@@ -15,6 +15,8 @@
   </p>
 </div>
 
+> **New in [0.2.98](https://github.com/LvisXVI/modspire/releases/tag/v0.2.98):** Undo selection changes, name pack variants, and share mod lists with project links. [Try the browser demo](https://lvisxvi.github.io/modspire/#demo) before downloading.
+
 ## 🎬 See Modspire in action
 
 Click the preview to open the hosted video player. GitHub's file browser cannot preview large MP4 files.
@@ -44,6 +46,8 @@ The tour uses a real recording of Modspire. The feature gallery below also shows
 - 💬 Describe the experience you want and review AI-assisted Modrinth suggestions before changing your pack.
 - 🔍 Search Modrinth directly without an AI account; filter by topic, version, loader, category, environment, and popularity.
 - 🧩 Add candidates or a pack foundation in batches, inspect dependencies, and review compatibility notes.
+- ↶ Undo or redo selection changes from the pack toolbar; Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y) work outside text fields. History lasts for the current session and resets when the pack or game setup changes.
+- 🔗 Copy a shareable mod list with project links, Minecraft version, loader and dependency labels; give saved Pack Lab snapshots a name to distinguish variants.
 - 📦 Import a Modrinth share code, public pack link, or `.mrpack` into an editable project, then export your selection.
 - 🛠️ Develop a mod idea into a specification and starter-code outline with the AI Mod Creator.
 - 🧪 Review a project in Pack Lab with mod roles, category balance, snapshots, and a Crash Analyzer that explains likely causes, cites nearby log evidence, and names a mod only when the log supports it.

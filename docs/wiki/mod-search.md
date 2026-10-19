@@ -20,3 +20,9 @@ Follow-up choices such as **More Exploration**, **Alternatives**, or **Visual Mo
 - Review dependency suggestions and compatibility notes before exporting.
 
 Mod descriptions, download counts, versions, and compatibility metadata come from external catalogs. A result is a candidate, not a guarantee that the mod works in your game.
+
+## Recover edits and share a shortlist
+
+Use **Undo** and **Redo** below your pack heading to reverse selection changes, including batch additions and clearing a pack. Outside text fields and dialogs, Ctrl/Cmd+Z undoes; Ctrl/Cmd+Shift+Z or Ctrl+Y redoes. The session keeps up to 30 changes. Switching the project, Minecraft version or loader, or restarting the app resets this history.
+
+For a persistent variant, open **Pack Lab**, optionally enter a snapshot name, and save the current state. Restoring a snapshot first backs up the current pack, then recalculates required dependencies. **Copy list** includes the pack name, Minecraft version, loader, dependency labels and available Modrinth/CurseForge project links.

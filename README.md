@@ -15,7 +15,7 @@
   </p>
 </div>
 
-> **New in [0.2.98](https://github.com/LvisXVI/modspire/releases/tag/v0.2.98):** Undo selection changes, name pack variants, and share mod lists with project links. [Try the browser demo](https://lvisxvi.github.io/modspire/#demo) before downloading.
+> **New in [0.2.99](https://github.com/LvisXVI/modspire/releases/tag/v0.2.99):** Portable updates remove the old executable backup and update cache after a successful launch, while keeping project data intact. [Try the browser demo](https://lvisxvi.github.io/modspire/#demo) before downloading.
 
 ## 🎬 See Modspire in action
 

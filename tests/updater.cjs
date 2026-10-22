@@ -1,12 +1,28 @@
 const assert = require('node:assert/strict');
+const { execFileSync } = require('node:child_process');
 const crypto = require('node:crypto');
 const http = require('node:http');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { compareVersions, parseLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('../updater.cjs');
+const { compareVersions, parseLatestRelease, downloadVerifiedAsset, buildPortableSwapScript, cleanupUpdateCache } = require('../updater.cjs');
 
 (async () => {
+  const cleanupRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'modspire-update-cache-test-'));
+  const userData = path.join(cleanupRoot, 'Modpack-Werkstatt');
+  const updateCache = path.join(userData, 'updates');
+  await fs.mkdir(updateCache, { recursive: true });
+  await fs.mkdir(path.join(userData, 'projects'), { recursive: true });
+  await fs.writeFile(path.join(updateCache, 'Modspire-0.2.99-Portable.exe.verified'), 'old update');
+  await fs.writeFile(path.join(updateCache, 'install-update.ps1'), 'old swap script');
+  await fs.writeFile(path.join(userData, 'settings.json'), '{"keep":true}');
+  await cleanupUpdateCache(updateCache, userData);
+  await assert.rejects(fs.access(updateCache), { code: 'ENOENT' });
+  assert.equal(await fs.readFile(path.join(userData, 'settings.json'), 'utf8'), '{"keep":true}');
+  assert.equal(await fs.access(path.join(userData, 'projects')).then(() => true), true);
+  await assert.rejects(cleanupUpdateCache(path.join(userData, 'projects'), userData), /nur.*Update-Cache/i);
+  await fs.rm(cleanupRoot, { recursive: true, force: true });
+
   assert.equal(compareVersions('0.2.91', '0.2.90'), 1);
   assert.equal(compareVersions('0.2.90', '0.2.90'), 0);
   assert.equal(compareVersions('0.2.9', '0.2.10'), -1);
@@ -43,10 +59,19 @@ const { compareVersions, parseLatestRelease, downloadVerifiedAsset, buildPortabl
     await fs.rm(directory, { recursive: true, force: true });
   }
 
-  const script = buildPortableSwapScript({ currentExe: 'C:\\Apps\\Modspire.exe', stagedExe: 'C:\\Apps\\.Modspire.exe.modspire-update', backupExe: 'C:\\Apps\\Modspire.exe.backup', pid: 42 });
+  const script = buildPortableSwapScript({ currentExe: 'C:\\Apps\\Modspire.exe', stagedExe: 'C:\\Apps\\.Modspire.exe.modspire-update', backupExe: 'C:\\Apps\\Modspire.exe.backup', updateDirectory: 'C:\\Users\\Alice\\AppData\\Roaming\\Modpack-Werkstatt\\updates', pid: 42 });
   assert.match(script, /Wait-Process -Id 42/);
   assert.match(script, /Modspire\.exe\.backup/);
-  assert.match(script, /Start-Process/);
+  assert.match(script, /Start-Process -FilePath \$target.+-PassThru/);
+  assert.match(script, /Remove-Item -LiteralPath \$backup -Force/);
+  assert.match(script, /Start-Process -FilePath 'powershell\.exe'/);
+  assert.match(script, /AppData\\Roaming\\Modpack-Werkstatt\\updates/);
+  assert.throws(() => buildPortableSwapScript({ currentExe: 'C:\\Apps\\Modspire.exe', stagedExe: 'C:\\Apps\\.Modspire.exe.modspire-update', backupExe: 'C:\\Apps\\Modspire.exe.backup', updateDirectory: 'C:\\Apps\\updates', pid: 42 }), /getrennt|Update-Cache/i);
+  if (process.platform === 'win32') {
+    const inner = Buffer.from(script, 'utf16le').toString('base64');
+    const parser = `$generated=[Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('${inner}'));[void][scriptblock]::Create($generated)`;
+    execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(parser, 'utf16le').toString('base64')], { windowsHide: true });
+  }
   assert.throws(() => buildPortableSwapScript({ currentExe: 'C:\\Apps\\..\\other.exe', stagedExe: 'C:\\temp\\update.exe', backupExe: 'x', pid: 1 }), /selben Verzeichnis/i);
   console.log('Updater version parsing, release validation, streamed integrity verification, cleanup, and portable swap safety passed.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

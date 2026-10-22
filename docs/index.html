@@ -89,6 +89,10 @@
       .nav-links a { color:var(--muted); font-size:13px; font-weight:600; text-decoration:none; transition:color .18s ease; }
       .nav-links a:hover { color:var(--ink); }
       .nav-links .nav-cta { color:#0b1521; }
+      .product-switch { display:flex; align-items:center; gap:3px; padding:4px; border:1px solid var(--line); border-radius:999px; background:rgba(16,25,41,.74); }
+      .product-switch a.product-link { display:inline-flex; min-height:34px; align-items:center; padding:0 13px; border-radius:999px; color:var(--muted); font-size:11px; font-weight:750; text-decoration:none; }
+      .product-switch a.product-link:hover { background:rgba(128,241,230,.1); color:var(--ink); }
+      .product-switch a.product-link[aria-current="page"] { background:linear-gradient(100deg,var(--cyan),var(--blue) 56%,#b99cff); color:#08131d; }
       .menu-toggle { display:none; width:44px; height:44px; border:1px solid var(--line); border-radius:14px; background:var(--panel); color:var(--ink); font-size:20px; }
       .button {
         display:inline-flex;
@@ -999,6 +1003,7 @@
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <div class="nav-links" id="site-nav">
           <a href="#demo">Try the studio</a><a href="#showcase">What’s inside</a><a href="#downloads">Download</a><a href="#docs">Guides</a>
+          <div class="product-switch" aria-label="Switch product preview"><a class="product-link" href="https://lvisxvi.github.io/modspire/" aria-current="page">Modspire</a><a class="product-link" href="https://lvisxvi.github.io/minecraft-mod-studio/">Mod Studio</a></div>
           <a class="button small primary nav-cta" href="#downloads">Download Modspire <span aria-hidden="true">↓</span></a>
         </div>
       </nav>

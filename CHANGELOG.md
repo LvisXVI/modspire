@@ -4,6 +4,13 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.2.99] - 2026-10-22
+
+### Fixed
+- Remove the previous portable executable backup after a successful update and clear the dedicated update cache after the new app starts.
+- Clear stale files from the updater cache before staging a new update, while preserving projects and other user data.
+- Defer cleanup until the old app process exits and roll back if the new app fails to stay open.
+
 ## [0.2.98] - 2026-10-19
 
 ### Added

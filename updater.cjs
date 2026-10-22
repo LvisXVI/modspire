@@ -79,13 +79,27 @@ async function downloadVerifiedAsset({ url, destination, expectedDigest, expecte
 }
 
 function psQuote(value) { return `'${String(value).replace(/'/g, "''")}'`; }
-function buildPortableSwapScript({ currentExe, stagedExe, backupExe, pid }) {
+async function cleanupUpdateCache(updateDirectory, userDataDirectory) {
+  const win = path.win32;
+  const cache = win.resolve(updateDirectory), userData = win.resolve(userDataDirectory);
+  if (win.basename(cache).toLowerCase() !== 'updates' || win.dirname(cache).toLowerCase() !== userData.toLowerCase()) throw new Error('Es darf nur der direkte Modspire-Update-Cache bereinigt werden.');
+  await fs.rm(cache, { recursive: true, force: true });
+}
+
+function buildPortableSwapScript({ currentExe, stagedExe, backupExe, updateDirectory, pid }) {
   const win = path.win32;
   const current = win.resolve(currentExe), staged = win.resolve(stagedExe), backup = win.resolve(backupExe);
   if (win.dirname(current).toLowerCase() !== win.dirname(staged).toLowerCase() || win.dirname(current).toLowerCase() !== win.dirname(backup).toLowerCase()) throw new Error('EXE, geprüfte Aktualisierung und Sicherung müssen im selben Verzeichnis liegen.');
   if (win.basename(current).toLowerCase() === win.basename(staged).toLowerCase() || win.basename(current).toLowerCase() === win.basename(backup).toLowerCase()) throw new Error('Update- und Sicherungsdatei müssen eigene Namen haben.');
+  const cleanup = win.resolve(updateDirectory || '');
+  const appDirectory = win.dirname(current).toLowerCase();
+  const cleanupDirectory = cleanup.toLowerCase();
+  const overlaps = (parent, child) => child === parent || child.startsWith(`${parent.replace(/[\\/]$/, '')}\\`);
+  if (win.basename(cleanup).toLowerCase() !== 'updates' || overlaps(appDirectory, cleanupDirectory) || overlaps(cleanupDirectory, appDirectory)) throw new Error('Update-Cache und portable App müssen getrennt liegen.');
   if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('Die Prozess-ID ist ungültig.');
-  return `$ErrorActionPreference='Stop';$target=${psQuote(current)};$stage=${psQuote(staged)};$backup=${psQuote(backup)};Wait-Process -Id ${pid} -ErrorAction SilentlyContinue;try{if(Test-Path -LiteralPath $backup){Remove-Item -LiteralPath $backup -Force};Move-Item -LiteralPath $target -Destination $backup -Force;Move-Item -LiteralPath $stage -Destination $target -Force;Start-Process -FilePath $target -WorkingDirectory ${psQuote(win.dirname(current))}}catch{if((Test-Path -LiteralPath $backup) -and !(Test-Path -LiteralPath $target)){Move-Item -LiteralPath $backup -Destination $target -Force};throw}`;
+  const cachePath = psQuote(cleanup);
+  const embeddedCachePath = cachePath.replace(/'/g, "''");
+  return `$ErrorActionPreference='Stop';$target=${psQuote(current)};$stage=${psQuote(staged)};$backup=${psQuote(backup)};$updateCache=${cachePath};Wait-Process -Id ${pid} -ErrorAction SilentlyContinue;try{if(Test-Path -LiteralPath $backup){Remove-Item -LiteralPath $backup -Force};Move-Item -LiteralPath $target -Destination $backup -Force;Move-Item -LiteralPath $stage -Destination $target -Force;$updated=Start-Process -FilePath $target -WorkingDirectory ${psQuote(win.dirname(current))} -PassThru;Start-Sleep -Seconds 3;$updated.Refresh();if($updated.HasExited){throw 'Die neue Version wurde nicht gestartet.'};Remove-Item -LiteralPath $backup -Force;$cleanupCommand='Wait-Process -Id '+$PID+' -ErrorAction SilentlyContinue; if(Test-Path -LiteralPath ${embeddedCachePath}){Remove-Item -LiteralPath ${embeddedCachePath} -Recurse -Force}';$encoded=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($cleanupCommand));Start-Process -FilePath 'powershell.exe' -WindowStyle Hidden -ArgumentList @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand',$encoded)}catch{if(Test-Path -LiteralPath $backup){if(Test-Path -LiteralPath $target){Remove-Item -LiteralPath $target -Force};Move-Item -LiteralPath $backup -Destination $target -Force;Start-Process -FilePath $target -WorkingDirectory ${psQuote(win.dirname(current))}};throw}`;
 }
 
-module.exports = { compareVersions, parseLatestRelease, fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript };
+module.exports = { compareVersions, parseLatestRelease, fetchLatestRelease, downloadVerifiedAsset, cleanupUpdateCache, buildPortableSwapScript };

@@ -11,7 +11,7 @@ const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { normalizeOpenCodeUrl, listOpenCodeModels, askOpenCode } = require('./opencode.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
-const { fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('./updater.cjs');
+const { fetchLatestRelease, downloadVerifiedAsset, cleanupUpdateCache, buildPortableSwapScript } = require('./updater.cjs');
 const { recordWeeklySnapshot, buildWeeklyFavoriteRanking, SNAPSHOT_INTERVAL_MS } = require('./weekly-favorites.cjs');
 // Keep packaged upgrades on their original project and credential folder after the product rename.
 if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData', path.join(app.getPath('appData'), 'Modpack-Werkstatt'));
@@ -1389,11 +1389,12 @@ handleWorkshop('updates:download', async (event) => {
   const currentExe = path.resolve(process.execPath);
   const stagedExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.modspire-update`);
   const backupExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.previous`);
+  await cleanupUpdateCache(updateDirectory, app.getPath('userData'));
   await fs.mkdir(updateDirectory, { recursive: true });
   await downloadVerifiedAsset({ url: checkedUpdate.asset.url, destination: downloaded, expectedDigest: checkedUpdate.asset.digest, expectedSize: checkedUpdate.asset.size, onProgress: progress => { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('updates:progress', progress); } });
   await fs.rm(stagedExe, { force: true });
   await fs.copyFile(downloaded, stagedExe, require('node:fs').constants.COPYFILE_EXCL);
-  stagedUpdate = { currentExe, stagedExe, backupExe, release: checkedUpdate };
+  stagedUpdate = { currentExe, stagedExe, backupExe, updateDirectory, release: checkedUpdate };
   return { version: checkedUpdate.version, bytes: checkedUpdate.asset.size, ready: true };
 });
 handleWorkshop('updates:install', async event => {

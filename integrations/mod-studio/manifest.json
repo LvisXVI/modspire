@@ -1,0 +1,147 @@
+{
+  "source": "https://github.com/LvisXVI/minecraft-mod-studio",
+  "version": "0.1.0-alpha.8",
+  "sourceRevision": "75c17edfe92026f4379e301614802b6853d1f863",
+  "files": [
+    {
+      "path": "licenses/Geist-Mono-OFL-1.1.txt",
+      "sha256": "ccfad5385ab52bf92e501be984746ebf4fdc21db251f56af45d82ff6caaf8c2e"
+    },
+    {
+      "path": "licenses/README.md",
+      "sha256": "48e3d70a623eca16bc4db067fc84c69c76ef983762a9581fff455ffc10be9997"
+    },
+    {
+      "path": "licenses/runtime-checksums.txt",
+      "sha256": "b974fa11f83fc36045654284dc9daf628b6f188c99cc5fcaa2c1f9359e2be07b"
+    },
+    {
+      "path": "package.json",
+      "sha256": "1a338df9ef697457a5988052447d1f5a71f7808b79d33b1d15c2dedbb43d8959"
+    },
+    {
+      "path": "public/ai-memory.css",
+      "sha256": "6afd3633dadade4accaea5ad8be3dbefda9c8ac6debf9699e3f3e13605f5fadc"
+    },
+    {
+      "path": "public/api.js",
+      "sha256": "92376826b469ec297da7ad7dc50c793b7addaf255b967d052485825d8576c09b"
+    },
+    {
+      "path": "public/app.js",
+      "sha256": "52b7fcfddd338ef1aa39176e0a35ecd9bbbfe79e3a3c5b908996f5a8e4444750"
+    },
+    {
+      "path": "public/blockbench.js",
+      "sha256": "4584506c1c82ebe298719841aed39888e5d912dde8c51a8f4c9d4f16e9e5481f"
+    },
+    {
+      "path": "public/editor.js",
+      "sha256": "e5333e931594aaf1f0ecb011b0474092b066624b46968bbfaacfec87ee84d21e"
+    },
+    {
+      "path": "public/favicon.svg",
+      "sha256": "7e9b2334d7f91c3863b39a31e0305ad6c38454eafcf4c93e38733e591104d670"
+    },
+    {
+      "path": "public/fonts/geist-mono-latin-wght-normal.woff2",
+      "sha256": "684ad5b531f81d43c1e8c7038262d5db7cdc1f68006e04d6c7769efa8d33c8cc"
+    },
+    {
+      "path": "public/glass-scene.webp",
+      "sha256": "62032ad2aad957171f37116def0642e949cdc528dc985af6716a9535d7e41c66"
+    },
+    {
+      "path": "public/glass-skin.css",
+      "sha256": "486c7d6a373e9a88e6fb6672d61b5e371c1e902b25ddbe2a4f9b598e1033db4b"
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "009d5ba31dbf028dd64e6b4d647e155f1da3092653d6eb83adcc25278214ee89"
+    },
+    {
+      "path": "public/industrial.css",
+      "sha256": "cdee4f76428918d29ac295494bd04a74ccb6f12bb62bf12a8e75c83f2038d582"
+    },
+    {
+      "path": "public/styles.css",
+      "sha256": "95b5d1e733903b72fe9c896b070aaf9d2fc41dbd2130a52cec1fbd1a534b324f"
+    },
+    {
+      "path": "public/tailwind.css",
+      "sha256": "239ca8b6be1067859ef68b11113ffdbbdb46f92b11d85c139dcf9729e49bbba6"
+    },
+    {
+      "path": "public/tailwind.input.css",
+      "sha256": "551be99b6a4dc68b628f9cd924d7c35d284ed526a409021a0ecc49ecc9391294"
+    },
+    {
+      "path": "server/ai-memory.js",
+      "sha256": "27dbef4d202a2b27838437414253b099c9b5e0e88b2e37290dcc29231c22716d"
+    },
+    {
+      "path": "server/ai.js",
+      "sha256": "4840f3ff45c96ef4379f6f6d4268b0608cd817248995bfd5e948dab382a55daa"
+    },
+    {
+      "path": "server/auth/dpapi.ps1",
+      "sha256": "bc4fce411e467bd39019eeb509cebd619c36e7a589e9e2b633ce1550a083cb48"
+    },
+    {
+      "path": "server/auth/oauth.js",
+      "sha256": "988bc08521aebd7424ed491acd64ef5f7cad0e854e5d5df3cb2826d6c040fbf4"
+    },
+    {
+      "path": "server/blockbench.js",
+      "sha256": "3acac4b51bee94cf9cb85e322855300ce0cdbd97b855d2a8e4007a0356eebe4b"
+    },
+    {
+      "path": "server/build-runner.ps1",
+      "sha256": "23f8c47c039acf1dffe65a64db0f0e7ba9ee0a13c09cae2a94c35a07dae5ffff"
+    },
+    {
+      "path": "server/generator.js",
+      "sha256": "3dcfe776b9034d4ba1ce825749be4d9189a30bad7c3059e1035f647bf1226048"
+    },
+    {
+      "path": "server/http.js",
+      "sha256": "d24529ee6f6dc1741b13e9d36c7bdbd1c28a11e2166a50439862dcdaa51a48db"
+    },
+    {
+      "path": "server/index.js",
+      "sha256": "0afd44a886c4cee537eada9c145f94e403e221ccf6391506e45953e5834df469"
+    },
+    {
+      "path": "server/loader-version-fallback.json",
+      "sha256": "da2247bad4ae84b14b19b089621c70c95b911d0106abb1804ad8249d9816e877"
+    },
+    {
+      "path": "server/projects.js",
+      "sha256": "cd0bfcc421259a74b8bcdb8bf6b5148e9d84393d4b68b1cb24b1c5a95f61a1f6"
+    },
+    {
+      "path": "server/schema.js",
+      "sha256": "435411c369a089f4bbeb37c95a98cc794f2e07998c088245c5ddeeaae8fd3968"
+    },
+    {
+      "path": "server/secure-store.js",
+      "sha256": "994dafd902218dce16abf1cd2b4208e33f1c5f6cdb8ecbc61941fa8dd13619a2"
+    },
+    {
+      "path": "server/services.js",
+      "sha256": "71fbe4225d88c3bdce1f83264e57574fecc225d4535c777fa68080062afa4c4f"
+    },
+    {
+      "path": "server/updates.js",
+      "sha256": "d6ce152df2953c7dd9147564c568d939e1cb1588c22f7c9bf9410cd37fe7981c"
+    },
+    {
+      "path": "server/version-catalog.js",
+      "sha256": "b71b9bca3a9ec953582543e04dbac82d74b95ce6d694c689f3e2931318220b33"
+    },
+    {
+      "path": "server/zip.js",
+      "sha256": "01658b521d0725cdcb8c295bfd57acc413692028b8d59ae96e319032e9bbbe7e"
+    }
+  ]
+}

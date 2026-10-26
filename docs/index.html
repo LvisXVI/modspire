@@ -1,1503 +1,257 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0a0b0e">
-    <meta name="description" content="Plan your next Minecraft Java modpack with Modspire: search Modrinth, curate mods, and review your setup. Try the interactive demo or download the Windows app.">
-    <link rel="canonical" href="https://lvisxvi.github.io/modspire/">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lvisxvi.github.io/modspire/">
-    <meta property="og:title" content="Modspire — Minecraft Java pack planning studio">
-    <meta property="og:description" content="Plan a Minecraft Java pack, search Modrinth, and check your setup. Try the interactive demo or download the Windows app.">
-    <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
-    <meta property="og:image:alt" content="Modspire Minecraft modpack planning studio with mod search, AI assistant, and project tools">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Modspire — Plan your next Minecraft Java pack">
-    <meta name="twitter:description" content="Search Modrinth, curate your mods, and review your pack. Try the demo or get the Windows app.">
-    <meta name="twitter:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>Modspire — Minecraft Java Modpack Planner & Studio</title>
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Modspire","applicationCategory":"DeveloperApplication","softwareVersion":"0.2.98","operatingSystem":"Windows 10, Windows 11","description":"A local-first Minecraft Java modpack planning studio with Modrinth search, pack inspection, and optional AI assistance.","url":"https://lvisxvi.github.io/modspire/","downloadUrl":"https://github.com/LvisXVI/modspire/releases/latest","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
-    </script>
-    <style>
-      :root {
-        color-scheme: dark;
-        font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        font-synthesis: none;
-        text-rendering: optimizeLegibility;
-        --ink: #f2f7ff;
-        --muted: #a7b5cb;
-        --subtle: #7889a2;
-        --bg: #080d17;
-        --panel: rgba(16, 25, 41, .78);
-        --panel-strong: #101a2a;
-        --line: rgba(156, 179, 219, .18);
-        --cyan: #80f1e6;
-        --blue: #79b9ff;
-        --violet: #aa8bff;
-        --pink: #f279d2;
-        --radius: 24px;
-        --max: 1180px;
-      }
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; scroll-padding-top: 92px; }
-      body {
-        min-width: 320px;
-        margin: 0;
-        color: var(--ink);
-        background:
-          radial-gradient(ellipse at 9% 2%, rgba(47, 114, 199, .2), transparent 34rem),
-          radial-gradient(ellipse at 88% 13%, rgba(108, 65, 178, .2), transparent 38rem),
-          radial-gradient(ellipse at 52% 70%, rgba(27, 119, 138, .08), transparent 40rem),
-          var(--bg);
-      }
-      body::before {
-        position: fixed;
-        z-index: -1;
-        inset: 0;
-        pointer-events: none;
-        content: "";
-        opacity: .18;
-        background-image: radial-gradient(rgba(195,216,255,.28) .7px, transparent .7px);
-        background-size: 34px 34px;
-        mask-image: linear-gradient(to bottom, #000, transparent 68%);
-      }
-      a { color: inherit; }
-      button, a { -webkit-tap-highlight-color: transparent; }
-      a:focus-visible, button:focus-visible, video:focus-visible {
-        outline: 3px solid var(--cyan);
-        outline-offset: 4px;
-      }
-      .wrap { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
-      .topbar {
-        position: sticky;
-        z-index: 10;
-        top: 0;
-        border-bottom: 1px solid rgba(156,179,219,.12);
-        background: rgba(8,13,23,.82);
-        backdrop-filter: blur(18px);
-      }
-      .nav { display:flex; min-height:76px; align-items:center; justify-content:space-between; gap:24px; }
-      .brand { display:inline-flex; align-items:center; gap:11px; text-decoration:none; font-size:17px; font-weight:800; letter-spacing:-.03em; }
-      .brand-mark { display:grid; width:39px; height:39px; place-items:center; border:1px solid rgba(128,241,230,.42); border-radius:13px; background:linear-gradient(145deg,rgba(45,176,185,.26),rgba(98,83,201,.35)); color:var(--cyan); }
-      .brand-mark svg { width:21px; height:21px; }
-      .nav-links { display:flex; align-items:center; gap:25px; }
-      .nav-links a { color:var(--muted); font-size:13px; font-weight:600; text-decoration:none; transition:color .18s ease; }
-      .nav-links a:hover { color:var(--ink); }
-      .nav-links .nav-cta { color:#0b1521; }
-      .product-switch { display:flex; align-items:center; gap:3px; padding:4px; border:1px solid var(--line); border-radius:999px; background:rgba(16,25,41,.74); }
-      .product-switch a.product-link { display:inline-flex; min-height:34px; align-items:center; padding:0 13px; border-radius:999px; color:var(--muted); font-size:11px; font-weight:750; text-decoration:none; }
-      .product-switch a.product-link:hover { background:rgba(128,241,230,.1); color:var(--ink); }
-      .product-switch a.product-link[aria-current="page"] { background:linear-gradient(100deg,var(--cyan),var(--blue) 56%,#b99cff); color:#08131d; }
-      .mobile-product-switch { display:none; }
-      .menu-toggle { display:none; width:44px; height:44px; border:1px solid var(--line); border-radius:50%; background:var(--panel); color:var(--ink); font-size:20px; }
-      .button {
-        display:inline-flex;
-        min-height:48px;
-        align-items:center;
-        justify-content:center;
-        gap:9px;
-        padding:0 19px;
-        border:1px solid rgba(137,178,228,.28);
-        border-radius:999px;
-        background:rgba(23,38,59,.76);
-        color:var(--ink);
-        font-size:13px;
-        font-weight:750;
-        text-decoration:none;
-        transition:transform .2s ease, border-color .2s ease, background .2s ease;
-      }
-      .button:hover { transform:translateY(-2px); border-color:rgba(128,241,230,.7); background:rgba(38,64,91,.88); }
-      .button.primary { border-color:transparent; background:linear-gradient(100deg,#84f0e4 0%,#79bdff 52%,#b99cff 100%); color:#08131d; }
-      .button.small { min-height:40px; padding-inline:15px; font-size:12px; }
-      .eyebrow { display:flex; align-items:center; gap:9px; margin:0 0 16px; color:var(--cyan); font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
-      .eyebrow::before { width:22px; height:1px; background:currentColor; content:""; }
-      .hero { position:relative; padding:86px 0 74px; }
-      .hero-grid { display:grid; grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr); align-items:center; gap:52px; }
-      .hero h1 { max-width:640px; margin:0; font-size:clamp(48px,7.5vw,88px); font-weight:800; line-height:.99; letter-spacing:-.075em; }
-      .hero h1 span { display:block; color:transparent; background:linear-gradient(100deg,var(--cyan),#91b9ff 48%,#c59bff); background-clip:text; -webkit-background-clip:text; }
-      .hero-copy { max-width:560px; margin:22px 0 0; color:#b6c4d9; font-size:17px; line-height:1.72; }
-      .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
-      .release-note { margin:15px 0 0; color:var(--subtle); font-size:12px; }
-      .hero-art { position:relative; min-width:0; }
-      .hero-art::before { position:absolute; inset:9% 4% 5%; border-radius:50%; background:linear-gradient(120deg,rgba(61,205,214,.25),rgba(116,83,220,.32)); filter:blur(65px); content:""; }
-      .hero-poster { position:relative; display:block; width:100%; border:1px solid rgba(176,206,255,.31); border-radius:25px; background:#111b2c; box-shadow:0 24px 90px rgba(0,0,0,.35); }
-      .poster-link { position:relative; display:block; border-radius:25px; text-decoration:none; }
-      .play-badge { position:absolute; right:18px; bottom:18px; display:flex; align-items:center; gap:9px; padding:11px 16px; border:1px solid rgba(190,240,255,.55); border-radius:999px; background:rgba(10,19,31,.82); backdrop-filter:blur(12px); font-size:12px; font-weight:750; }
-      .play-dot { display:grid; width:27px; height:27px; place-items:center; border-radius:50%; background:linear-gradient(135deg,var(--cyan),var(--blue)); color:#06121b; }
-      .hero-stats { display:flex; flex-wrap:wrap; gap:22px; margin-top:30px; }
-      .hero-stats span { color:var(--muted); font-size:12px; }
-      .hero-stats strong { color:var(--ink); font-weight:750; }
-      .section { padding:76px 0; }
-      .section-heading { display:flex; align-items:end; justify-content:space-between; gap:28px; margin-bottom:28px; }
-      .section-heading h2 { max-width:640px; margin:0; font-size:clamp(30px,4.4vw,48px); line-height:1.04; letter-spacing:-.055em; }
-      .section-heading p { max-width:420px; margin:0; color:var(--muted); font-size:14px; line-height:1.65; }
-      .section-tag { margin:0 0 12px; color:var(--violet); font-size:11px; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
-      .video-section { padding-top:18px; }
-      .video-panel { padding:14px; border:1px solid var(--line); border-radius:30px; background:linear-gradient(135deg,rgba(20,35,55,.9),rgba(15,23,40,.82)); }
-      .video-panel video { display:block; width:100%; max-height:680px; aspect-ratio:16/9; border-radius:19px; background:#050811; object-fit:contain; }
-      .video-caption { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; padding:16px 7px 3px; color:var(--muted); font-size:13px; }
-      .demo-shell { overflow:hidden; border:1px solid rgba(145,185,235,.23); border-radius:26px; background:#0c1422; box-shadow:0 28px 90px rgba(0,0,0,.34); transition:border-color .2s ease; }
-      .demo-shell[data-demo-active-theme="Crystal Glass"] { --cyan:#9be1ff; --blue:#8eb7ff; --violet:#aaa2ff; border-color:rgba(155,225,255,.55); }
-      .demo-shell[data-demo-active-theme="Lush Caves"] { --cyan:#9ff0b3; --blue:#82d8ba; --violet:#b8d78e; border-color:rgba(159,240,179,.48); }
-      .demo-shell[data-demo-active-theme="End Rift"] { --cyan:#d6a6ff; --blue:#9c9bff; --violet:#ef90df; border-color:rgba(214,166,255,.5); }
-      .demo-top { display:flex; min-height:56px; align-items:center; justify-content:space-between; gap:16px; padding:0 19px; border-bottom:1px solid var(--line); background:#111b2c; }
-      .demo-brand { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; }
-      .demo-brand-mark { display:grid; width:29px; height:29px; place-items:center; border:1px solid rgba(128,241,230,.32); border-radius:10px; background:rgba(57,177,182,.14); color:var(--cyan); }
-      .demo-status { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:11px; }
-      .demo-status::before { width:7px; height:7px; border-radius:50%; background:#55dfaf; box-shadow:0 0 13px rgba(85,223,175,.6); content:""; }
-      .demo-body { display:grid; min-height:490px; grid-template-columns:190px minmax(0,1fr); }
-      .demo-sidebar { display:flex; flex-direction:column; gap:6px; padding:17px 12px; border-right:1px solid var(--line); background:#0e1828; }
-      .demo-side-label { margin:8px 9px 5px; color:#71839d; font-size:9px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
-      .demo-tab { display:flex; min-height:39px; align-items:center; gap:10px; padding:0 11px; border:1px solid transparent; border-radius:12px; background:transparent; color:#a9b8ce; text-align:left; font:inherit; font-size:12px; cursor:pointer; transition:background .16s ease,border-color .16s ease,color .16s ease; }
-      .demo-tab:hover { background:rgba(139,176,225,.08); color:#f3f7ff; }
-      .demo-tab[aria-selected="true"] { border-color:rgba(128,241,230,.2); background:linear-gradient(100deg,rgba(69,188,191,.15),rgba(104,117,215,.13)); color:#effcff; }
-      .demo-tab-icon { width:18px; color:var(--cyan); text-align:center; }
-      .demo-workspace { min-width:0; padding:22px; }
-      .demo-view[hidden] { display:none !important; }
-      .demo-view.active { display:block; animation:rise .24s both; }
-      .demo-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:18px; }
-      .demo-heading h3 { margin:0; font-size:21px; letter-spacing:-.04em; }
-      .demo-heading p { margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.5; }
-      .demo-chip { display:inline-flex; align-items:center; gap:7px; padding:7px 10px; border:1px solid rgba(128,241,230,.2); border-radius:999px; background:rgba(40,142,153,.1); color:#bdfaf2; font-size:10px; white-space:nowrap; }
-      .demo-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:13px; }
-      .demo-stat,.demo-panel { border:1px solid var(--line); border-radius:16px; background:linear-gradient(145deg,rgba(22,35,56,.94),rgba(14,23,39,.94)); }
-      .demo-stat { padding:14px; }
-      .demo-stat span { display:block; color:var(--muted); font-size:10px; }
-      .demo-stat strong { display:block; margin-top:6px; font-size:20px; letter-spacing:-.04em; }
-      .demo-panel { padding:16px; }
-      .demo-panel + .demo-panel { margin-top:12px; }
-      .demo-panel-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; font-size:12px; font-weight:750; }
-      .demo-mod-list { display:grid; gap:8px; }
-      .demo-mod { display:grid; grid-template-columns:36px minmax(0,1fr) auto; align-items:center; gap:10px; padding:9px; border:1px solid rgba(149,177,217,.12); border-radius:12px; background:rgba(7,13,23,.35); }
-      .demo-mod-icon { display:grid; width:36px; height:36px; place-items:center; border-radius:11px; background:linear-gradient(145deg,rgba(67,200,178,.22),rgba(101,114,218,.25)); font-size:18px; }
-      .demo-mod strong { display:block; font-size:11px; }
-      .demo-mod small { display:block; margin-top:4px; color:var(--subtle); font-size:10px; }
-      .demo-mini-button { min-width:33px; min-height:32px; border:1px solid rgba(128,185,245,.32); border-radius:10px; background:rgba(42,92,145,.25); color:#b9dcff; font:inherit; font-size:16px; cursor:pointer; }
-      .demo-mini-button:hover { border-color:var(--cyan); background:rgba(48,142,155,.2); }
-      .demo-toolbar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:13px; }
-      .demo-input,.demo-select { min-height:40px; border:1px solid rgba(150,183,227,.2); border-radius:12px; background:#0b1422; color:var(--ink); font:inherit; font-size:12px; }
-      .demo-input { flex:1 1 210px; padding:0 12px; }
-      .demo-select { padding:0 10px; }
-      .demo-note { margin:12px 0 0; color:var(--subtle); font-size:10px; line-height:1.55; }
-      .demo-chat { display:grid; min-height:260px; grid-template-rows:1fr auto; gap:14px; }
-      .demo-message { max-width:560px; padding:14px; border:1px solid rgba(128,241,230,.2); border-radius:4px 16px 16px 16px; background:rgba(33,89,107,.22); color:#dceafb; font-size:12px; line-height:1.65; }
-      .demo-prompt { display:flex; gap:8px; }
-      .demo-prompt .demo-input { min-width:0; }
-      .demo-empty { padding:27px 14px; border:1px dashed rgba(150,183,227,.22); border-radius:13px; color:var(--muted); font-size:12px; text-align:center; }
-      .demo-pack-tray { display:flex; flex-wrap:wrap; gap:7px; min-height:34px; }
-      .demo-pack-item { display:inline-flex; align-items:center; gap:6px; padding:7px 9px; border:1px solid rgba(128,241,230,.2); border-radius:999px; background:rgba(39,130,139,.14); color:#d9fbf5; font-size:10px; }
-      .demo-pack-item button { padding:0; border:0; background:none; color:#bcd2e7; font:inherit; cursor:pointer; }
-      .demo-bars { display:flex; height:110px; align-items:end; gap:8px; padding:12px 0 0; }
-      .demo-bars i { flex:1; min-width:5px; border:1px solid rgba(135,159,255,.22); border-bottom:0; border-radius:9px 9px 0 0; background:linear-gradient(180deg,rgba(126,186,255,.78),rgba(101,99,221,.42)); }
-      .demo-designs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
-      .demo-design-button { min-height:70px; padding:12px; border:1px solid var(--line); border-radius:13px; background:linear-gradient(145deg,rgba(36,60,88,.82),rgba(22,28,57,.82)); color:var(--ink); text-align:left; font:inherit; font-size:11px; cursor:pointer; }
-      .demo-design-button[aria-pressed="true"] { border-color:var(--cyan); box-shadow:inset 0 0 0 1px rgba(128,241,230,.2); }
-      .demo-design-button small { display:block; margin-top:6px; color:var(--muted); font-size:10px; }
-      .demo-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 16px; border-top:1px solid var(--line); background:#0e1828; color:var(--muted); font-size:10px; }
-      .demo-footer strong { color:#e5f3ff; }
-      .demo-clear { border:0; background:none; color:#a9c5e9; font:inherit; cursor:pointer; }
-      @media (max-width:900px) { .demo-body { grid-template-columns:150px minmax(0,1fr); } .demo-sidebar { padding-inline:8px; } .demo-workspace { padding:16px; } }
-      @media (max-width:680px) { .demo-body { display:block; min-height:0; } .demo-sidebar { display:flex; flex-direction:row; overflow-x:auto; gap:5px; padding:9px; border-right:0; border-bottom:1px solid var(--line); } .demo-side-label { display:none; } .demo-tab { flex:0 0 auto; min-height:36px; padding:0 10px; } .demo-tab-icon { width:auto; } .demo-workspace { padding:14px; } .demo-stats { grid-template-columns:1fr; } .demo-heading { display:block; } .demo-heading .demo-chip { margin-top:10px; } .demo-designs { grid-template-columns:1fr; } .demo-top { padding-inline:13px; } .demo-footer { align-items:flex-start; flex-direction:column; } }
-      .feature-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:16px; }
-      .feature-card {
-        position:relative;
-        min-width:0;
-        overflow:hidden;
-        border:1px solid var(--line);
-        border-radius:var(--radius);
-        background:linear-gradient(145deg,rgba(20,31,50,.92),rgba(12,20,34,.94));
-      }
-      .feature-card.large { grid-column:span 7; }
-      .feature-card.medium { grid-column:span 5; }
-      .feature-card.half { grid-column:span 6; }
-      .feature-copy { padding:23px 24px 17px; }
-      .feature-copy h3 { margin:0; font-size:21px; letter-spacing:-.04em; }
-      .feature-copy p { max-width:520px; margin:9px 0 0; color:var(--muted); font-size:14px; line-height:1.65; }
-      .feature-shot { display:block; width:calc(100% - 30px); margin:0 15px 15px; border:1px solid rgba(155,185,227,.19); border-radius:15px; background:#0c1420; }
-      .feature-shot.tall { aspect-ratio:16/8.8; object-fit:cover; object-position:top; }
-      .feature-shot.short { aspect-ratio:16/7.4; object-fit:cover; object-position:top; }
-      .capability-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
-      .capability { min-height:190px; padding:22px; border:1px solid var(--line); border-radius:21px; background:rgba(16,26,43,.78); }
-      .capability .icon { display:grid; width:42px; height:42px; place-items:center; margin-bottom:18px; border:1px solid rgba(128,241,230,.22); border-radius:14px; background:rgba(128,241,230,.08); color:var(--cyan); }
-      .capability .icon svg { width:21px; height:21px; }
-      .capability h3 { margin:0; font-size:16px; letter-spacing:-.02em; }
-      .capability p { margin:9px 0 0; color:var(--muted); font-size:13px; line-height:1.6; }
-      .workflow { position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; overflow:hidden; border:1px solid var(--line); border-radius:25px; background:rgba(15,25,41,.76); }
-      .step { position:relative; min-height:205px; padding:26px 23px; }
-      .step + .step { border-left:1px solid var(--line); }
-      .step-number { display:block; margin-bottom:34px; color:var(--cyan); font-size:12px; font-weight:800; letter-spacing:.1em; }
-      .step h3 { margin:0 0 8px; font-size:17px; }
-      .step p { margin:0; color:var(--muted); font-size:13px; line-height:1.6; }
-      .callout { display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center; padding:32px; border:1px solid rgba(128,241,230,.24); border-radius:28px; background:radial-gradient(ellipse at 100% 0%,rgba(60,140,205,.18),transparent 38rem),linear-gradient(120deg,rgba(23,45,66,.88),rgba(31,24,55,.83)); }
-      .callout h2 { margin:0; font-size:clamp(28px,4vw,42px); letter-spacing:-.055em; line-height:1.06; }
-      .callout p { max-width:620px; margin:14px 0 0; color:var(--muted); font-size:14px; line-height:1.7; }
-      .provider-list { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:9px; }
-      .pill { padding:10px 13px; border:1px solid rgba(173,197,233,.22); border-radius:999px; background:rgba(8,15,27,.36); color:#d4e2f4; font-size:12px; }
-      .download-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-      .download-card { padding:26px; border:1px solid var(--line); border-radius:25px; background:linear-gradient(145deg,rgba(20,32,52,.91),rgba(12,20,34,.93)); }
-      .download-card.primary-card { border-color:rgba(128,241,230,.3); background:radial-gradient(ellipse at 0% 0%,rgba(41,175,176,.14),transparent 28rem),linear-gradient(145deg,rgba(20,39,56,.96),rgba(12,20,34,.94)); }
-      .download-card h3 { margin:0; font-size:21px; letter-spacing:-.04em; }
-      .download-card p { margin:9px 0 18px; color:var(--muted); font-size:13px; line-height:1.6; }
-      .download-actions { display:flex; flex-wrap:wrap; gap:10px; }
-      .download-links { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:14px; }
-      .download-link { padding:14px; border:1px solid var(--line); border-radius:16px; background:rgba(11,19,31,.5); text-decoration:none; }
-      .download-link strong { display:block; font-size:13px; }
-      .download-link span { display:block; margin-top:5px; color:var(--subtle); font-size:11px; }
-      .doc-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-      .doc-link { display:flex; min-height:84px; align-items:center; justify-content:space-between; gap:15px; padding:17px; border:1px solid var(--line); border-radius:17px; background:rgba(16,26,43,.7); text-decoration:none; transition:border-color .18s ease,transform .18s ease; }
-      .doc-link:hover { transform:translateY(-2px); border-color:rgba(128,241,230,.58); }
-      .doc-link strong { display:block; font-size:13px; }
-      .doc-link small { display:block; margin-top:5px; color:var(--subtle); font-size:11px; line-height:1.45; }
-      .doc-link .arrow { color:var(--cyan); font-size:18px; }
-      .notice { margin-top:20px; padding:17px 19px; border-left:3px solid var(--violet); border-radius:0 14px 14px 0; background:rgba(92,70,147,.12); color:#c7d2e4; font-size:13px; line-height:1.7; }
-      .footer { margin-top:52px; padding:26px 0 38px; border-top:1px solid var(--line); }
-      .footer-main { display:flex; justify-content:space-between; align-items:flex-start; gap:25px; }
-      .footer p { max-width:640px; margin:10px 0 0; color:var(--subtle); font-size:12px; line-height:1.7; }
-      .footer-links { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:17px; }
-      .footer-links a { color:var(--muted); font-size:12px; text-decoration:none; }
-      .footer-links a:hover { color:#fff; }
-      .copyright { margin-top:26px; color:#65758d; font-size:11px; }
-      .reveal { animation:rise .7s both; }
-      @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+<html lang="en" class="js-off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#060b17">
+  <title>Modspire — Minecraft Java Modpack Studio</title>
+  <meta name="description" content="Modspire is a local-first Windows studio for Minecraft Java modpacks: search Modrinth, plan with an optional AI assistant, compare pack snapshots, export .mrpack files and build mods in the integrated Mod Studio.">
+  <link rel="canonical" href="https://lvisxvi.github.io/modspire/">
+  <link rel="icon" href="media/modspire-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lvisxvi.github.io/modspire/">
+  <meta property="og:title" content="Modspire — your Minecraft Java modpack studio">
+  <meta property="og:description" content="Search Modrinth, curate mods, compare pack variants and export .mrpack files. Local-first, AI optional.">
+  <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="media/bg/aurora-lake.webp">
+  <link rel="stylesheet" href="liquid.css">
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Modspire","applicationCategory":"DeveloperApplication","softwareVersion":"0.3.2","operatingSystem":"Windows 10, Windows 11","url":"https://lvisxvi.github.io/modspire/","downloadUrl":"https://github.com/LvisXVI/modspire/releases/latest","author":{"@type":"Person","name":"LvisXVI"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"A local-first Minecraft Java modpack studio with Modrinth search, optional AI planning, Pack Lab snapshots, .mrpack export and an integrated Mod Studio."}
+  </script>
+  <style>
+    body { --scene: url("media/bg/aurora-lake.webp"); --accent: #7ff0e4; --accent-2: #a98bff; --accent-ink: #03161b; }
+    .hero h1 .grad { display: inline-block; padding-bottom: .08em; }
+    .new-ribbon { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink-2); margin-bottom: 26px; }
+    .new-ribbon b { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); color: var(--ink); font-size: 12px; }
+    .f1 { left: -34px; top: 12%; } .f2 { right: -18px; top: 46%; animation-delay: -2.5s; } .f3 { left: 12%; bottom: -26px; animation-delay: -4.5s; }
+    .studio-card { overflow: hidden; }
+    .studio-card .orbit { position: absolute; right: -60px; bottom: -60px; width: 260px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 40%), linear-gradient(140deg, var(--accent), var(--accent-2)); filter: blur(2px); opacity: .32; z-index: -1; }
+  </style>
+</head>
+<body data-repo="LvisXVI/modspire" data-asset="Portable\.exe$">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="lg-scene" aria-hidden="true"><div class="lg-orb a"></div><div class="lg-orb b"></div></div>
 
-      @media (max-width:900px) {
-        .hero-grid { grid-template-columns:1fr; gap:34px; }
-        .hero { padding-top:62px; }
-        .hero-copy { max-width:650px; }
-        .hero-art { max-width:760px; }
-        .capability-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-        .workflow { grid-template-columns:repeat(2,minmax(0,1fr)); }
-        .step:nth-child(3) { border-left:0; border-top:1px solid var(--line); }
-        .step:nth-child(4) { border-top:1px solid var(--line); }
-        .callout { grid-template-columns:1fr; }
-        .provider-list { justify-content:flex-start; }
-      }
-      @media (max-width:680px) {
-        .wrap { width:min(var(--max),calc(100% - 28px)); }
-        .nav { min-height:66px; }
-        .menu-toggle { display:inline-grid; place-items:center; }
-        .nav-links { position:absolute; top:65px; right:14px; left:14px; display:none; align-items:stretch; gap:0; padding:9px; border:1px solid var(--line); border-radius:18px; background:rgba(9,15,26,.97); box-shadow:0 20px 50px rgba(0,0,0,.4); }
-        .nav-links.open { display:flex; flex-direction:column; }
-        .nav-links a { padding:13px 12px; }
-        .nav-links .button { margin-top:5px; }
-        .hero { padding:51px 0 51px; }
-        .hero-grid { gap:28px; }
-        .hero h1 { font-size:clamp(46px,14vw,68px); }
-        .hero-copy { font-size:15px; }
-        .hero-actions .button { flex:1 1 100%; }
-        .hero-stats { gap:12px 19px; }
-        .section { padding:54px 0; }
-        .section-heading { display:block; margin-bottom:22px; }
-        .section-heading p { margin-top:12px; }
-        .feature-card.large,.feature-card.medium,.feature-card.half { grid-column:span 12; }
-        .feature-copy { padding:20px 19px 14px; }
-        .capability-grid,.workflow,.download-layout,.doc-grid { grid-template-columns:1fr; }
-        .step { min-height:auto; padding:21px; }
-        .step-number { margin-bottom:18px; }
-        .step + .step,.step:nth-child(3),.step:nth-child(4) { border-top:1px solid var(--line); border-left:0; }
-        .callout { padding:23px; }
-        .download-card { padding:21px; }
-        .download-links { grid-template-columns:1fr; }
-        .footer-main { display:block; }
-        .footer-links { justify-content:flex-start; margin-top:20px; }
-      }
-      /* Art direction: editorial field guide, anchored in real product imagery. */
-      :root {
-        --ink:#f0f1e9; --muted:#bac4bd; --subtle:#85938b; --bg:#090f10;
-        --panel:rgba(17,27,26,.9); --panel-strong:#111b1a; --line:rgba(181,203,187,.16);
-        --cyan:#c1ee83; --blue:#8ec7b7; --violet:#d5b28a; --pink:#e9856c;
-        --radius:16px; --max:1240px;
-      }
-      @property --cyan { syntax:"<color>"; inherits:true; initial-value:#c1ee83; }
-      @property --blue { syntax:"<color>"; inherits:true; initial-value:#8ec7b7; }
-      @property --violet { syntax:"<color>"; inherits:true; initial-value:#d5b28a; }
-      html { scroll-padding-top:88px; }
-      body { background:radial-gradient(ellipse at 74% 8%,rgba(71,103,74,.12),transparent 35rem),#090f10; }
-      body::before { opacity:.08; background-image:linear-gradient(rgba(202,226,207,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(202,226,207,.22) 1px,transparent 1px); background-size:54px 54px; mask-image:linear-gradient(to bottom,#000,transparent 42%); }
-      .reading-progress { position:fixed; z-index:30; inset:0 0 auto; height:2px; background:transparent; }
-      .reading-progress span { display:block; width:100%; height:100%; background:var(--cyan); transform:scaleX(0); transform-origin:left; will-change:transform; }
-      .topbar { border-bottom-color:rgba(181,203,187,.11); background:rgba(9,15,16,.9); backdrop-filter:blur(12px); transition:background .25s ease,border-color .25s ease; }
-      .topbar.scrolled { background:rgba(9,15,16,.97); border-bottom-color:rgba(181,203,187,.2); }
-      .nav { min-height:72px; }
-      .brand-mark { width:35px; height:35px; border-radius:10px; background:#c1ee83; color:#172018; border:0; }
-      .nav-links { gap:22px; }
-      .nav-links a { font-size:12px; }
-      .nav-links>a:not(.button) { position:relative; transition:color .2s ease,transform .2s ease; }
-      .nav-links>a:not(.button)::after { position:absolute; right:0; bottom:-8px; left:0; height:1px; background:var(--cyan); content:""; transform:scaleX(0); transform-origin:left; transition:transform .24s cubic-bezier(.2,.75,.25,1); }
-      .nav-links>a:not(.button):hover,.nav-links>a[aria-current="location"] { color:var(--ink); transform:translateY(-1px); }
-      .nav-links>a:not(.button):hover::after,.nav-links>a[aria-current="location"]::after { transform:scaleX(1); }
-      .button { min-height:48px; padding-inline:19px; border-radius:13px; background:#151e1d; border-color:rgba(181,203,187,.2); transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .28s ease,background .28s ease,color .28s ease; }
-      .button:hover { transform:translateY(-3px); background:#1b2924; border-color:rgba(193,238,131,.62); }
-      .button.primary { background:var(--cyan); color:#132016; border-color:var(--cyan); }
-      .button.primary:hover { background:#d2f79c; border-color:#d2f79c; }
-      .hero { display:flex; min-height:min(820px,calc(100svh - 72px)); align-items:center; padding:48px 0 66px; }
-      .hero-grid { width:100%; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(32px,4vw,62px); }
-      .eyebrow { gap:12px; margin-bottom:23px; color:#c5e49b; font-size:10px; letter-spacing:.19em; }
-      .eyebrow::before { width:34px; height:2px; }
-      .hero h1 { max-width:650px; font-size:clamp(52px,5.2vw,72px); line-height:.98; letter-spacing:-.075em; }
-      .hero h1 span { color:var(--cyan); background:none; -webkit-text-fill-color:var(--cyan); }
-      .hero-copy { max-width:475px; margin-top:22px; color:#c0c9c2; font-size:16px; line-height:1.75; }
-      .hero-actions { gap:10px; margin-top:30px; }
-      .hero-actions .button:nth-child(2) span { transition:transform .25s ease; }
-      .hero-actions .button:nth-child(2):hover span { transform:translate(3px,3px); }
-      .release-note { color:#9daa9f; font-size:11px; letter-spacing:.02em; }
-      .hero-stats { gap:0; margin-top:35px; padding-top:19px; border-top:1px solid var(--line); }
-      .hero-stats span { display:flex; align-items:center; gap:8px; padding-right:16px; margin-right:16px; border-right:1px solid var(--line); color:#9daa9f; font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
-      .hero-stats span:last-child { border:0; }
-      .hero-stats strong { color:var(--cyan); font-family:ui-monospace,Consolas,monospace; font-size:10px; }
-      .hero-art { perspective:1200px; transform:translate3d(0,var(--scroll-parallax,0px),0); transition:transform .12s linear; }
-      .hero-art::before { inset:14% 9% 5%; background:rgba(157,203,117,.12); filter:blur(80px); transform-origin:center; animation:aura-drift 9s ease-in-out infinite alternate; }
-      .poster-link { overflow:hidden; border:1px solid rgba(193,238,131,.28); border-radius:14px; background:#101818; transform:translate3d(var(--scene-x,0px),var(--scene-y,0px),0) rotateY(var(--scene-rotate,0deg)); transition:transform .5s cubic-bezier(.2,.75,.25,1),border-color .3s ease; }
-      .poster-link:hover { border-color:rgba(193,238,131,.65); transform:translate3d(0,-4px,0) rotateY(0deg); }
-      .hero-poster { width:100%; aspect-ratio:1.45; object-fit:cover; object-position:top center; border:0; border-radius:0; box-shadow:none; transition:transform .7s cubic-bezier(.2,.75,.25,1),filter .5s ease; }
-      .poster-link:hover .hero-poster { transform:scale(1.025); filter:saturate(1.06); }
-      .hero-art::after { position:absolute; z-index:1; inset:0 0 29px; border-radius:14px 14px 0 0; pointer-events:none; background:linear-gradient(180deg,rgba(8,14,15,.06) 55%,rgba(8,14,15,.25)); content:""; }
-      .play-badge { right:15px; bottom:46px; z-index:2; padding:8px 11px 8px 8px; border-color:rgba(240,241,233,.22); border-radius:11px; background:rgba(10,16,16,.88); font-size:10px; }
-      .play-dot { width:25px; height:25px; background:var(--cyan); color:#172018; }
-      .play-dot { animation:play-pulse 2.8s ease-in-out infinite; }
-      .hero-caption { display:flex; justify-content:space-between; gap:12px; padding:13px 2px 0; color:#99a89e; font-family:ui-monospace,Consolas,monospace; font-size:9px; letter-spacing:.06em; text-transform:uppercase; }
-      .section { position:relative; padding-block:clamp(72px,9vw,126px); border-top:1px solid rgba(181,203,187,.1); }
-      .section-heading { align-items:end; margin-bottom:34px; }
-      .section-heading h2 { position:relative; }
-      .section-heading h2::after { display:block; width:clamp(38px,7vw,82px); height:2px; margin-top:16px; background:var(--cyan); content:""; transform:scaleX(.35); transform-origin:left; transition:transform .65s cubic-bezier(.2,.75,.25,1); }
-      .section-heading.is-visible h2::after { transform:scaleX(1); }
-      .section-heading h2 { max-width:740px; font-size:clamp(34px,4.8vw,58px); line-height:1.02; letter-spacing:-.065em; }
-      .section-heading p { max-width:390px; color:#aeb9b1; font-size:13px; line-height:1.75; }
-      .section-tag { margin-bottom:14px; color:#b5d99b; font-size:9px; letter-spacing:.2em; }
-      #demo { padding-top:clamp(68px,8vw,100px); }
-      .demo-shell { border-color:rgba(193,238,131,.2); border-radius:15px; background:#0d1515; box-shadow:0 45px 100px rgba(0,0,0,.28); transition:--cyan .52s cubic-bezier(.2,.75,.25,1),--blue .52s cubic-bezier(.2,.75,.25,1),--violet .52s cubic-bezier(.2,.75,.25,1),border-color .52s ease; }
-      .demo-top { min-height:62px; background:#111a19; }
-      .demo-body { min-height:465px; }
-      .demo-sidebar { background:#0e1716; }
-      .demo-tab { border-radius:9px; }
-      .demo-tab { position:relative; overflow:hidden; transition:background .22s ease,border-color .22s ease,color .22s ease,transform .22s cubic-bezier(.2,.8,.2,1); }
-      .demo-tab::before { position:absolute; top:8px; bottom:8px; left:0; width:2px; border-radius:2px; background:var(--cyan); content:""; transform:scaleY(0); transition:transform .22s cubic-bezier(.2,.75,.25,1); }
-      .demo-tab:hover { transform:translateX(2px); }
-      .demo-tab[aria-selected="true"]::before { transform:scaleY(1); }
-      .demo-tab:active,.demo-mini-button:active,.demo-design-button:active,.button:active { transform:scale(.97); }
-      .demo-tab[aria-selected="true"] { border-color:rgba(193,238,131,.23); background:rgba(193,238,131,.1); color:#ecf5df; }
-      .demo-view.active { animation:panel-arrive .38s cubic-bezier(.2,.75,.25,1) both; }
-      .demo-view.active { transform-origin:top center; }
-      .demo-mod { animation:demo-row-in .3s cubic-bezier(.2,.75,.25,1) both; transition:transform .2s ease,border-color .2s ease,background .2s ease; }
-      .demo-mod:hover { transform:translateY(-2px); border-color:rgba(193,238,131,.25); background:#14201c; }
-      .demo-mini-button { transition:transform .18s cubic-bezier(.2,.8,.2,1),background .18s ease,border-color .18s ease,color .18s ease; }
-      .demo-mini-button:hover { transform:scale(1.08); }
-      .demo-pack-item { animation:demo-chip-in .24s cubic-bezier(.2,.8,.2,1) both; }
-      .demo-pack-item button { transition:transform .18s ease,color .18s ease,background .18s ease; }
-      .demo-pack-item button:hover { transform:rotate(90deg) scale(1.12); }
-      .demo-design-button { transition:transform .22s cubic-bezier(.2,.8,.2,1),border-color .22s ease,background .22s ease; }
-      .demo-design-button:hover { transform:translateY(-2px); }
-      .demo-design-button[aria-pressed="true"] { box-shadow:inset 0 0 0 1px var(--cyan); }
-      .demo-message { animation:demo-message-in .32s cubic-bezier(.2,.75,.25,1) both; }
-      .demo-view :is(button,input,select,a):focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
-      .demo-stat,.demo-panel { border-radius:12px; background:#111b1a; }
-      .demo-stat { transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .25s ease,background .25s ease; }
-      .demo-stat:hover { transform:translateY(-3px); border-color:rgba(193,238,131,.32); background:#14201c; }
-      .demo-mod { border-radius:9px; background:#0d1515; }
-      .demo-design-button { border-radius:10px; background:#121d1a; }
-      .demo-footer { background:#0e1716; }
-      .demo-status::before { animation:status-breathe 2.4s ease-in-out infinite; }
-      .video-section { padding-top:clamp(68px,8vw,100px); }
-      .video-panel { padding:9px; border-color:rgba(193,238,131,.19); border-radius:15px; background:#0d1515; }
-      .video-panel video { border-radius:9px; }
-      .video-caption { padding-inline:6px; font-size:11px; }
-      .feature-grid { gap:13px; }
-      .feature-card { border-radius:13px; background:#101817; transition:transform .45s cubic-bezier(.2,.75,.25,1),border-color .3s ease,background .3s ease; }
-      .feature-card:hover { transform:translateY(-5px); border-color:rgba(193,238,131,.36); background:#131d1a; }
-      .feature-copy { padding:23px 24px 15px; }
-      .feature-copy h3 { font-size:19px; letter-spacing:-.035em; }
-      .feature-copy p { color:#abb8ae; font-size:12px; }
-      .feature-shot { border-color:rgba(193,238,131,.13); border-radius:8px; transition:transform .7s cubic-bezier(.2,.75,.25,1),filter .5s ease; }
-      .feature-card:hover .feature-shot { transform:scale(1.012); filter:saturate(1.08); }
-      .feature-card .feature-copy h3 { transition:color .22s ease,transform .3s cubic-bezier(.2,.75,.25,1); }
-      .feature-card:hover .feature-copy h3 { color:var(--cyan); transform:translateX(3px); }
-      .capability-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 22px; }
-      .capability { min-height:0; padding:23px 4px 24px; border:0; border-top:1px solid var(--line); border-radius:0; background:transparent; }
-      .capability .icon { width:34px; height:34px; margin-bottom:14px; border-color:rgba(193,238,131,.16); border-radius:9px; background:rgba(193,238,131,.07); color:var(--cyan); }
-      .capability h3 { font-size:15px; }
-      .capability p { color:#aeb9b1; font-size:12px; }
-      .workflow { border-color:var(--line); border-radius:13px; background:#101817; }
-      .step { min-height:180px; padding:23px 21px; }
-      .step { transition:background .3s ease; }
-      .step:hover { background:rgba(193,238,131,.035); }
-      .step-number { transition:transform .3s cubic-bezier(.2,.75,.25,1),color .3s ease; }
-      .step:hover .step-number { color:#e0f4c0; transform:translateX(4px); }
-      .step-number { margin-bottom:40px; color:var(--cyan); font-family:ui-monospace,Consolas,monospace; font-size:10px; }
-      .step h3 { font-size:16px; }
-      .step p { color:#aeb9b1; font-size:12px; }
-      .callout { border-color:rgba(193,238,131,.25); border-radius:14px; background:linear-gradient(115deg,#111c19,#101816 60%,#14191a); }
-      .callout h2 { font-size:clamp(32px,4.4vw,50px); }
-      .callout p { color:#b5c0b8; font-size:13px; }
-      .pill { border-color:rgba(193,238,131,.16); border-radius:9px; background:#0d1514; color:#dbe3d9; font-size:11px; }
-      .download-layout { grid-template-columns:1.12fr .88fr; gap:13px; }
-      .download-card { border-color:var(--line); border-radius:14px; background:#101817; }
-      .download-card.primary-card { position:relative; overflow:hidden; border-color:rgba(193,238,131,.35); background:linear-gradient(130deg,#17251d,#111918 70%); }
-      .download-card.primary-card::after { position:absolute; right:-75px; bottom:-120px; width:300px; height:300px; border:1px solid rgba(193,238,131,.13); border-radius:50%; box-shadow:0 0 0 35px rgba(193,238,131,.025),0 0 0 70px rgba(193,238,131,.02); pointer-events:none; content:""; }
-      .download-card.primary-card::after { animation:download-orbit 18s linear infinite; }
-      .download-card h3 { font-size:19px; }
-      .download-card p { max-width:560px; color:#b2beb4; font-size:12px; }
-      .download-links { gap:8px; }
-      .download-link { border-color:rgba(181,203,187,.13); border-radius:10px; background:rgba(8,14,13,.42); transition:transform .25s ease,border-color .25s ease,background .25s ease; }
-      .download-link:hover { transform:translateY(-3px); border-color:rgba(193,238,131,.35); background:rgba(193,238,131,.05); }
-      .download-link span { color:#9ba99f; }
-      #downloads .section-heading { margin-bottom:29px; }
-      #downloads .section-heading strong { color:var(--cyan); }
-      .doc-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
-      .doc-link { min-height:74px; border-color:rgba(181,203,187,.13); border-radius:10px; background:#0f1716; transition:transform .25s ease,border-color .25s ease,background .25s ease; }
-      .doc-link:hover { transform:translateY(-3px); border-color:rgba(193,238,131,.32); background:#121c19; }
-      .doc-link strong { font-size:12px; }
-      .doc-link small { color:#99a69d; }
-      .notice { border-left-color:var(--cyan); border-radius:0 8px 8px 0; background:rgba(193,238,131,.055); color:#bdc8bf; font-size:12px; }
-      .footer { border-top-color:rgba(181,203,187,.13); }
-      .footer p { color:#98a59c; }
-      .footer-links a { transition:color .2s ease; }
-      .footer-links a:hover { color:var(--cyan); }
-      .reveal { animation:none; }
-      .motion-ready .reveal-target { opacity:0; transform:translateY(23px); filter:blur(3px); transition:opacity .72s ease,transform .72s cubic-bezier(.2,.75,.25,1),filter .72s ease; transition-delay:var(--reveal-delay,0ms); }
-      .motion-ready .reveal-target.is-visible { opacity:1; transform:translateY(0); filter:blur(0); }
-      .motion-ready .reveal-target.demo-shell { transition:opacity .72s ease,transform .72s cubic-bezier(.2,.75,.25,1),filter .72s ease,--cyan .52s cubic-bezier(.2,.75,.25,1),--blue .52s cubic-bezier(.2,.75,.25,1),--violet .52s cubic-bezier(.2,.75,.25,1),border-color .52s ease; }
-      .motion-ready .reveal-target.hero-art { transform:translate3d(0,calc(var(--scroll-parallax,0px) + 23px),0); transition:opacity .72s ease,transform .72s cubic-bezier(.2,.75,.25,1),filter .72s ease; }
-      .motion-ready .reveal-target.hero-art.is-visible { transform:translate3d(0,var(--scroll-parallax,0px),0); }
-      .motion-ready .reveal-target.feature-card { transition:opacity .72s ease,transform .45s cubic-bezier(.2,.75,.25,1),filter .72s ease,border-color .3s ease,background .3s ease; transition-delay:var(--reveal-delay,0ms); }
-      .motion-ready .reveal-target.capability,.motion-ready .reveal-target.step { transition:opacity .72s ease,transform .45s cubic-bezier(.2,.75,.25,1),filter .72s ease,background .3s ease; transition-delay:var(--reveal-delay,0ms); }
-      .motion-ready .reveal-target.doc-link { transition:opacity .72s ease,transform .25s ease,filter .72s ease,border-color .25s ease,background .25s ease; transition-delay:var(--reveal-delay,0ms); }
-      @keyframes panel-arrive { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-      @keyframes demo-row-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
-      @keyframes demo-chip-in { from { opacity:0; transform:translateY(4px) scale(.96); } to { opacity:1; transform:translateY(0) scale(1); } }
-      @keyframes demo-message-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-      @keyframes aura-drift { from { opacity:.55; transform:translate3d(-2%,1%,0) scale(.96); } to { opacity:1; transform:translate3d(2%,-1%,0) scale(1.04); } }
-      @keyframes play-pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.08); } }
-      @keyframes status-breathe { 0%,100% { opacity:.72; transform:scale(.86); } 50% { opacity:1; transform:scale(1.18); } }
-      @keyframes bar-breathe { from { transform:scaleY(.88); filter:saturate(.86); } to { transform:scaleY(1); filter:saturate(1.1); } }
-      @keyframes download-orbit { to { transform:rotate(1turn); } }
-      @media (max-width:900px) { .hero { min-height:0; } .hero-grid { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:34px; } .hero h1 { font-size:clamp(48px,6vw,62px); } .capability-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-      @media (max-width:680px) {
-        .nav { min-height:66px; }
-        .nav-links { background:rgba(9,15,16,.98); }
-        .hero { display:block; min-height:0; padding:53px 0 58px; }
-        .hero-grid { grid-template-columns:1fr; gap:34px; }
-        .hero h1 { font-size:clamp(48px,13vw,68px); }
-        .hero-copy { max-width:100%; }
-        .hero-actions .button { flex:1 1 100%; }
-        .hero-stats { flex-wrap:wrap; row-gap:13px; }
-        .hero-stats span { padding-right:10px; margin-right:10px; font-size:8px; }
-        .hero-caption { font-size:8px; }
-        .section { padding-block:62px; }
-        .section-heading h2 { font-size:36px; }
-        .capability-grid { grid-template-columns:1fr; }
-        .feature-grid { gap:10px; }
-        .download-layout,.doc-grid { grid-template-columns:1fr; }
-        .step { min-height:0; }
-        .step-number { margin-bottom:16px; }
-        .download-card.primary-card::after { opacity:.5; }
-      }
+  <div id="lg-intro" aria-hidden="true">
+    <div class="intro-core">
+      <div class="intro-drop"><img src="media/modspire-icon.png" alt=""></div>
+      <div class="intro-word">Modspire</div>
+      <div class="intro-line"></div>
+      <div class="intro-sub">Modpack studio · 0.3.2</div>
+    </div>
+  </div>
 
-      /* Organic glass direction: layered, tinted surfaces with soft reflected light. */
-      :root {
-        font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-        --ink: #edf3e9;
-        --muted: #bdcbbd;
-        --subtle: #95a994;
-        --bg: #07120f;
-        --panel: rgba(15, 34, 29, .86);
-        --panel-strong: rgba(17, 39, 33, .94);
-        --line: rgba(198, 225, 196, .17);
-        --cyan: #a4e1c1;
-        --blue: #9cced0;
-        --violet: #c2b2d7;
-        --pink: #e7bca1;
-        --radius: 30px;
-        --glass: rgba(13, 31, 26, .84);
-        --glass-light: rgba(44, 73, 58, .38);
-        --glass-edge: rgba(212, 235, 199, .26);
-      }
-      body {
-        background: #07120f;
-        font-family: "DM Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-      }
-      body::before {
-        z-index: -2;
-        opacity: .52;
-        background-image: linear-gradient(180deg,rgba(4,13,11,.48),rgba(4,13,11,.79)),url("../assets/shader-aurora-lake.png");
-        background-position: center, center 44%;
-        background-size: cover;
-        filter: blur(5px) saturate(.72);
-        transform: scale(1.035);
-        mask-image: linear-gradient(to bottom,#000 0%,#000 68%,transparent 100%);
-      }
-      body::after {
-        position: fixed;
-        z-index: -1;
-        inset: 0;
-        pointer-events: none;
-        content: "";
-        background: radial-gradient(ellipse at 50% 8%,rgba(105,152,118,.13),transparent 42rem),linear-gradient(180deg,rgba(5,15,12,.2),rgba(5,15,12,.49));
-      }
-      h1,h2,h3,.brand { font-family: Fraunces, Georgia, serif; font-weight:600; letter-spacing:-.045em; }
-      .topbar {
-        top: 14px;
-        width: min(var(--max),calc(100% - 32px));
-        margin: 14px auto 0;
-        border: 1px solid rgba(207,230,205,.2);
-        border-radius: 999px;
-        background: rgba(10,25,21,.76);
-        box-shadow: inset 0 1px rgba(241,249,227,.08),0 16px 48px rgba(0,0,0,.18);
-        backdrop-filter: blur(24px) saturate(135%);
-        -webkit-backdrop-filter: blur(24px) saturate(135%);
-      }
-      .nav { min-height:64px; padding-inline:20px; }
-      .brand-mark { border-radius:50%; background:linear-gradient(145deg,rgba(101,166,120,.35),rgba(72,119,99,.18)); color:#c4edcf; }
-      .nav-links { gap:20px; }
-      .nav-links a { color:#cfdbcb; }
-      .nav-links a:hover { color:#fff; }
-      .button,.menu-toggle {
-        border-color:rgba(204,229,204,.24);
-        background:linear-gradient(145deg,rgba(53,83,65,.54),rgba(19,41,34,.77));
-        box-shadow:inset 0 1px rgba(239,249,227,.12),inset 0 -1px rgba(5,14,11,.14);
-        backdrop-filter:blur(16px) saturate(135%);
-        -webkit-backdrop-filter:blur(16px) saturate(135%);
-        transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .28s ease,background .28s ease,box-shadow .28s ease;
-      }
-      .button:hover { transform:translateY(-2px) scale(1.015); border-color:rgba(206,235,202,.52); background:linear-gradient(145deg,rgba(77,119,88,.7),rgba(24,52,41,.88)); box-shadow:inset 0 1px rgba(255,255,241,.18),0 10px 28px rgba(3,12,9,.24); }
-      .button:active,.demo-tab:active,.demo-design-button:active { transform:scale(.975); }
-      .button.primary { border-color:rgba(220,247,216,.32); background:linear-gradient(120deg,#c5e3b8,#a9d6bf 52%,#a9cfc4); color:#10271c; box-shadow:inset 0 1px rgba(255,255,255,.58),0 10px 32px rgba(90,145,108,.2); }
-      .hero { padding-top:72px; }
-      .hero h1 { font-family:"DM Sans","Segoe UI",sans-serif;font-size:clamp(46px,4.4vw,60px);font-weight:700;line-height:1.02;letter-spacing:-.055em; }
-      .hero h1,.section-heading h2,.callout h2 { font-weight:600; }
-      .hero h1 span { color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(105deg,#c8e8c0,#aedbd0 56%,#e6d5ae);background-clip:text;-webkit-background-clip:text; }
-      .hero-copy { color:#c6d2c4; }
-      .eyebrow,.section-tag { color:#c4e2b7; }
-      .hero-art::before { background:linear-gradient(120deg,rgba(115,174,125,.24),rgba(114,158,144,.17)); }
-      .hero-poster { border-radius:34px; border-color:rgba(217,235,202,.32); box-shadow:0 30px 100px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.1); }
-      .poster-link { border-radius:34px; }
-      .play-badge { border-color:rgba(220,240,211,.35); background:rgba(12,29,23,.82); }
-      .play-dot { background:linear-gradient(135deg,#c6e6b4,#9fcfc0); color:#14291c; }
-      .demo-shell,.video-panel,.feature-card,.capability,.workflow,.callout,.download-card,.doc-link,.site-footer {
-        border-color:var(--glass-edge);
-        background:linear-gradient(145deg,rgba(27,50,40,.86),rgba(11,28,23,.9));
-        box-shadow:inset 0 1px rgba(245,249,224,.11),0 24px 75px rgba(0,0,0,.19);
-        backdrop-filter:blur(22px) saturate(130%);
-        -webkit-backdrop-filter:blur(22px) saturate(130%);
-      }
-      .video-panel { padding:12px; border-radius:34px; }
-      .video-panel video { border-radius:25px; }
-      .feature-card,.capability,.download-card,.doc-link { border-radius:28px; }
-      .feature-shot { border-radius:21px; }
-      .feature-card:hover,.capability:hover,.download-card:hover,.doc-link:hover { border-color:rgba(207,235,194,.4); transform:translateY(-3px); }
-      .demo-shell {
-        --line:rgba(209,231,198,.16);
-        position:relative;
-        isolation:isolate;
-        overflow:hidden;
-        border-radius:36px;
-        background:linear-gradient(145deg,rgba(19,39,32,.91),rgba(8,23,19,.94));
-        box-shadow:inset 0 1px rgba(246,250,231,.16),0 30px 100px rgba(0,0,0,.34);
-        backdrop-filter:blur(30px) saturate(140%);
-        -webkit-backdrop-filter:blur(30px) saturate(140%);
-      }
-      .demo-shell::before {
-        position:absolute;
-        z-index:-1;
-        inset:0;
-        pointer-events:none;
-        content:"";
-        border-radius:inherit;
-        background:radial-gradient(ellipse at 8% 0%,rgba(195,231,178,.1),transparent 36%),linear-gradient(118deg,rgba(233,245,211,.055),transparent 38%,rgba(150,200,177,.045));
-      }
-      .demo-shell[data-demo-active-theme="Crystal Glass"] { --cyan:#b8dce3; --blue:#9bc7d9; --violet:#b8c4df; border-color:rgba(188,221,231,.46); }
-      .demo-shell[data-demo-active-theme="Lush Caves"] { --cyan:#b9e2ad; --blue:#94c7a3; --violet:#c7d69a; border-color:rgba(185,226,173,.45); }
-      .demo-shell[data-demo-active-theme="End Rift"] { --cyan:#d0c0e0; --blue:#aaa5d4; --violet:#dec0d2; border-color:rgba(208,192,224,.43); }
-      .demo-top {
-        min-height:74px;
-        padding-inline:25px;
-        border-color:rgba(209,231,198,.12);
-        background:rgba(12,29,24,.48);
-        backdrop-filter:blur(20px);
-        -webkit-backdrop-filter:blur(20px);
-      }
-      .demo-brand { font-size:14px; }
-      .demo-brand-mark { width:34px;height:34px;border-radius:50%; background:linear-gradient(145deg,rgba(120,173,126,.32),rgba(61,113,89,.2)); }
-      .demo-status { color:#c3d1bf; }
-      .demo-body { display:block; min-height:0; }
-      .demo-sidebar {
-        width:max-content;
-        max-width:calc(100% - 40px);
-        min-height:58px;
-        flex-direction:row;
-        align-items:center;
-        justify-content:center;
-        gap:6px;
-        margin:15px auto 0;
-        padding:7px;
-        border:1px solid rgba(208,229,199,.17);
-        border-radius:999px;
-        background:rgba(8,23,19,.68);
-        box-shadow:inset 0 1px rgba(250,255,230,.09),0 12px 30px rgba(0,0,0,.14);
-        backdrop-filter:blur(22px) saturate(135%);
-        -webkit-backdrop-filter:blur(22px) saturate(135%);
-      }
-      .demo-side-label { display:none; }
-      .demo-tab {
-        min-height:42px;
-        padding:0 17px;
-        border-color:transparent;
-        border-radius:999px;
-        color:#c5d2c1;
-        transition:transform .28s cubic-bezier(.2,.8,.2,1),background .28s ease,border-color .28s ease,color .28s ease,box-shadow .28s ease;
-      }
-      .demo-tab:hover { transform:translateY(-1px); border-color:rgba(211,235,203,.15); background:rgba(178,210,173,.1); color:#fff; }
-      .demo-tab[aria-selected="true"] { border-color:rgba(211,235,203,.22); background:linear-gradient(145deg,rgba(113,166,119,.34),rgba(54,104,81,.37)); color:#f3f7e9; box-shadow:inset 0 1px rgba(248,255,231,.16),0 5px 16px rgba(1,10,7,.16); }
-      .demo-tab-icon { width:19px;color:var(--cyan); }
-      .demo-tab-icon svg { width:17px;height:17px;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
-      .demo-workspace { padding:24px 28px 29px; }
-      .demo-view.active { animation:panel-arrive .42s cubic-bezier(.2,.75,.25,1) both; }
-      @keyframes panel-arrive { from { opacity:0; transform:translateY(10px) scale(.992); filter:blur(4px); } to { opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
-      .demo-heading { align-items:center; margin-bottom:20px; }
-      .demo-heading h3 { font-size:25px; }
-      .demo-heading p { color:#bac9b9; }
-      .demo-chip { border-color:rgba(190,222,183,.22); background:rgba(92,143,99,.16); color:#d8efd0; }
-      .demo-stat,.demo-panel { border-color:rgba(205,227,193,.17); border-radius:22px; background:linear-gradient(145deg,rgba(39,66,51,.63),rgba(13,32,25,.76)); box-shadow:inset 0 1px rgba(255,255,238,.08); }
-      .demo-stat { padding:18px 19px; }
-      .demo-stat strong { font-family:Fraunces,Georgia,serif; font-weight:600; }
-      .demo-panel { padding:19px; }
-      .demo-mod { grid-template-columns:44px minmax(0,1fr) auto; gap:12px; padding:11px; border-color:rgba(209,230,201,.13); border-radius:17px; background:rgba(8,22,17,.43); transition:transform .2s ease,border-color .2s ease,background .2s ease; }
-      .demo-mod:hover { transform:translateY(-2px); border-color:rgba(197,227,188,.32); background:rgba(44,75,53,.48); }
-      .demo-mod-icon { width:44px;height:44px;border:1px solid rgba(205,233,187,.2);border-radius:15px;background:linear-gradient(145deg,rgba(140,188,123,.25),rgba(54,113,82,.28));color:#e1f0cf;font:700 15px "DM Sans",sans-serif; }
-      .demo-mod small { color:#b2c3ae; }
-      .demo-mini-button { min-width:38px;min-height:38px;border-radius:50%;border-color:rgba(195,225,191,.28);background:rgba(83,139,93,.23);color:#d5efcc; transition:transform .22s ease,background .22s ease,border-color .22s ease; }
-      .demo-mini-button:hover { transform:scale(1.07);border-color:var(--cyan);background:rgba(100,165,112,.32); }
-      .demo-input,.demo-select { border-color:rgba(207,229,198,.2);border-radius:999px;background:rgba(7,21,17,.69);color:var(--ink);backdrop-filter:blur(12px); }
-      .demo-input { padding-inline:16px; }
-      .demo-input::placeholder { color:#9fb19b; }
-      .demo-message { max-width:720px;border-color:rgba(190,222,183,.2);border-radius:19px 19px 19px 5px;background:linear-gradient(140deg,rgba(74,123,84,.4),rgba(29,74,63,.43));color:#edf4e8; }
-      .demo-designs { grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
-      .demo-design-button {
-        position:relative;
-        overflow:hidden;
-        min-height:148px;
-        padding:16px;
-        border-color:rgba(211,232,202,.19);
-        border-radius:22px;
-        background:linear-gradient(145deg,rgba(38,68,50,.64),rgba(12,30,24,.78));
-        box-shadow:inset 0 1px rgba(246,250,227,.1);
-        font-size:13px;
-        font-weight:700;
-        transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s ease,background .3s ease,box-shadow .3s ease;
-      }
-      .demo-design-button:hover { transform:translateY(-4px); border-color:rgba(217,239,205,.4); }
-      .demo-design-button[aria-pressed="true"] { border-color:var(--cyan); background:linear-gradient(145deg,rgba(73,119,78,.69),rgba(15,40,29,.88)); box-shadow:inset 0 0 0 1px rgba(211,240,199,.18),0 12px 30px rgba(2,13,8,.19); }
-      .demo-theme-swatch { display:block;width:100%;height:66px;margin-bottom:13px;border:1px solid rgba(227,240,212,.19);border-radius:15px;background:radial-gradient(circle at 72% 30%,rgba(220,249,194,.85) 0 2px,transparent 4px),linear-gradient(135deg,#183c35,#547d63 46%,#172a29);box-shadow:inset 0 1px rgba(255,255,255,.18); }
-      .demo-design-button:nth-child(2) .demo-theme-swatch { background:radial-gradient(ellipse at 78% 22%,rgba(196,229,245,.8),transparent 26%),linear-gradient(135deg,#233e49,#819ea0 48%,#23333d); }
-      .demo-design-button:nth-child(3) .demo-theme-swatch { background:radial-gradient(circle at 23% 28%,rgba(203,235,155,.72),transparent 17%),linear-gradient(135deg,#183b2b,#619267 52%,#243a2b); }
-      .demo-design-button:nth-child(4) .demo-theme-swatch { background:radial-gradient(circle at 72% 28%,rgba(220,194,241,.85) 0 2px,transparent 4px),linear-gradient(135deg,#271d3b,#6d5b83 48%,#171b2e); }
-      .demo-design-button small { color:#bdcbb8;font-size:10px;font-weight:500; }
-      .demo-footer { min-height:64px;padding:12px 23px;border-color:rgba(208,229,199,.13);background:rgba(8,23,19,.52);color:#bdcbb9;backdrop-filter:blur(20px); }
-      .demo-footer strong { color:#edf4e6; }
-      .demo-pack-item { border-color:rgba(190,225,180,.19);background:rgba(75,129,81,.21);color:#e0f1d7; }
-      .demo-clear { color:#c8d9c1; }
-      .demo-note { color:#aebaab; }
-      .section-heading p,.feature-copy p,.capability p,.step p,.callout p,.video-caption { color:#bdcbb9; }
-      .pill { border-color:rgba(209,230,197,.2);background:rgba(18,39,31,.54);color:#dce8d4;backdrop-filter:blur(12px); }
-      .site-footer { border-radius:24px 24px 0 0; }
-      .motion-ready .reveal-target { transform:translateY(28px) scale(.988); filter:blur(5px); transition:opacity .82s ease,transform .82s cubic-bezier(.16,.78,.22,1),filter .82s ease; }
-      .motion-ready .reveal-target.is-visible { transform:translateY(0) scale(1); }
-      .hero-art { transform-style:preserve-3d; }
-      .hero-poster { transition:transform .5s cubic-bezier(.2,.75,.25,1),border-color .3s ease; }
-      .hero-art:hover .hero-poster { transform:translateY(-4px) rotateX(1deg);border-color:rgba(218,240,201,.52); }
-      @media (max-width:900px) {
-        .demo-designs { grid-template-columns:repeat(2,minmax(0,1fr)); }
-        .demo-sidebar { max-width:calc(100% - 24px); }
-        .demo-tab { padding-inline:13px; }
-      }
-      @media (max-width:680px) {
-        .topbar { top:7px;width:calc(100% - 16px);margin-top:7px;border-radius:25px; }
-        .nav { min-height:58px;padding-inline:13px; }
-        .nav-links { gap:8px; }
-        .hero { padding-top:50px; }
-        .demo-shell { border-radius:25px; }
-        .demo-top { min-height:62px;padding-inline:15px; }
-        .demo-status { max-width:132px;text-align:right;line-height:1.35; }
-        .demo-sidebar { width:calc(100% - 20px);max-width:none;justify-content:flex-start;overflow-x:auto;margin-top:10px;padding:6px;border-radius:20px;scrollbar-width:thin; }
-        .demo-tab { min-height:39px;flex:0 0 auto;padding-inline:13px;font-size:11px; }
-        .demo-workspace { padding:19px 14px 20px; }
-        .demo-heading { display:flex;align-items:flex-start; }
-        .demo-heading h3 { font-size:22px; }
-        .demo-stats { grid-template-columns:1fr; }
-        .demo-designs { grid-template-columns:1fr 1fr; }
-        .demo-design-button { min-height:124px;padding:11px;font-size:12px; }
-        .demo-theme-swatch { height:52px; }
-        .demo-footer { align-items:flex-start;flex-direction:column;padding:14px 16px; }
-      }
+  <nav class="lg-nav glass" aria-label="Main">
+    <a class="brand" href="#top" aria-label="Modspire home"><img src="media/modspire-icon.png" alt=""><span>Modspire</span></a>
+    <div class="nav-links">
+      <a href="#new">What’s new</a><a href="#tour">Tour</a><a href="#features">Features</a><a href="#download">Download</a><a href="#docs">Docs</a>
+    </div>
+    <div class="switch" aria-label="Projects">
+      <a href="./" aria-current="page">Modspire</a>
+      <a href="../minecraft-mod-studio/">Mod Studio</a>
+      <a href="../minecraft-host/">Host</a>
+    </div>
+    <a class="btn primary small nav-cta" href="#download">Download</a>
+    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </nav>
 
-      /* Modspire / Studio OS: a precise dark canvas with real product imagery. */
-      :root {
-        color-scheme:dark;
-        font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;
-        --ink:#f1f2f0; --muted:#a5a9ad; --subtle:#747a81; --bg:#0a0b0e;
-        --panel:#111317; --panel-strong:#181b21; --line:rgba(236,240,245,.09);
-        --cyan:#10b981; --blue:#8da0ff; --violet:#8da0ff; --pink:#f59e0b;
-        --radius:12px; --max:1280px;
-      }
-      html { background:#0a0b0e; scroll-padding-top:96px; }
-      body { color:var(--ink);background:#0a0b0e;font-family:"Plus Jakarta Sans","Segoe UI",sans-serif; }
-      body::before { opacity:.34;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,#000,transparent 74%); }
-      body::after { display:none; }
-      h1,h2,h3,.brand { font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;font-weight:700;letter-spacing:-.055em; }
-      .wrap { width:min(var(--max),calc(100% - 64px)); }
-      .topbar { top:10px;width:min(1320px,calc(100% - 28px));margin:10px auto 0;border:1px solid var(--line);border-radius:12px;background:rgba(15,17,21,.9);box-shadow:0 8px 28px rgba(0,0,0,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px); }
-      .topbar.scrolled { background:rgba(15,17,21,.97); }
-      .nav { min-height:62px;padding-inline:17px; }
-      .brand { gap:10px;font-size:15px;letter-spacing:-.04em; }
-      .brand-mark { width:30px;height:30px;border:1px solid rgba(16,185,129,.32);border-radius:7px;background:rgba(16,185,129,.1);color:#54d6a5; }
-      .brand-mark svg { width:16px;height:16px; }
-      .nav-links { gap:20px; }
-      .nav-links a:not(.button) { color:#a6abb0;font-size:11px; }
-      .nav-links a:not(.button):hover,.nav-links a[aria-current="location"] { color:#fff; }
-      .button,.menu-toggle { min-height:40px;padding:0 14px;border:1px solid rgba(237,240,245,.12);border-radius:8px;background:#15181d;color:#e9ebed;box-shadow:inset 0 1px rgba(255,255,255,.035);font-size:11px;transition:transform .2s ease,border-color .2s ease,background .2s ease,color .2s ease; }
-      .button:hover { transform:translateY(-1px);border-color:rgba(16,185,129,.48);background:#1a2020; }
-      .button:active { transform:translateY(1px) scale(.99); }
-      .button.primary { border-color:#10b981;background:#10b981;color:#06150f;box-shadow:none; }
-      .button.primary:hover { border-color:#34d399;background:#34d399; }
-      .button.small { min-height:36px;padding-inline:12px;font-size:10px; }
-      .menu-toggle { display:none; }
-      .menu-toggle svg { width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round; }
-      .eyebrow,.section-tag { color:#99a2aa;font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:500;letter-spacing:.02em;text-transform:none; }
-      .eyebrow::before { display:none; }
-      .status-indicator,.signal-dot,.search-preview-label i,.hud-foot i { display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1); }
-      .hero { display:block;min-height:0;padding:clamp(82px,12vw,148px) 0 84px; }
-      .hero-grid { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(42px,6vw,84px); }
-      .hero h1 { max-width:660px;margin:0;font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;font-size:clamp(48px,5.7vw,76px);font-weight:700;line-height:1.02;letter-spacing:-.075em; }
-      .hero h1 span { display:block;color:#b7c1ca;background:none;-webkit-text-fill-color:currentColor; }
-      .hero-copy { max-width:520px;margin:23px 0 0;color:#aeb4b9;font-size:15px;line-height:1.8; }
-      .hero-platform { display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px;margin-top:29px; }
-      .platform-choice { display:grid;grid-template-columns:1fr auto;gap:3px 12px;align-items:center;min-height:65px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#111317;color:#d8dcdf;text-decoration:none;transition:border-color .2s ease,background .2s ease,transform .2s ease; }
-      .platform-choice:hover { transform:translateY(-2px);border-color:rgba(16,185,129,.45);background:#151a19; }
-      .platform-choice.is-active { border-color:rgba(16,185,129,.42);background:linear-gradient(115deg,rgba(16,185,129,.11),#111317 64%); }
-      .platform-choice>span { font-size:11px;font-weight:700; }
-      .platform-choice kbd,.key-combo kbd,.command-trigger kbd,.demo-search-field kbd,.command-item kbd,.command-close { padding:3px 6px;border:1px solid rgba(237,240,245,.13);border-radius:5px;background:#1a1d22;color:#b7bdc2;font-family:"JetBrains Mono",monospace;font-size:9px; }
-      .platform-choice small { grid-column:1/-1;color:#828991;font-family:"JetBrains Mono",monospace;font-size:9px; }
-      .hero-utilities { display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin-top:11px; }
-      .command-trigger { display:inline-flex;align-items:center;gap:12px;padding:5px 0;border:0;background:transparent;color:#a5abb0;font:inherit;font-size:10px;cursor:pointer; }
-      .key-combo { display:flex;gap:4px; }
-      .release-note { display:flex;align-items:center;gap:8px;margin:0;color:#848b92;font-family:"JetBrains Mono",monospace;font-size:9px; }
-      .release-note i { width:3px;height:3px;border-radius:50%;background:#59616a; }
-      .hero-art { position:relative;min-width:0;padding-bottom:22px;perspective:none; }
-      .hero-art::before { display:none; }
-      .poster-link { overflow:hidden;border:1px solid rgba(235,241,246,.16);border-radius:12px;background:#111317;transform:none;transition:border-color .25s ease,transform .25s ease; }
-      .poster-link:hover { transform:translateY(-3px);border-color:rgba(16,185,129,.38); }
-      .hero-poster { display:block;width:100%;aspect-ratio:1.45;object-fit:cover;object-position:top center;border:0;border-radius:0;box-shadow:none;transition:transform .45s cubic-bezier(.2,.75,.25,1),filter .35s ease; }
-      .poster-link:hover .hero-poster { transform:scale(1.012);filter:saturate(1.04); }
-      .hero-art::after { display:none; }
-      .play-badge { right:12px;bottom:12px;z-index:2;gap:7px;padding:6px 9px 6px 6px;border:1px solid rgba(239,242,246,.16);border-radius:7px;background:rgba(12,14,17,.9);font-size:9px; }
-      .play-dot { width:22px;height:22px;background:#10b981;color:#06150f; }
-      .play-dot svg { width:12px;height:12px;fill:currentColor; }
-      .hero-caption { display:flex;justify-content:space-between;gap:12px;padding:9px 2px 0;color:#788087;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.02em;text-transform:none; }
-      .hero-hud { position:absolute;right:-22px;bottom:7px;z-index:3;width:min(290px,63%);padding:12px;border:1px solid rgba(232,239,244,.14);border-radius:9px;background:rgba(20,23,28,.96);box-shadow:0 16px 38px rgba(0,0,0,.38); }
-      .hud-head,.hud-foot { display:flex;justify-content:space-between;align-items:center;gap:8px;color:#dce0e3;font-size:9px;font-weight:700; }
-      .mono-label { color:#818a91;font-family:"JetBrains Mono",monospace;font-size:8px;font-weight:400; }
-      .hud-graph { position:relative;height:105px;margin-top:8px;border:1px solid rgba(238,242,246,.07);border-radius:6px;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:16px 16px; }
-      .graph-lines { position:absolute;inset:0;width:100%;height:100%;fill:#10b981;stroke:#10b981;stroke-width:1.3; }
-      .graph-lines path { fill:none;stroke:rgba(16,185,129,.65);stroke-dasharray:4 4;animation:cable-flow 8s linear infinite; }
-      .graph-lines circle { stroke:none; }
-      .graph-node { position:absolute;z-index:1;display:grid;gap:2px;padding:5px 7px;border:1px solid rgba(235,241,245,.12);border-radius:5px;background:#191d22;color:#e7eaec; }
-      .graph-node small { color:#838c93;font-family:"JetBrains Mono",monospace;font-size:6px; }
-      .graph-node strong { font-size:8px;font-weight:700; }
-      .node-core { left:6%;top:38%; }.node-world {left:37%;top:8%;border-color:rgba(16,185,129,.35);}.node-perf {right:5%;top:38%;border-color:rgba(245,158,11,.3);}
-      .hud-foot { margin-top:8px;color:#939ba1;font-size:8px;font-weight:500; }.hud-foot>span:first-child {display:flex;align-items:center;gap:7px;}.hud-foot .signal-dot {width:5px;height:5px;box-shadow:none;}
-      @keyframes cable-flow { to { stroke-dashoffset:-32; } }
-      .section { position:relative;padding-block:clamp(64px,8vw,104px);border-top:1px solid rgba(236,240,245,.075); }
-      .section-heading { align-items:end;margin-bottom:27px; }
-      .section-tag { margin-bottom:10px;color:#7f8a92; }
-      .section-heading h2 { max-width:760px;font-size:clamp(30px,4.4vw,52px);line-height:1.07;letter-spacing:-.065em; }
-      .section-heading h2::after { display:none; }
-      .section-heading p { max-width:420px;color:#9ba2a8;font-size:12px;line-height:1.75; }
-      #demo { padding-top:clamp(70px,9vw,112px); }
-      .demo-shell { overflow:hidden;border:1px solid rgba(233,239,244,.13);border-radius:12px;background:#101216;box-shadow:0 26px 85px rgba(0,0,0,.28); }
-      .demo-top { display:grid;grid-template-columns:1fr auto 1fr;min-height:47px;padding:0 14px;border-bottom:1px solid var(--line);background:#15181d; }
-      .demo-window-mark { display:flex;align-items:center;gap:6px; }
-      .demo-window-mark span { width:8px;height:8px;border:1px solid rgba(236,240,245,.2);border-radius:50%;background:#282d33; }
-      .demo-window-mark span:first-child { border-color:rgba(248,113,113,.55);background:#ef6863; }.demo-window-mark span:nth-child(2){border-color:rgba(245,158,11,.55);background:#e9ad4d;}.demo-window-mark span:nth-child(3){border-color:rgba(16,185,129,.5);background:#43ba83;}
-      .demo-brand { justify-self:center;gap:8px;font-family:"Plus Jakarta Sans",sans-serif;font-size:10px; }
-      .demo-brand-mark { width:22px;height:22px;border:1px solid rgba(16,185,129,.25);border-radius:5px;background:rgba(16,185,129,.08);color:#54d6a5; }
-      .demo-brand-mark svg { width:13px;height:13px; }
-      .demo-chip { padding:4px 7px;border:1px solid rgba(236,240,245,.1);border-radius:5px;background:#1c2026;color:#a0a8ad;font-family:"JetBrains Mono",monospace;font-size:7px; }
-      .demo-status { justify-self:end;color:#858e95;font-family:"JetBrains Mono",monospace;font-size:8px; }
-      .demo-status::before { width:6px;height:6px;background:#10b981;box-shadow:none; }
-      .demo-window-controls { display:none; }
-      .demo-body { display:grid;min-height:495px;grid-template-columns:180px minmax(0,1fr); }
-      .demo-sidebar { display:flex;width:auto;max-width:none;min-height:0;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;margin:0;padding:13px 9px;border:0;border-right:1px solid var(--line);border-radius:0;background:#111419;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none; }
-      .demo-side-label { margin:6px 9px 8px;color:#747d85;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.02em; }
-      .demo-tab { min-height:36px;padding:0 10px;border:1px solid transparent;border-radius:6px;color:#a5abb0;font-size:10px; }
-      .demo-tab::before { top:8px;bottom:8px;left:-1px;width:2px;background:#10b981; }
-      .demo-tab:hover { transform:none;background:#1a1e23;color:#f0f2f3; }
-      .demo-tab[aria-selected="true"] { border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.09);color:#d9f7e8; }
-      .demo-tab-icon { width:16px;color:#8b959c; }.demo-tab[aria-selected="true"] .demo-tab-icon { color:#45d19a; }
-      .demo-tab-icon svg { width:15px;height:15px;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
-      .demo-workspace { min-width:0;padding:23px 25px; }
-      .demo-heading { align-items:center;margin-bottom:17px; }
-      .demo-heading h3 { font-size:20px;letter-spacing:-.05em; }
-      .demo-heading p { margin-top:5px;color:#8f989f;font-size:10px; }
-      .demo-stat,.demo-panel { border:1px solid rgba(235,240,244,.09);border-radius:8px;background:#15181d;box-shadow:none; }
-      .demo-stats { gap:8px;margin-bottom:10px; }
-      .demo-stat { padding:11px 13px; }
-      .demo-stat span { color:#868f96;font-family:"JetBrains Mono",monospace;font-size:8px; }
-      .demo-stat strong { margin-top:7px;font-family:"Plus Jakarta Sans",sans-serif;font-size:17px;letter-spacing:-.04em; }
-      .demo-panel { padding:13px; }
-      .demo-panel-title { margin-bottom:9px;font-size:10px; }
-      .demo-mod-list { gap:5px; }
-      .demo-mod { grid-template-columns:34px minmax(0,1fr) auto;gap:9px;padding:8px;border:1px solid rgba(235,240,244,.07);border-radius:7px;background:#101317; }
-      .demo-mod:hover { transform:translateY(-1px);border-color:rgba(16,185,129,.24);background:#151a1a; }
-      .demo-mod-icon { width:34px;height:34px;border:1px solid rgba(235,240,244,.1);border-radius:6px;background:#1c2225;color:#a9e8c8;font-family:"JetBrains Mono",monospace;font-size:13px; }
-      .demo-mod strong { font-size:9px; }.demo-mod small { color:#808990;font-family:"JetBrains Mono",monospace;font-size:8px; }
-      .demo-mini-button { min-width:30px;min-height:30px;border:1px solid rgba(16,185,129,.28);border-radius:6px;background:rgba(16,185,129,.09);color:#80dfb2;font:600 13px "JetBrains Mono",monospace; }
-      .demo-mini-button:hover { transform:translateY(-1px);border-color:#10b981;background:rgba(16,185,129,.16); }
-      .demo-toolbar { gap:7px; }
-      .demo-search-field { display:flex;min-width:180px;flex:1 1 240px;align-items:center;gap:8px;padding:0 9px;border:1px solid rgba(236,240,245,.11);border-radius:7px;background:#0c0e11; }
-      .demo-search-field svg,.command-search svg { width:14px;height:14px;flex:none;fill:none;stroke:#7c858c;stroke-width:1.8;stroke-linecap:round; }
-      .demo-search-field .demo-input { min-height:36px;flex:1;border:0;background:transparent;outline:none;box-shadow:none; }
-      .demo-search-field kbd { padding:2px 5px;color:#7c858c;font-size:8px; }
-      .demo-input,.demo-select { min-height:37px;border:1px solid rgba(236,240,245,.11);border-radius:7px;background:#0c0e11;color:#eceff1;font:inherit;font-size:10px; }
-      .demo-input { padding:0 10px; }.demo-input::placeholder {color:#727b83;}
-      .demo-select { padding:0 11px; }
-      .demo-chat { min-height:244px; }
-      .demo-message { max-width:650px;padding:12px;border:1px solid rgba(16,185,129,.16);border-radius:8px;background:#171c1a;color:#d9e4de;font-size:10px;line-height:1.7; }
-      .demo-message + .demo-message { margin-top:8px;margin-left:auto;border-color:rgba(141,160,255,.16);background:#171920; }
-      .demo-note { color:#7f888e;font-size:9px; }
-      .demo-designs { gap:8px; }
-      .demo-design-button { min-height:116px;padding:11px;border:1px solid rgba(236,240,245,.1);border-radius:7px;background:#15181d;color:#eceff1;font-size:10px; }
-      .demo-design-button:hover { transform:translateY(-2px);border-color:rgba(16,185,129,.33); }
-      .demo-design-button[aria-pressed="true"] { border-color:rgba(16,185,129,.55);background:#17211d;box-shadow:inset 0 0 0 1px rgba(16,185,129,.12); }
-      .demo-theme-swatch { height:54px;margin-bottom:9px;border-radius:4px;box-shadow:none; }
-      .demo-design-button small { color:#8c959c;font-size:8px; }
-      .demo-footer { min-height:52px;padding:8px 14px;border-top:1px solid var(--line);background:#111419;color:#899198;font-family:"JetBrains Mono",monospace;font-size:8px; }
-      .demo-footer strong { color:#cfd4d7;font-family:"Plus Jakarta Sans",sans-serif;font-size:9px; }
-      .demo-pack-tray { gap:5px; }
-      .demo-pack-item { padding:5px 7px;border:1px solid rgba(16,185,129,.18);border-radius:5px;background:rgba(16,185,129,.07);color:#b5e6cb;font-size:8px; }
-      .demo-pack-item button { color:#95a29a; }
-      .demo-clear { padding:6px 8px;border:1px solid rgba(236,240,245,.1);border-radius:5px;background:#171a1f;color:#a3aaaf;font:inherit;font-size:8px; }
-      .demo-clear:hover { border-color:rgba(245,158,11,.35);color:#f5c578; }
-      .demo-note { color:#767f86; }
-      .video-panel,.feature-card,.capability,.workflow,.callout,.download-card,.doc-link { border-color:rgba(236,240,245,.09);border-radius:10px;background:#111317;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none; }
-      .video-panel { padding:8px; }.video-panel video { border-radius:5px; }
-      .video-caption,.feature-copy p,.capability p,.step p,.callout p,.section-heading p { color:#969da3; }
-      .studio-bento { display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px; }
-      .bento-card { position:relative;min-width:0;overflow:hidden;border:1px solid rgba(236,240,245,.09);border-radius:10px;background:#111317;transition:border-color .25s ease,transform .25s ease,background .25s ease; }
-      .bento-card:hover { transform:translateY(-3px);border-color:rgba(236,240,245,.18);background:#14171b; }
-      .bento-graph { grid-column:span 7;min-height:330px; }.bento-inspector {grid-column:span 5;grid-row:span 2;}.bento-search {grid-column:span 7;}.bento-workspace {grid-column:span 7;display:grid;grid-template-columns:.8fr 1.2fr;align-items:center;gap:12px;min-height:178px;}
-      .bento-copy { position:relative;z-index:2;padding:19px 19px 0; }
-      .bento-index { color:#828a91;font-family:"JetBrains Mono",monospace;font-size:8px; }
-      .bento-copy h3 { margin:8px 0 0;font-size:17px;letter-spacing:-.05em; }
-      .bento-copy p { max-width:420px;margin:7px 0 0;color:#90989e;font-size:10px;line-height:1.7; }
-      .dependency-canvas { position:relative;height:205px;margin:12px 17px 17px;border:1px solid rgba(236,240,245,.075);border-radius:7px;background-color:#0d0f12;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:25px 25px; }
-      .dependency-canvas>svg { position:absolute;inset:0;width:100%;height:100%;fill:none;stroke-width:1.3; }
-      .dependency-canvas .cable { stroke:rgba(16,185,129,.47);stroke-dasharray:5 5;animation:cable-flow 8s linear infinite; }
-      .dependency-canvas .cable-branch { stroke:rgba(141,160,255,.28); }
-      .dependency-canvas .cable-port { fill:#101317;stroke:#10b981;stroke-width:2; }
-      .canvas-label { position:absolute;top:9px;left:11px;color:#737c83;font-family:"JetBrains Mono",monospace;font-size:7px; }
-      .map-node { position:absolute;z-index:1;display:grid;gap:3px;min-width:81px;padding:7px 9px;border:1px solid rgba(236,240,245,.13);border-radius:5px;background:#191d22; }
-      .map-node small { color:#747d84;font-family:"JetBrains Mono",monospace;font-size:6px; }.map-node strong {color:#d6dcdf;font-size:8px;}
-      .map-loader {left:4%;top:42%;}.map-api {left:38%;top:20%;border-color:rgba(16,185,129,.35);}.map-terrain {right:4%;top:42%;border-color:rgba(245,158,11,.28);}.map-render {left:43%;bottom:9%;border-color:rgba(141,160,255,.3);}
-      .canvas-foot { position:absolute;right:9px;bottom:8px;display:flex;align-items:center;gap:7px;color:#7c858c;font-size:7px; }
-      .canvas-foot i { width:5px;height:5px;border-radius:50%;background:#f59e0b; }
-      .inspector-preview,.search-preview { position:relative;overflow:hidden;margin:14px;border:1px solid rgba(236,240,245,.08);border-radius:6px;background:#0b0d10; }
-      .inspector-preview img,.search-preview img,.bento-workspace>img { display:block;width:100%;height:auto;object-fit:cover; }
-      .inspector-preview img { max-height:230px;object-position:top; }
-      .inspector-overlay { position:absolute;right:8px;bottom:8px;left:8px;display:grid;gap:2px;padding:9px;border:1px solid rgba(236,240,245,.12);border-radius:5px;background:rgba(13,15,18,.94); }
-      .inspector-overlay span,.inspector-overlay small { color:#838c93;font-family:"JetBrains Mono",monospace;font-size:7px; }.inspector-overlay strong {font-size:10px;}
-      .inspector-tags { display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 14px; }.inspector-tags span {padding:5px 7px;border:1px solid rgba(236,240,245,.1);border-radius:4px;color:#a4abb1;font-size:7px;}
-      .inspector-readout { display:grid;gap:0;margin:0 14px 14px;padding:10px;border:1px solid rgba(236,240,245,.08);border-radius:6px;background:#0e1013; }
-      .readout-heading { display:flex;justify-content:space-between;padding:1px 2px 8px;color:#7e888f;font:7px "JetBrains Mono",monospace;letter-spacing:.06em; }
-      .inspector-readout>div:not(.readout-heading) { display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 2px;border-top:1px solid rgba(236,240,245,.055); }
-      .readout-marker { color:#51c99c;font:8px "JetBrains Mono",monospace; }
-      .inspector-readout strong,.inspector-readout small { display:block; }.inspector-readout strong { color:#cdd2d5;font-size:8px;font-weight:600; }.inspector-readout small { margin-top:3px;color:#7f888e;font-size:7px; }
-      .readout-state { padding:4px 6px;border:1px solid rgba(236,240,245,.09);border-radius:4px;color:#929ba1;font:7px "JetBrains Mono",monospace; }
-      .bento-inspector { grid-row:span 1; }
-      .bento-workspace { grid-column:span 5; }
-      .search-preview { max-height:205px; }.search-preview img {object-position:top;}.search-preview-label {position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid rgba(236,240,245,.12);border-radius:5px;background:rgba(13,15,18,.94);color:#c9d0d4;font-family:"JetBrains Mono",monospace;font-size:7px;}.search-preview-label i {width:5px;height:5px;}
-      .bento-workspace .bento-copy { padding:18px; }.bento-workspace>img { width:calc(100% - 14px);max-height:145px;border:1px solid rgba(236,240,245,.1);border-radius:5px;object-position:top; }
-      .capability-grid { grid-template-columns:repeat(3,minmax(0,1fr));gap:0 22px; }
-      .capability { min-height:0;padding:19px 4px;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent; }
-      .capability .icon { width:30px;height:30px;margin-bottom:12px;border:1px solid rgba(16,185,129,.18);border-radius:6px;background:rgba(16,185,129,.06);color:#45d19a; }
-      .capability h3 {font-size:13px;letter-spacing:-.035em;}.capability p {font-size:10px;line-height:1.7;}
-      .workflow { border-radius:8px;background:#111317; }.step {min-height:160px;padding:20px 18px;}.step-number {margin-bottom:27px;color:#8e989f;font-family:"JetBrains Mono",monospace;font-size:8px;}.step h3 {font-size:14px;}.step p {font-size:10px;}
-      .callout { grid-template-columns:1.1fr .9fr;padding:25px;border-color:rgba(16,185,129,.23);background:#111714; }.callout h2 {font-size:clamp(28px,3.7vw,43px);}.callout p {font-size:11px;}.pill {border-color:rgba(236,240,245,.1);border-radius:5px;background:#181b20;color:#bbc1c6;font-size:9px;}
-      .download-layout {grid-template-columns:1.1fr .9fr;gap:12px;}.download-card {padding:20px;}.download-card h3 {font-size:16px;}.download-card p {font-size:10px;}.download-card.primary-card {border-color:rgba(16,185,129,.28);background:#111714;}.download-card.primary-card::after {display:none;}.download-links {gap:6px;}.download-link {border-color:rgba(236,240,245,.08);border-radius:6px;background:#15181d;}.download-link:hover {border-color:rgba(16,185,129,.3);background:#191e1b;}.download-link strong {font-size:10px;}.download-link span {color:#858e94;font-size:9px;}
-      .doc-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}.doc-link {min-height:65px;border-radius:6px;background:#111317;}.doc-link:hover {border-color:rgba(16,185,129,.3);background:#151916;}.doc-link strong {font-size:10px;}.doc-link small {color:#848c92;font-size:8px;}.notice {border-left-color:#10b981;border-radius:0 5px 5px 0;background:#111714;color:#aeb6b2;font-size:10px;}
-      .footer {border-top:1px solid var(--line);}.footer p,.copyright {color:#7c848b;font-size:10px;}.footer-links a {color:#9da5ab;font-size:10px;}.footer-links a:hover {color:#50d39c;}.inline-icon {width:13px;height:13px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-      .command-dialog {width:min(560px,calc(100% - 28px));padding:0;border:1px solid rgba(236,240,245,.14);border-radius:11px;background:#111419;color:#e8ebed;box-shadow:0 28px 100px rgba(0,0,0,.65); }
-      .command-dialog::backdrop {background:rgba(3,5,7,.72);backdrop-filter:blur(3px);}
-      .command-top {display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--line);font-size:11px;font-weight:700;}
-      .command-close {padding:4px 7px;cursor:pointer;}.command-search {display:flex;align-items:center;gap:9px;margin:11px;padding:0 10px;border:1px solid rgba(236,240,245,.11);border-radius:6px;background:#0b0d10;}.command-search input {width:100%;height:38px;border:0;outline:none;background:none;color:#eee;font:inherit;font-size:10px;}.command-list {display:grid;gap:3px;padding:0 7px 8px;}.command-item {display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid transparent;border-radius:5px;background:transparent;color:#c8cdd1;text-align:left;font:inherit;font-size:10px;cursor:pointer;}.command-item:hover,.command-item:focus-visible {border-color:rgba(16,185,129,.23);background:rgba(16,185,129,.08);outline:none;}.command-item[hidden] {display:none;}
-      .motion-ready .reveal-target { transform:translateY(15px);filter:blur(1px);transition:opacity .58s ease,transform .58s cubic-bezier(.2,.75,.25,1),filter .58s ease; }
-      .motion-ready .reveal-target.is-visible { transform:translateY(0);filter:none; }
-      .feature-card,.capability,.download-card,.doc-link,.bento-card,.step { transition:transform .24s ease,border-color .24s ease,background .24s ease; }
-      .demo-view.active { animation:panel-arrive .22s ease both; }
-      @media (max-width:1000px) { .hero-grid {grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:35px;}.hero-hud {right:-8px;width:58%;}.bento-inspector {grid-row:span 1;}.bento-graph,.bento-search,.bento-workspace {grid-column:span 6;} }
-      @media (max-width:760px) {
-        .wrap {width:calc(100% - 36px);}.topbar {top:7px;width:calc(100% - 16px);margin-top:7px;}.nav {min-height:55px;padding-inline:10px;gap:10px;}.mobile-product-switch {display:flex;flex:0 0 auto;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:rgba(16,25,41,.74);}.mobile-product-switch a.product-link {display:inline-flex;min-height:32px;align-items:center;padding:0 9px;border-radius:999px;color:var(--muted);font-size:10px;font-weight:750;text-decoration:none;white-space:nowrap;}.mobile-product-switch a.product-link[aria-current="page"] {background:linear-gradient(100deg,var(--cyan),var(--blue) 56%,#b99cff);color:#08131d;}.menu-toggle {display:grid;flex:0 0 38px;width:38px;height:38px;place-items:center;padding:0;border:1px solid rgba(156,179,219,.25);border-radius:50%;background:rgba(16,25,41,.9);color:var(--ink);box-shadow:inset 0 1px rgba(255,255,255,.06);}.menu-toggle svg {width:17px;height:17px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-width:1.7;}.nav-links {display:none;position:absolute;top:calc(100% + 6px);right:8px;left:8px;flex-direction:column;align-items:stretch;gap:4px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111419;}.nav-links.open {display:flex;}.nav-links a:not(.button) {padding:10px;border-radius:5px;}.nav-links a:not(.button):hover {background:#1b1f24;}.nav-links .product-switch {display:none;}.nav-links .button {width:100%;}
-        .hero {padding:78px 0 62px;}.hero-grid {grid-template-columns:1fr;gap:35px;}.hero h1 {font-size:clamp(40px,10.8vw,62px);}.hero-copy {font-size:13px;}.hero-platform {max-width:560px;}.hero-utilities {flex-wrap:wrap;}.hero-art {padding-bottom:14px;}.hero-hud {right:-5px;bottom:0;width:min(275px,72%);}.hero-caption {font-size:7px;}
-        .section {padding-block:58px;}.section-heading {display:grid;gap:10px;}.section-heading h2 {font-size:clamp(29px,8vw,42px);}.demo-shell {border-radius:8px;}.demo-top {grid-template-columns:auto 1fr auto;min-height:43px;padding-inline:9px;}.demo-brand {justify-self:start;margin-left:8px;}.demo-status {display:none;}.demo-window-controls {display:flex;gap:4px;}.demo-window-controls span {width:7px;height:7px;border:1px solid rgba(236,240,245,.2);border-radius:50%;background:#252a30;}.demo-body {display:block;min-height:0;}.demo-sidebar {display:flex;width:auto;max-width:none;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;overflow-x:auto;gap:3px;margin:0;padding:7px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#111419;box-shadow:none;scrollbar-width:thin;}.demo-side-label {display:none;}.demo-tab {flex:0 0 auto;min-height:33px;padding-inline:9px;font-size:9px;}.demo-tab-icon {width:14px;}.demo-workspace {padding:15px 11px;}.demo-heading {align-items:flex-start;}.demo-heading h3 {font-size:17px;}.demo-heading p {font-size:9px;}.demo-stats {grid-template-columns:repeat(3,minmax(0,1fr));}.demo-stat {padding:9px 7px;}.demo-stat strong {font-size:14px;}.demo-footer {align-items:flex-start;flex-wrap:wrap;gap:8px;padding:9px;}.demo-pack-tray {order:3;width:100%;}.demo-designs {grid-template-columns:repeat(2,minmax(0,1fr));}
-        .studio-bento {grid-template-columns:1fr;}.bento-graph,.bento-inspector,.bento-search,.bento-workspace {grid-column:auto;grid-row:auto;}.bento-workspace {grid-template-columns:1fr;}.bento-workspace>img {width:calc(100% - 28px);max-height:180px;margin:0 14px 14px;}.dependency-canvas {height:185px;}.map-node {min-width:72px;padding:6px;}.canvas-label {font-size:6px;}.canvas-foot {font-size:6px;}
-        .capability-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px;}.workflow {grid-template-columns:1fr 1fr;}.step {min-height:145px;padding:15px 12px;}.step + .step {border-left:1px solid var(--line);}.step:nth-child(3) {border-left:0;border-top:1px solid var(--line);}.step:nth-child(4) {border-top:1px solid var(--line);}.callout,.download-layout {grid-template-columns:1fr;}.provider-list {justify-content:flex-start;}.doc-grid {grid-template-columns:1fr 1fr;}.video-panel {padding:5px;}.video-caption {font-size:9px;}
-      }
-      @media (max-width:420px) { .wrap {width:calc(100% - 20px);}.nav {gap:5px;padding-inline:6px;}.brand {gap:7px;font-size:15px;}.brand-mark {width:33px;height:33px;}.mobile-product-switch a.product-link {padding-inline:7px;font-size:9px;}.menu-toggle {flex-basis:36px;width:36px;height:36px;}.hero h1 {font-size:clamp(38px,10vw,46px);}.hero-platform {grid-template-columns:1fr;}.hero-hud {width:70%;}.hud-graph {height:88px;}.demo-stats {grid-template-columns:1fr;}.demo-heading {display:block;}.demo-heading .demo-chip {margin-top:8px;}.demo-toolbar {display:grid;grid-template-columns:1fr;}.demo-search-field {min-width:0;}.demo-select {width:100%;}.demo-mod {grid-template-columns:29px minmax(0,1fr) auto;gap:6px;padding:6px;}.demo-mod-icon {width:29px;height:29px;}.demo-mod small {font-size:7px;}.demo-design-button {min-height:106px;padding:8px;}.doc-grid,.capability-grid {grid-template-columns:1fr;} }
-
-      /* Studio-specific interaction finish: crisp controls, considered icon rhythm, and a staged first impression. */
-      @keyframes opening-type { from { opacity:0;transform:translateY(15px);filter:blur(3px); } to { opacity:1;transform:translateY(0);filter:none; } }
-      @keyframes art-arrive { from { opacity:0;filter:blur(5px); } to { opacity:1;filter:none; } }
-      .hero-grid > .reveal:first-child > * { animation:opening-type .56s cubic-bezier(.2,.75,.25,1) both; }
-      .hero-grid > .reveal:first-child > :nth-child(2) { animation-delay:.07s; }
-      .hero-grid > .reveal:first-child > :nth-child(3) { animation-delay:.14s; }
-      .hero-grid > .reveal:first-child > :nth-child(4) { animation-delay:.21s; }
-      .hero-art { animation:art-arrive .72s .15s cubic-bezier(.2,.75,.25,1) both; }
-      .button,.platform-choice,.command-trigger,.demo-tab,.demo-design-button,.demo-mini-button,.nav-links a { position:relative;transition:transform .16s cubic-bezier(.2,.75,.25,1),border-color .16s ease,background-color .16s ease,color .16s ease,box-shadow .16s ease; }
-      .button,.platform-choice,.command-trigger { border-radius:999px;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%); }
-      .button:hover,.platform-choice:hover,.command-trigger:hover,.demo-tab:hover,.demo-design-button:hover,.demo-mini-button:hover { transform:translateY(-2px);border-color:color-mix(in srgb,var(--cyan) 52%,var(--line));box-shadow:0 9px 24px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.12); }
-      .button:active,.platform-choice:active,.command-trigger:active,.demo-tab:active,.demo-design-button:active,.demo-mini-button:active { transform:translateY(1px) scale(.985);filter:brightness(1.08); }
-      .button:focus-visible,.platform-choice:focus-visible,.command-trigger:focus-visible,.demo-tab:focus-visible,.demo-design-button:focus-visible,.demo-mini-button:focus-visible,.nav a:focus-visible { outline:2px solid var(--cyan);outline-offset:3px; }
-      .icon,.inline-icon { display:inline-grid;place-items:center;flex:none; }
-      .icon svg,.inline-icon { width:17px;height:17px; }
-      .section-tag,.mono-label,.step-number,.hero-caption,.demo-kicker,.release-note { font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;letter-spacing:.09em; }
-      .section-heading { padding-bottom:15px;border-bottom:1px solid var(--line); }
-      .feature-card,.capability,.bento-card,.download-card,.doc-link { border-radius:18px; }
-      .capability:hover,.doc-link:hover,.download-card:hover { transform:translateY(-3px);border-color:color-mix(in srgb,var(--cyan) 36%,var(--line)); }
-      .demo-shell,.hero-poster,.hero-hud,.video-panel { border-radius:22px; }
-      .demo-view.active { animation:panel-arrive .3s cubic-bezier(.2,.75,.25,1) both; }
-      .demo-mod,.demo-pack-item,.demo-message { animation:demo-row-arrive .24s cubic-bezier(.2,.75,.25,1) both; }
-      @keyframes demo-row-arrive { from { opacity:0;transform:translateY(6px); } to { opacity:1;transform:translateY(0); } }
-      .video-panel { max-width:920px;margin-inline:auto; }
-      .feature-details { margin-top:18px;border:1px solid var(--line);border-radius:12px;background:rgba(17,20,23,.7); }
-      .feature-details > summary,.more-docs > summary { display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 18px;color:var(--text);cursor:pointer;list-style:none; }
-      .feature-details > summary::-webkit-details-marker,.more-docs > summary::-webkit-details-marker { display:none; }
-      .feature-details > summary strong,.feature-details > summary small { display:block; }
-      .feature-details > summary strong { font-size:13px; }
-      .feature-details > summary small { margin-top:4px;color:var(--muted);font-size:10px; }
-      .feature-details > summary:focus-visible,.more-docs > summary:focus-visible { outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px; }
-      .feature-details[open] > summary,.more-docs[open] > summary { border-bottom:1px solid var(--line); }
-      .feature-toggle,.more-docs > summary span { display:grid;width:25px;height:25px;place-items:center;border:1px solid var(--line);border-radius:50%;color:var(--cyan);font-size:17px;transition:transform .16s ease; }
-      .feature-details[open] .feature-toggle,.more-docs[open] > summary span { transform:rotate(45deg); }
-      .feature-details .capability-grid { padding:0 18px 8px; }
-      .provider-summary { margin:0 18px 16px;color:var(--muted);font-size:10px;line-height:1.6; }
-      .provider-summary strong { color:var(--text); }
-      .more-docs { grid-column:1/-1;border:1px solid var(--line);border-radius:8px;background:rgba(17,20,23,.5); }
-      .more-docs > summary { padding:11px 14px;font-size:11px;font-weight:650; }
-      .more-docs .doc-grid { padding:0 8px 8px; }
-      .notice a { color:var(--cyan);text-underline-offset:3px; }
-      @media (max-width:760px) { .feature-details .capability-grid { padding-inline:12px; }.more-docs .doc-grid { grid-template-columns:1fr; }.video-panel { max-width:100%; } }
-      html { scroll-behavior:smooth; }
-    </style>
-  </head>
-  <body>
-    <div class="reading-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
-    <div class="topbar">
-      <nav class="nav wrap" aria-label="Main navigation">
-        <a class="brand" href="#top" aria-label="Modspire home">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg>
-          </span><span>Modspire</span>
-        </a>
-        <div class="product-switch mobile-product-switch" aria-label="Switch product preview"><a class="product-link" href="https://lvisxvi.github.io/modspire/" aria-current="page">Modspire</a><a class="product-link" href="https://lvisxvi.github.io/minecraft-mod-studio/">Mod Studio</a></div>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-        <div class="nav-links" id="site-nav">
-          <a href="#demo">Try the studio</a><a href="#showcase">What’s inside</a><a href="#downloads">Download</a><a href="#docs">Guides</a>
-          <div class="product-switch" aria-label="Switch product preview"><a class="product-link" href="https://lvisxvi.github.io/modspire/" aria-current="page">Modspire</a><a class="product-link" href="https://lvisxvi.github.io/minecraft-mod-studio/">Mod Studio</a></div>
-          <a class="button small primary nav-cta" href="#downloads">Download Modspire <span aria-hidden="true">↓</span></a>
+  <main id="main">
+    <header class="hero wrap" id="top">
+      <div class="hero-grid">
+        <div>
+          <a class="new-ribbon glass" href="#new" data-hero style="--d:0"><span>New: Liquid Glass UI</span><b>0.3.2</b></a>
+          <h1 data-hero style="--d:1">Plan the pack.<br><span class="grad">Skip the chaos.</span></h1>
+          <p class="lead" data-hero style="--d:2">Modspire is a local-first Windows studio for Minecraft Java modpacks. Search Modrinth, shape an idea with an optional AI assistant, compare pack variants and export an installable <code>.mrpack</code>.</p>
+          <div class="actions" data-hero style="--d:3">
+            <a class="btn primary" href="https://github.com/LvisXVI/modspire/releases/download/v0.3.2/Modspire-0.3.2-Portable.exe" data-release-download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19h14"/></svg>
+              Download for Windows
+            </a>
+            <a class="btn" href="demo/#demo">Try the browser demo</a>
+          </div>
+          <div class="meta" data-hero style="--d:4">
+            <span class="chip"><span class="dot"></span>Version <b data-release-version>0.3.2</b></span>
+            <span class="chip">Portable · no install</span>
+            <span class="chip">Catalog search needs no AI account</span>
+          </div>
         </div>
+        <div class="hero-visual" data-hero style="--d:2">
+          <div class="device glass"><img src="screenshots/rounded/ai-pack-assistant.webp" width="1600" height="1100" alt="Modspire Pack Assistant planning a Fabric 1.21.1 exploration pack"></div>
+          <div class="float glass f1"><span class="ico">⌕</span><div>Modrinth search<small>Version &amp; loader aware</small></div></div>
+          <div class="float glass f2"><span class="ico">⇄</span><div>Compare snapshots<small>Added · removed · changed</small></div></div>
+          <div class="float glass f3"><span class="ico">⬡</span><div>.mrpack export<small>Exact versions &amp; hashes</small></div></div>
+        </div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true"></div>
+    </header>
+
+    <section class="section wrap" id="new">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">New in 0.3.0 – 0.3.2</span>
+        <h2>From a shortlist to a <span class="grad">real pack file.</span></h2>
+        <p>Pack workflows grew up: keep variants side by side, update safely, and hand friends something they can install.</p>
+      </div>
+      <div class="bento">
+        <article class="card glass tint span-6 feature-wide" data-reveal>
+          <div>
+            <div class="ico">🫧</div>
+            <h3>UI 5 · Liquid Glass</h3>
+            <p>A fifth layout: frosted, light-catching panels over your Minecraft world, a floating rail, spring-loaded controls and soft view transitions. Plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.</p>
+            <span class="tag">0.3.2</span>
+          </div>
+          <img src="screenshots/glass-ui.webp" width="1600" height="867" alt="Modspire UI 5 Liquid Glass overview over an aurora lake" loading="lazy">
+        </article>
+        <article class="card glass tint span-4 studio-card feature-wide" data-reveal>
+          <div>
+            <div class="ico">🛠️</div>
+            <h3>Mod Studio, built right in</h3>
+            <p>Open the real Minecraft Mod Studio from any of Modspire’s layouts: pixel textures, Blockbench models, AI help, source export and supported JAR builds. It runs on a private loopback server with checksum-verified JDK and Gradle runtimes. No separate installation.</p>
+            <span class="tag">0.3.1</span>
+          </div>
+          <span class="orbit" aria-hidden="true"></span>
+        </article>
+        <article class="card glass span-2" data-reveal style="--d:1">
+          <div class="ico">⇄</div><h3>Compare any two snapshots</h3>
+          <p>See added, removed and changed mod versions plus game setup between saved Pack Lab snapshots.</p><span class="tag">Pack Lab</span>
+        </article>
+        <article class="card glass span-2" data-reveal>
+          <div class="ico">⬆</div><h3>Selective updates</h3>
+          <p>Preview compatible Modrinth updates, pick individual versions, and get an automatic snapshot before anything changes.</p><span class="tag">Safe by default</span>
+        </article>
+        <article class="card glass span-2" data-reveal style="--d:1">
+          <div class="ico">📦</div><h3>Installable .mrpack export</h3>
+          <p>Exact versions, required dependencies, verified hashes, download URLs and a concrete loader version.</p><span class="tag">Modrinth format</span>
+        </article>
+        <article class="card glass span-2" data-reveal style="--d:2">
+          <div class="ico">⭐</div><h3>Bookmarks with notes</h3>
+          <p>Star mods in the catalog and keep a personal cross-pack library with editable notes, stored locally.</p><span class="tag">Library</span>
+        </article>
+        <article class="card glass span-3" data-reveal>
+          <div class="ico">🧩</div><h3>Dependencies, explained</h3>
+          <p>Required dependencies and client/server environments are explained in the selection and Pack Lab, including which parent pulled a shared library in.</p>
+        </article>
+        <article class="card glass span-3" data-reveal style="--d:1">
+          <div class="ico">🛡️</div><h3>Hardened local server</h3>
+          <p>The embedded Studio server blocks external origins and Host-header rebinding. Exact version pins survive import and dependency resolution.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section wrap" id="tour">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Inside the app</span>
+        <h2>Five rooms. <span class="grad">One workflow.</span></h2>
+        <p>Real screenshots from the Windows app, not mockups.</p>
+      </div>
+      <div class="showcase glass" data-showcase data-reveal>
+        <div class="tabs" role="tablist" aria-label="App areas">
+          <button class="tab" role="tab" aria-selected="true" data-src="screenshots/rounded/ai-pack-assistant.webp" data-alt="Pack Assistant chat with follow-up choices"><strong>🤖 Pack Assistant</strong><span>Describe the experience you want, review suggestions and continue with contextual choices.</span><i class="bar"></i></button>
+          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/rounded/modrinth-search-and-selection.webp" data-alt="Modrinth search results with filters"><strong>🔎 Modrinth catalog</strong><span>Search and filter by topic, version, loader, category, environment and popularity.</span><i class="bar"></i></button>
+          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/rounded/pack-lab.webp" data-alt="Pack Lab with mod roles and category balance"><strong>🧪 Pack Lab</strong><span>Mod roles, category balance, snapshots and a crash analyzer that cites log evidence.</span><i class="bar"></i></button>
+          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/rounded/designs-and-minecraft-backgrounds.webp" data-alt="Appearance settings with Minecraft backgrounds"><strong>🎨 Appearance</strong><span>Four layouts, visual themes and Minecraft backgrounds, saved on this device.</span><i class="bar"></i></button>
+          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/rounded/local-web.webp" data-alt="Modspire running in a local browser tab"><strong>🌐 Local web view</strong><span>Open the same workspace in your browser on 127.0.0.1 while the desktop app runs.</span><i class="bar"></i></button>
+        </div>
+        <div class="stage" role="tabpanel"><img src="screenshots/rounded/ai-pack-assistant.webp" alt="Pack Assistant chat with follow-up choices" width="1600" height="1100"></div>
+      </div>
+      <div class="video-shell glass" style="margin-top:16px" data-reveal>
+        <video controls preload="none" playsinline poster="media/modspire-promo-poster.png" aria-label="Modspire app tour">
+          <source src="media/modspire-promo-v0.2.88.mp4" type="video/mp4">
+        </video>
+      </div>
+    </section>
+
+    <section class="section wrap" id="features">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Everything included</span>
+        <h2>Built for people who <span class="grad">actually play the pack.</span></h2>
+      </div>
+      <ul class="checklist">
+        <li class="glass" data-reveal><span class="em">🗂️</span><span><b>Multiple projects</b> with separate Minecraft versions, loaders, selections and chat histories.</span></li>
+        <li class="glass" data-reveal style="--d:1"><span class="em">💬</span><span><b>AI-assisted planning</b>: review Modrinth suggestions before anything changes in your pack.</span></li>
+        <li class="glass" data-reveal><span class="em">↶</span><span><b>Undo &amp; redo</b> selection changes, including batch additions, with Ctrl+Z / Ctrl+Shift+Z.</span></li>
+        <li class="glass" data-reveal style="--d:1"><span class="em">🔗</span><span><b>Shareable mod lists</b> with project links, version, loader and dependency labels.</span></li>
+        <li class="glass" data-reveal><span class="em">📥</span><span><b>Import</b> a Modrinth share code, public pack link or <code>.mrpack</code> into an editable project.</span></li>
+        <li class="glass" data-reveal style="--d:1"><span class="em">🩺</span><span><b>Crash Analyzer</b> explains likely causes and names a mod only when the log supports it.</span></li>
+        <li class="glass" data-reveal><span class="em">📈</span><span><b>Weekly favorites</b> from private local daily snapshots, beside all-time follows.</span></li>
+        <li class="glass" data-reveal style="--d:1"><span class="em">🧠</span><span><b>Your choice of AI</b>: ChatGPT account, OpenAI or Anthropic API, Ollama, OmniRoute or a local OpenCode server.</span></li>
+      </ul>
+      <p class="note glass" data-reveal style="margin-top:16px"><b>Limits, honestly:</b> Modspire organizes packs and reviews metadata. It does not install a Minecraft loader or prove that a pack starts in a game world. Credentials are encrypted with Windows DPAPI-backed storage; chat content goes to the provider you pick, only when you send it.</p>
+    </section>
+
+    <section class="section wrap" id="download">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Download</span>
+        <h2>One file. <span class="grad">Double-click.</span></h2>
+      </div>
+      <div class="download">
+        <div class="dl-main glass tint" data-reveal>
+          <div>
+            <h3 style="font-size:30px">Modspire <span data-release-version>0.3.2</span> for Windows</h3>
+            <p class="muted" style="margin:8px 0 0">Portable executable for Windows 10 and 11. The first launch asks for a local display name. That name is not an account.</p>
+          </div>
+          <div class="spec">
+            <div><small>File</small><strong data-release-name>Modspire-0.3.2-Portable.exe</strong></div>
+            <div><small>Size</small><strong data-release-size>≈ 365 MB</strong></div>
+            <div><small>Released</small><strong data-release-date>Oct 2026</strong></div>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/LvisXVI/modspire/releases/download/v0.3.2/Modspire-0.3.2-Portable.exe" data-release-download>Download portable .exe</a>
+            <a class="btn" href="https://github.com/LvisXVI/modspire/releases">All releases &amp; checksums</a>
+          </div>
+        </div>
+        <div class="dl-side">
+          <div class="card glass" data-reveal style="--d:1">
+            <h3>Run from source</h3>
+            <p>Windows 10/11, Node.js 22+ and pnpm.</p>
+            <pre>pnpm install
+pnpm start
+pnpm dist</pre>
+          </div>
+          <div class="card glass" data-reveal style="--d:2">
+            <h3>Community test build</h3>
+            <p>Found something confusing? <a href="https://github.com/LvisXVI/modspire/issues/new?template=bug_report.yml">Report a bug</a> or <a href="https://github.com/LvisXVI/modspire/discussions">share feedback</a>. Please remove keys, names and paths from screenshots first.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="docs">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Docs</span>
+        <h2>Guides &amp; <span class="grad">background.</span></h2>
+      </div>
+      <div class="links">
+        <a class="glass" data-reveal href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span>Getting started<small>Setup, first project, providers</small></span><span class="arr">→</span></a>
+        <a class="glass" data-reveal style="--d:1" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span>Mod search<small>Filters, CurseForge key, ranking</small></span><span class="arr">→</span></a>
+        <a class="glass" data-reveal style="--d:2" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span>AI &amp; privacy<small>What is sent, and when</small></span><span class="arr">→</span></a>
+        <a class="glass" data-reveal href="https://github.com/LvisXVI/modspire/blob/main/docs/mod-studio-integration.md"><span>Mod Studio integration<small>How the embedded Studio works</small></span><span class="arr">→</span></a>
+        <a class="glass" data-reveal style="--d:1" href="https://github.com/LvisXVI/modspire/blob/main/CHANGELOG.md"><span>Changelog<small>Every user-facing change</small></span><span class="arr">→</span></a>
+        <a class="glass" data-reveal style="--d:2" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span>Troubleshooting<small>Build, run and debug</small></span><span class="arr">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="#top"><img src="media/modspire-icon.png" alt="" width="28" height="28"><span>Modspire</span></a>
+        <p>An independent project. Not affiliated with or endorsed by Microsoft, Mojang, Modrinth, CurseForge or OpenAI. MIT for original files; see the licence notes in the repository.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="https://github.com/LvisXVI/modspire">GitHub</a>
+        <a href="demo/">Interactive demo</a>
+        <a href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md">Disclaimer</a>
+        <a href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md">Third-party notices</a>
+        <a href="../minecraft-mod-studio/">Mod Studio</a>
+        <a href="../minecraft-host/">Minecraft Host</a>
       </nav>
     </div>
-    <main id="top">
-      <header class="hero wrap">
-        <div class="hero-grid">
-          <div class="reveal">
-            <p class="eyebrow"><span class="status-indicator" aria-hidden="true"></span> Minecraft Java · Pack planning studio</p>
-            <h1>Plan the pack.<br><span>Keep it yours.</span></h1>
-            <p class="hero-copy">Plan a Minecraft Java pack from first idea to export. Search Modrinth, curate your picks, and review the setup before you play. AI is optional.</p>
-            <div class="hero-platform" role="group" aria-label="Choose a download">
-              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.2.98</span></small></a>
-              <a class="platform-choice" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><span>Project source</span><kbd>ZIP</kbd><small>Complete repository</small></a>
-            </div>
-            <div class="hero-utilities"><button class="command-trigger" type="button" data-open-commands><span>Open command menu</span><span class="key-combo"><kbd>Ctrl</kbd><kbd>K</kbd></span></button><span class="release-note">AI optional <i></i> Pack stays local</span></div>
-          </div>
-          <div class="hero-art reveal">
-            <a class="poster-link" href="#tour" aria-label="Watch the Modspire app tour">
-              <img class="hero-poster" src="screenshots/rounded/ai-pack-assistant.png" alt="Real Modspire Pack Assistant screen over a Minecraft world background">
-              <span class="play-badge"><span class="play-dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 9 6-9 6z"/></svg></span> Watch the real app tour</span>
-            </a>
-            <aside class="hero-hud" aria-label="Illustrative modpack plan">
-              <div class="hud-head"><span>Pack map</span><span class="mono-label">SAMPLE · 1.21.1</span></div>
-              <div class="hud-graph" aria-label="Illustrative relationship map for selected sample mods">
-                <svg class="graph-lines" viewBox="0 0 360 154" aria-hidden="true"><path d="M68 77h74M216 77h76M180 52V27M180 102v25"/><circle cx="68" cy="77" r="3"/><circle cx="142" cy="77" r="3"/><circle cx="216" cy="77" r="3"/><circle cx="292" cy="77" r="3"/><circle cx="180" cy="27" r="3"/><circle cx="180" cy="127" r="3"/></svg>
-                <span class="graph-node node-core">Fabric API</span><span class="graph-node node-world">Terralith</span><span class="graph-node node-perf">Sodium</span>
-              </div>
-              <div class="hud-foot"><span><i class="signal-dot"></i> Illustrative plan</span><span class="mono-label">3 MODS</span></div>
-            </aside>
-            <div class="hero-caption"><span>REAL APP SCREEN</span><span>Pack Assistant · Windows</span></div>
-          </div>
-        </div>
-      </header>
-
-      <section class="section wrap" id="demo">
-        <div class="section-heading">
-          <div><p class="section-tag">Interactive sample</p><h2>Try the studio.</h2></div>
-          <p>Click through the studio. Add mods, switch views, and shape a sample pack.</p>
-        </div>
-        <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
-          <div class="demo-top"><div class="demo-window-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 · Fabric</span><div class="demo-window-controls" aria-hidden="true"><span></span><span></span><span></span></div></div>
-          <div class="demo-body">
-            <nav class="demo-sidebar" aria-label="Demo workspace sections" role="tablist">
-              <span class="demo-side-label">Workspace</span>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-overview" aria-controls="demo-view-overview" aria-selected="true" tabindex="0" data-demo-tab="overview"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg></span>Overview</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-assistant" aria-controls="demo-view-assistant" aria-selected="false" tabindex="-1" data-demo-tab="assistant"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2L12 3Z"/></svg></span>Pack Assistant</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-search" aria-controls="demo-view-search" aria-selected="false" tabindex="-1" data-demo-tab="search"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span>Mod search</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-lab" aria-controls="demo-view-lab" aria-selected="false" tabindex="-1" data-demo-tab="lab"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10m8 10V4m8 16v-7"/><path d="M2 20h20"/></svg></span>Pack Lab</button>
-              <button class="demo-tab" type="button" role="tab" id="demo-tab-designs" aria-controls="demo-view-designs" aria-selected="false" tabindex="-1" data-demo-tab="designs"><span class="demo-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>Designs</button>
-            </nav>
-            <div class="demo-workspace">
-              <section class="demo-view active" id="demo-view-overview" role="tabpanel" aria-labelledby="demo-tab-overview" data-demo-view="overview" aria-label="Project overview" tabindex="0">
-                <div class="demo-heading"><div><h3>Wildlands & Waypoints</h3><p>A sample exploration pack · Minecraft Java 1.21.1 · Fabric</p></div><span class="demo-chip"><span class="demo-live-dot" aria-hidden="true"></span> Project saved</span></div>
-                <div class="demo-stats"><article class="demo-stat"><span>Mods in your pack</span><strong id="demo-count">3</strong></article><article class="demo-stat"><span>Loader</span><strong>Fabric</strong></article><article class="demo-stat"><span>Pack focus</span><strong>Explore</strong></article></div>
-                <article class="demo-panel"><div class="demo-panel-title"><span>Suggested for your world</span><span style="color:var(--subtle);font-size:10px">Sample catalog</span></div><div class="demo-mod-list">
-                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">T</span><span><strong>Terralith</strong><small>World generation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Terralith" aria-label="Add Terralith">+</button></div>
-                  <div class="demo-mod"><span class="demo-mod-icon" aria-hidden="true">X</span><span><strong>Xaero's Minimap</strong><small>Map & navigation · Fabric 1.21.1</small></span><button class="demo-mini-button" type="button" data-demo-add="Xaero's Minimap" aria-label="Add Xaero's Minimap">+</button></div>
-                </div></article>
-              </section>
-              <section class="demo-view" id="demo-view-assistant" role="tabpanel" aria-labelledby="demo-tab-assistant" data-demo-view="assistant" aria-label="Pack Assistant demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>Pack Assistant</h3><p>Plan the feeling of your next world, then curate the suggestions.</p></div><span class="demo-chip">Local preview</span></div>
-                <div class="demo-panel demo-chat"><div><div class="demo-message">For a quieter exploration pack, I’d start with richer terrain, a lightweight map, and a few ambient details. Search the sample catalog to choose what belongs in your pack.</div><p class="demo-note">This browser preview uses example responses. Connect an AI provider in the desktop app for live chat and suggestions.</p></div><form class="demo-prompt" id="demo-prompt"><input class="demo-input" id="demo-prompt-input" aria-label="Ask the sample assistant" placeholder="Try: suggest a world-generation mod"><button class="demo-mini-button" type="submit" aria-label="Send sample prompt">↑</button></form></div>
-              </section>
-              <section class="demo-view" id="demo-view-search" role="tabpanel" aria-labelledby="demo-tab-search" data-demo-view="search" aria-label="Mod search demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>Mod search</h3><p>Try filters and add or remove sample mods from your pack.</p></div><span class="demo-chip">Demo catalog · not live</span></div>
-                <div class="demo-toolbar"><label class="demo-search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input class="demo-input" id="demo-search-input" aria-label="Search sample mods" placeholder="Search sample mods…"><kbd>/</kbd></label><select class="demo-select" id="demo-category" aria-label="Filter sample mods"><option value="all">All categories</option><option value="world">World</option><option value="map">Map & travel</option><option value="performance">Performance</option></select></div>
-                <div class="demo-panel"><div class="demo-panel-title"><span>Catalog results</span><span id="demo-results-label" style="color:var(--muted);font-size:10px">4 sample mods</span></div><div class="demo-mod-list" id="demo-results"></div></div>
-              </section>
-              <section class="demo-view" id="demo-view-lab" role="tabpanel" aria-labelledby="demo-tab-lab" data-demo-view="lab" aria-label="Pack Lab preview" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>Pack Lab</h3><p>A quick sample view of project balance and checks.</p></div><span class="demo-chip">Example analysis</span></div>
-                <div class="demo-stats"><article class="demo-stat"><span>World & exploration</span><strong>42%</strong></article><article class="demo-stat"><span>Quality of life</span><strong>31%</strong></article><article class="demo-stat"><span>Performance</span><strong>27%</strong></article></div>
-                <article class="demo-panel"><div class="demo-panel-title"><span>Pack mix</span><span style="color:var(--subtle);font-size:10px">Illustrative data</span></div><div class="demo-bars" aria-label="Illustrative pack category chart"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:83%"></i><i style="height:57%"></i><i style="height:94%"></i><i style="height:70%"></i><i style="height:52%"></i><i style="height:76%"></i><i style="height:64%"></i><i style="height:88%"></i><i style="height:46%"></i></div><p class="demo-note">Compatibility and dependency checks in the desktop app use your selected project and installed tools.</p></article>
-              </section>
-              <section class="demo-view" id="demo-view-designs" role="tabpanel" aria-labelledby="demo-tab-designs" data-demo-view="designs" aria-label="Design selection demo" tabindex="0" hidden>
-                <div class="demo-heading"><div><h3>Choose a world mood</h3><p>Switch the preview mood. Your selection is kept for this page session.</p></div><span class="demo-chip" id="demo-theme-status">Aurora selected</span></div>
-                <div class="demo-designs"><button class="demo-design-button" type="button" data-demo-theme="Aurora" aria-pressed="true"><span class="demo-theme-swatch" aria-hidden="true"></span>Aurora <small>Deep navy · cyan light</small></button><button class="demo-design-button" type="button" data-demo-theme="Crystal Glass" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>Crystal Glass <small>Cool glass · blue edge</small></button><button class="demo-design-button" type="button" data-demo-theme="Lush Caves" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>Lush Caves <small>Forest green · soft glow</small></button><button class="demo-design-button" type="button" data-demo-theme="End Rift" aria-pressed="false"><span class="demo-theme-swatch" aria-hidden="true"></span>End Rift <small>Violet night · starlight</small></button></div>
-              </section>
-            </div>
-          </div>
-          <div class="demo-footer"><span><strong>Your sample pack</strong> <span id="demo-pack-count">3 mods selected</span></span><div class="demo-pack-tray" id="demo-pack-tray" aria-live="polite"></div><button class="demo-clear" type="button" id="demo-clear">Clear sample pack</button></div>
-        </div>
-        <p class="demo-note">Sample data only; this preview does not connect to Modrinth, AI providers, Minecraft, or the desktop app.</p>
-      </section>
-
-      <section class="section video-section wrap" id="tour">
-        <div class="section-heading">
-          <div><p class="section-tag">App tour · 0.2.88</p><h2>See the real app in motion.</h2></div>
-          <p>A short walkthrough of planning, mod search, themes, and project review.</p>
-        </div>
-        <div class="video-panel">
-          <video controls playsinline preload="metadata" poster="media/modspire-promo-poster.png" aria-label="Modspire app tour, version 0.2.88">
-            <source src="media/modspire-promo-v0.2.88.mp4" type="video/mp4">
-            Your browser cannot play the video. <a href="media/modspire-promo-v0.2.88.mp4">Download the MP4</a>.
-          </video>
-          <div class="video-caption"><span>Modspire 0.2.88 · MP4 · 1920 × 1080</span><a class="button small" href="media/modspire-promo-v0.2.88.mp4" download><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg> Download video</a></div>
-        </div>
-      </section>
-
-      <section class="section wrap" id="showcase">
-        <div class="section-heading">
-          <div><p class="section-tag">Inside Modspire</p><h2>Plan. Find. Check.</h2></div>
-          <p>Three core tools, with real screens from the app.</p>
-        </div>
-        <div class="studio-bento">
-          <article class="bento-card bento-graph">
-            <div class="bento-copy"><span class="bento-index">01 / PACK MAP</span><h3>Keep the pack in view.</h3><p>Track selected mods, loader context, and dependency notes together.</p></div>
-            <div class="dependency-canvas" aria-label="Illustrative relationship map with sample mods">
-              <span class="canvas-label">ILLUSTRATIVE SAMPLE · 1.21.1 FABRIC</span>
-              <svg viewBox="0 0 660 260" role="img" aria-label="Example map showing a loader connected to sample mods"><path class="cable cable-main" d="M100 130H250M410 130h150M330 80V42M330 180v38"/><path class="cable cable-branch" d="M250 130 330 80m80 50-80-50m0 100-80-50m80 50 80-50"/><circle class="cable-port" cx="250" cy="130" r="5"/><circle class="cable-port" cx="410" cy="130" r="5"/></svg>
-              <span class="map-node map-loader"><small>LOADER</small><strong>Fabric</strong></span><span class="map-node map-api"><small>CORE</small><strong>Fabric API</strong></span><span class="map-node map-terrain"><small>WORLD</small><strong>Terralith</strong></span><span class="map-node map-render"><small>RENDER</small><strong>Sodium</strong></span>
-              <span class="canvas-foot"><i></i> Example relationships only · not a live dependency graph</span>
-            </div>
-          </article>
-          <article class="bento-card bento-inspector">
-            <div class="bento-copy"><span class="bento-index">02 / PACK LAB</span><h3>Check before you play.</h3><p>Review dependencies, snapshots, pack balance, and crash reports.</p></div>
-            <div class="inspector-preview"><img src="screenshots/rounded/pack-lab.png" alt="Real Pack Lab screen from Modspire" loading="lazy"><div class="inspector-overlay"><span>PROJECT INSPECTOR</span><strong>Pack Lab</strong><small>Real app screenshot</small></div></div>
-            <div class="inspector-tags"><span>Snapshots</span><span>Crash review</span><span>Dependencies</span></div>
-            <div class="inspector-readout" aria-label="Illustrative Pack Lab review steps">
-              <div class="readout-heading"><span>REVIEW WORKFLOW</span><span>ILLUSTRATIVE</span></div>
-              <div><span class="readout-marker">01</span><span><strong>Project context</strong><small>Minecraft version and loader</small></span><span class="readout-state">Attached</span></div>
-              <div><span class="readout-marker">02</span><span><strong>Dependencies</strong><small>Review required and optional links</small></span><span class="readout-state">Inspect</span></div>
-              <div><span class="readout-marker">03</span><span><strong>Launch readiness</strong><small>Check your setup before playing</small></span><span class="readout-state">Verify</span></div>
-            </div>
-          </article>
-          <article class="bento-card bento-search">
-            <div class="bento-copy"><span class="bento-index">03 / MODRINTH</span><h3>Find compatible mods.</h3><p>Filter the catalog by Minecraft version and loader.</p></div>
-            <div class="search-preview"><img src="screenshots/rounded/modrinth-search-and-selection.png" alt="Real Modrinth catalog and selection screen from Modspire" loading="lazy"><span class="search-preview-label"><i></i> Direct catalog integration</span></div>
-          </article>
-          <article class="bento-card bento-workspace">
-            <div class="bento-copy"><span class="bento-index">WORKSPACE</span><h3>Set up your space.</h3><p>Choose from four layouts, themes, and Minecraft backgrounds.</p></div>
-            <img src="screenshots/rounded/designs-and-minecraft-backgrounds.png" alt="Real Modspire design and background settings" loading="lazy">
-          </article>
-        </div>
-        <details class="feature-details" id="features">
-          <summary><span><strong>More in the studio</strong><small>Assistant · Mod Creator · projects · local web view</small></span><span class="feature-toggle" aria-hidden="true">+</span></summary>
-          <div class="capability-grid">
-            <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg></span><h3>Pack Assistant</h3><p>Describe a theme or search for an exact mod in chat.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><h3>Mod selection</h3><p>Search, filter, sort, and curate catalog results.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4z"/><path d="M8 15v-3m4 3V8m4 7v-5"/></svg></span><h3>Pack Lab</h3><p>Review dependencies, diagnostics, and pack snapshots.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.3 5.4L20 10l-5.7 1.6L12 17l-2.3-5.4L4 10l5.7-1.6L12 3Z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z"/></svg></span><h3>Mod Creator</h3><p>Draft a mod specification and starter-code outline.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></span><h3>Pack projects</h3><p>Manage packs, import Modrinth or .mrpack, and export.</p></article>
-          <article class="capability"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5h18v14H3z"/><path d="M8 22h8M12 19v3M7 9h10M7 13h6"/></svg></span><h3>Local web view</h3><p>Open your running workspace in a browser.</p></article>
-          </div>
-          <p class="provider-summary"><strong>AI is optional.</strong> Connect ChatGPT, OpenAI or Anthropic APIs, Ollama, Bionic / LM Studio, or OmniRoute.</p>
-        </details>
-      </section>
-
-      <section class="section wrap" id="downloads">
-        <div class="section-heading">
-          <div><p class="section-tag">Ready when you are</p><h2>Get Modspire.</h2></div>
-          <p><strong id="release-version">0.2.98</strong> · Windows portable · No installer</p>
-        </div>
-        <div class="download-layout">
-          <article class="download-card primary-card">
-            <h3>Modspire for Windows</h3>
-            <p><strong>New in 0.2.98:</strong> undo mod selection changes, name your pack variants, and copy mod lists with project links. Modrinth search works without an AI account.</p>
-            <div class="download-actions"><a class="button primary" id="app-download" href="https://github.com/LvisXVI/modspire/releases/latest"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg> Download portable app</a><a class="button" href="https://github.com/LvisXVI/modspire/releases/latest">Release notes</a></div>
-            <div class="download-links">
-              <a class="download-link" id="release-source" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><strong>Source archive</strong><span>Complete current project source</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire"><strong>Browse the repository</strong><span>Code, assets, tests, and project files</span></a>
-            </div>
-          </article>
-          <article class="download-card">
-            <h3>Need a hand?</h3>
-            <p>Guides, releases, and project support.</p>
-            <div class="download-links">
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/wiki"><strong>GitHub Wiki</strong><span>Guides and patch log</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/releases"><strong>All releases</strong><span>Builds and archived versions</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/issues"><strong>Issues</strong><span>Report a problem or follow progress</span></a>
-              <a class="download-link" href="https://github.com/LvisXVI/modspire/discussions"><strong>Discussions</strong><span>Share ideas with the project</span></a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section wrap" id="docs">
-        <div class="section-heading">
-          <div><p class="section-tag">Project library</p><h2>Need a guide?</h2></div>
-          <p>Open the docs, changelog, or source.</p>
-        </div>
-        <div class="doc-grid">
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span><strong>Getting started</strong><small>Set up a pack and connect optional AI.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span><strong>Mod search</strong><small>Catalog filters, suggestions, and selection.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/interfaces-and-designs.md"><span><strong>Interfaces and designs</strong><small>Four layouts, themes, backgrounds, and glass.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span><strong>AI and privacy</strong><small>Provider routes, data flow, and limitations.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <details class="more-docs"><summary>More project links <span aria-hidden="true">+</span></summary>
-            <div class="doc-grid">
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span><strong>Troubleshooting</strong><small>Common fixes, tests, and local builds.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/wiki/Patch%E2%80%90log"><span><strong>Patch log</strong><small>Release history and recent project updates.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/README.md"><span><strong>Repository README</strong><small>Feature overview and development commands.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md"><span><strong>Test disclaimer</strong><small>Compatibility and community-test status.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-          <a class="doc-link" href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md"><span><strong>Licensing notices</strong><small>App license and bundled component terms.</small></span><span class="arrow" aria-hidden="true"><svg class="inline-icon" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
-            </div>
-          </details>
-        </div>
-        <div class="notice"><strong>Project notes:</strong> Independent community test project; model compatibility varies. Modspire organizes pack plans but does not guarantee every mod or Minecraft launch. See the <a href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md">test disclaimer</a> and <a href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md">license notices</a>.</div>
-      </section>
-    </main>
-    <footer class="footer">
-      <div class="wrap">
-        <div class="footer-main">
-          <div><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span><span>Modspire</span></a><p>An independent Minecraft Java modpack planning studio. Not affiliated with or endorsed by Microsoft, Mojang, Modrinth, CurseForge, or OpenAI.</p></div>
-          <div class="footer-links"><a href="https://github.com/LvisXVI/modspire">GitHub</a><a href="https://github.com/LvisXVI/modspire/wiki">Wiki</a><a href="https://github.com/LvisXVI/modspire/releases/latest">Releases</a><a href="https://github.com/LvisXVI/modspire/blob/main/LICENSE">License</a></div>
-        </div>
-        <div class="copyright">© <span id="year">2026</span> Modspire community project · Built for pack planners</div>
-      </div>
-    </footer>
-    <dialog class="command-dialog" id="command-dialog" aria-labelledby="command-title">
-      <form method="dialog" class="command-top"><span id="command-title">Command menu</span><button class="command-close" aria-label="Close command menu">Esc</button></form>
-      <label class="command-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="command-filter" type="search" placeholder="Find a page or action…" aria-label="Filter commands" autocomplete="off"></label>
-      <div class="command-list" role="listbox" aria-label="Site commands">
-        <button type="button" class="command-item" data-command="demo"><span>Open interactive demo</span><kbd>↵</kbd></button>
-        <button type="button" class="command-item" data-command="search"><span>Search sample mods</span><kbd>/</kbd></button>
-        <button type="button" class="command-item" data-command="download"><span>Download Windows build</span><kbd>↗</kbd></button>
-        <button type="button" class="command-item" data-command="source"><span>Browse project source</span><kbd>↗</kbd></button>
-        <button type="button" class="command-item" data-command="wiki"><span>Read the project wiki</span><kbd>↗</kbd></button>
-      </div>
-    </dialog>
-    <script>
-      const menuButton = document.querySelector(".menu-toggle");
-      const nav = document.querySelector("#site-nav");
-      menuButton.addEventListener("click", () => {
-        const open = menuButton.getAttribute("aria-expanded") !== "true";
-        menuButton.setAttribute("aria-expanded", String(open));
-        menuButton.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
-        nav.classList.toggle("open", open);
-      });
-      nav.addEventListener("click", event => {
-        if (event.target.closest("a")) {
-          nav.classList.remove("open");
-          menuButton.setAttribute("aria-expanded", "false");
-          menuButton.setAttribute("aria-label", "Open navigation");
-        }
-      });
-      const commandDialog = document.querySelector("#command-dialog");
-      const commandFilter = document.querySelector("#command-filter");
-      function openCommandMenu() {
-        if (!commandDialog.open) commandDialog.showModal();
-        commandFilter.value = "";
-        commandFilter.dispatchEvent(new Event("input"));
-        requestAnimationFrame(() => commandFilter.focus());
-      }
-      document.querySelectorAll("[data-open-commands]").forEach(button => button.addEventListener("click", openCommandMenu));
-      document.addEventListener("keydown", event => {
-        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
-          event.preventDefault();
-          openCommandMenu();
-          return;
-        }
-        const typing = event.target.matches("input,textarea,select,[contenteditable='true']");
-        if (event.key === "/" && !typing && !commandDialog.open) {
-          event.preventDefault();
-          document.querySelector('[data-demo-tab="search"]').click();
-          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
-          setTimeout(() => document.querySelector("#demo-search-input").focus(), 350);
-        }
-      });
-      commandFilter.addEventListener("input", () => {
-        const query = commandFilter.value.trim().toLowerCase();
-        document.querySelectorAll(".command-item").forEach(item => { item.hidden = query && !item.textContent.toLowerCase().includes(query); });
-      });
-      document.querySelectorAll("[data-command]").forEach(button => button.addEventListener("click", () => {
-        const command = button.dataset.command;
-        commandDialog.close();
-        if (command === "demo") {
-          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
-        } else if (command === "search") {
-          document.querySelector('[data-demo-tab="search"]').click();
-          document.querySelector("#demo").scrollIntoView({ behavior: "smooth", block: "start" });
-          setTimeout(() => document.querySelector("#demo-search-input").focus(), 350);
-        } else {
-          const destinations = {
-            download: "https://github.com/LvisXVI/modspire/releases/latest",
-            source: "https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip",
-            wiki: "https://github.com/LvisXVI/modspire/wiki"
-          };
-          window.open(destinations[command], "_blank", "noopener,noreferrer");
-        }
-      }));
-      const revealTargets = document.querySelectorAll(".reveal,.section-heading,.demo-shell,.video-panel,.hero-stats,.feature-card,.capability,.workflow,.step,.callout,.download-card,.doc-link,.footer");
-      if ("IntersectionObserver" in window) {
-        document.documentElement.classList.add("motion-ready");
-        const revealObserver = new IntersectionObserver(entries => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add("is-visible");
-            entry.target.removeAttribute("data-reveal");
-            const clearRevealDelay = event => {
-              if (event.propertyName !== "opacity") return;
-              entry.target.style.removeProperty("--reveal-delay");
-              entry.target.removeEventListener("transitionend", clearRevealDelay);
-            };
-            entry.target.addEventListener("transitionend", clearRevealDelay);
-            window.setTimeout(() => {
-              entry.target.style.removeProperty("--reveal-delay");
-              entry.target.removeEventListener("transitionend", clearRevealDelay);
-            }, 1300);
-            revealObserver.unobserve(entry.target);
-          }
-        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-        revealTargets.forEach(element => {
-          element.classList.add("reveal-target");
-          element.dataset.reveal = "pending";
-          const siblingIndex = [...element.parentElement.children].indexOf(element);
-          element.style.setProperty("--reveal-delay", `${Math.min(siblingIndex % 4, 3) * 85}ms`);
-          revealObserver.observe(element);
-        });
-      }
-      const progress = document.querySelector("#scroll-progress");
-      const topbar = document.querySelector(".topbar");
-      const heroArt = document.querySelector(".hero-art");
-      let scrollFrame = 0;
-      function updateScrollChrome() {
-        scrollFrame = 0;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        progress.style.transform = `scaleX(${maxScroll > 0 ? Math.min(1,Math.max(0,window.scrollY / maxScroll)) : 0})`;
-        topbar.classList.toggle("scrolled", window.scrollY > 24);
-        if (heroArt) heroArt.style.setProperty("--scroll-parallax", `${Math.max(-24,Math.min(0,-window.scrollY * .055))}px`);
-      }
-      window.addEventListener("scroll", () => {
-        if (scrollFrame) return;
-        scrollFrame = requestAnimationFrame(updateScrollChrome);
-      }, { passive: true });
-      updateScrollChrome();
-      // The primary nav tracks section location. The repeated Download CTA shares
-      // its target with the Download link and must not receive a second current state.
-      const sectionLinks = [...document.querySelectorAll('#site-nav a[href^="#"]:not(.button)')].filter(link => document.querySelector(link.getAttribute("href")));
-      if ("IntersectionObserver" in window && sectionLinks.length) {
-        const sectionObserver = new IntersectionObserver(entries => {
-          const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-          if (!visible) return;
-          for (const link of sectionLinks) {
-            if (link.getAttribute("href") === `#${visible.target.id}`) link.setAttribute("aria-current","location");
-            else link.removeAttribute("aria-current");
-          }
-        }, { rootMargin:"-18% 0px -66% 0px", threshold:[0,.15,.35,.6] });
-        for (const link of sectionLinks) sectionObserver.observe(document.querySelector(link.getAttribute("href")));
-      }
-      if (heroArt && window.matchMedia("(pointer: fine)").matches) {
-        heroArt.addEventListener("pointermove", event => {
-          const bounds = heroArt.getBoundingClientRect();
-          const x = (event.clientX - bounds.left) / bounds.width - .5;
-          const y = (event.clientY - bounds.top) / bounds.height - .5;
-          heroArt.style.setProperty("--scene-x", `${x * -5}px`);
-          heroArt.style.setProperty("--scene-y", `${y * -5}px`);
-          heroArt.style.setProperty("--scene-rotate", `${x * 1.1}deg`);
-        });
-        heroArt.addEventListener("pointerleave", () => {
-          heroArt.style.setProperty("--scene-x", "0px");
-          heroArt.style.setProperty("--scene-y", "0px");
-          heroArt.style.setProperty("--scene-rotate", "0deg");
-        });
-      }
-      document.querySelector("#year").textContent = new Date().getFullYear();
-      const demoMods = [
-        { name: "Terralith", category: "world", icon: "T", detail: "Overhauled terrain · World generation" },
-        { name: "Tectonic", category: "world", icon: "T", detail: "Large-scale terrain shaping · World generation" },
-        { name: "Xaero's Minimap", category: "map", icon: "X", detail: "Map & navigation · Exploration" },
-        { name: "Sodium", category: "performance", icon: "S", detail: "Rendering optimization · Performance" }
-      ];
-      const demoPack = new Set(["Sodium", "JEI", "Terralith"]);
-      const demoResults = document.querySelector("#demo-results");
-      const demoSearch = document.querySelector("#demo-search-input");
-      const demoCategory = document.querySelector("#demo-category");
-      function renderDemoPack() {
-        const tray = document.querySelector("#demo-pack-tray");
-        const countLabel = document.querySelector("#demo-count");
-        tray.replaceChildren();
-        for (const name of demoPack) {
-          const chip = document.createElement("span");
-          chip.className = "demo-pack-item";
-          const label = document.createTextNode(name + " ");
-          const remove = document.createElement("button");
-          remove.type = "button";
-          remove.setAttribute("aria-label", "Remove " + name + " from sample pack");
-          remove.textContent = "×";
-          remove.addEventListener("click", () => { demoPack.delete(name); renderDemoPack(); renderDemoResults(); });
-          chip.append(label, remove);
-          tray.append(chip);
-        }
-        const count = demoPack.size;
-        countLabel.textContent = count;
-        if (countLabel.animate) countLabel.animate([{ transform:"scale(1)" },{ transform:"scale(1.2)", offset:.55 },{ transform:"scale(1)" }], { duration:340, easing:"cubic-bezier(.2,.8,.2,1)" });
-        document.querySelector("#demo-pack-count").textContent = `${count} ${count === 1 ? "mod selected" : "mods selected"}`;
-        for (const button of document.querySelectorAll("[data-demo-add]")) {
-          const selected = demoPack.has(button.dataset.demoAdd);
-          button.textContent = selected ? "−" : "+";
-          button.setAttribute("aria-label", `${selected ? "Remove" : "Add"} ${button.dataset.demoAdd}`);
-        }
-      }
-      function renderDemoResults() {
-        const query = demoSearch.value.trim().toLowerCase();
-        const category = demoCategory.value;
-        const matches = demoMods.filter(mod => (!query || `${mod.name} ${mod.detail}`.toLowerCase().includes(query)) && (category === "all" || mod.category === category));
-        document.querySelector("#demo-results-label").textContent = `${matches.length} sample ${matches.length === 1 ? "mod" : "mods"}`;
-        demoResults.replaceChildren();
-        if (!matches.length) {
-          const empty = document.createElement("div");
-          empty.className = "demo-empty";
-          empty.textContent = "No sample mods match. Try a different term or category.";
-          demoResults.append(empty);
-          return;
-        }
-        for (const mod of matches) {
-          const row = document.createElement("div");
-          row.className = "demo-mod";
-          const icon = document.createElement("span"); icon.className = "demo-mod-icon"; icon.setAttribute("aria-hidden", "true"); icon.textContent = mod.icon;
-          const info = document.createElement("span");
-          const title = document.createElement("strong"); title.textContent = mod.name;
-          const detail = document.createElement("small"); detail.textContent = mod.detail;
-          info.append(title, detail);
-          const action = document.createElement("button");
-          action.className = "demo-mini-button"; action.type = "button";
-          const selected = demoPack.has(mod.name);
-          action.textContent = selected ? "−" : "+";
-          action.setAttribute("aria-label", `${selected ? "Remove" : "Add"} ${mod.name} ${selected ? "from" : "to"} sample pack`);
-          action.addEventListener("click", () => { selected ? demoPack.delete(mod.name) : demoPack.add(mod.name); renderDemoPack(); renderDemoResults(); });
-          row.append(icon, info, action); demoResults.append(row);
-        }
-      }
-      const demoTabs = [...document.querySelectorAll("[data-demo-tab]")];
-      const demoViews = [...document.querySelectorAll("[data-demo-view]")];
-      function activateDemoTab(button, moveFocus = false) {
-        for (const tab of demoTabs) {
-          const selected = tab === button;
-          tab.setAttribute("aria-selected", String(selected));
-          tab.tabIndex = selected ? 0 : -1;
-        }
-        for (const view of demoViews) {
-          const selected = view.dataset.demoView === button.dataset.demoTab;
-          view.hidden = !selected;
-          view.classList.toggle("active", selected);
-        }
-        if (moveFocus) button.focus();
-      }
-      demoTabs.forEach((button, index) => {
-        button.addEventListener("click", () => activateDemoTab(button));
-        button.addEventListener("keydown", event => {
-          let next = index;
-          if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % demoTabs.length;
-          else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + demoTabs.length) % demoTabs.length;
-          else if (event.key === "Home") next = 0;
-          else if (event.key === "End") next = demoTabs.length - 1;
-          else return;
-          event.preventDefault();
-          activateDemoTab(demoTabs[next], true);
-        });
-      });
-      demoSearch.addEventListener("input", renderDemoResults);
-      demoCategory.addEventListener("change", renderDemoResults);
-      document.querySelectorAll("[data-demo-add]").forEach(button => button.addEventListener("click", () => {
-        demoPack.has(button.dataset.demoAdd) ? demoPack.delete(button.dataset.demoAdd) : demoPack.add(button.dataset.demoAdd);
-        renderDemoPack(); renderDemoResults();
-        for (const cardButton of document.querySelectorAll("[data-demo-add]")) {
-          const selected = demoPack.has(cardButton.dataset.demoAdd);
-          cardButton.textContent = selected ? "−" : "+";
-          cardButton.setAttribute("aria-label", `${selected ? "Remove" : "Add"} ${cardButton.dataset.demoAdd}`);
-        }
-      }));
-      document.querySelector("#demo-clear").addEventListener("click", () => { demoPack.clear(); renderDemoPack(); renderDemoResults(); });
-      document.querySelectorAll("[data-demo-theme]").forEach(button => button.addEventListener("click", () => {
-        document.querySelectorAll("[data-demo-theme]").forEach(theme => theme.setAttribute("aria-pressed", String(theme === button)));
-        document.querySelector(".demo-shell").dataset.demoActiveTheme = button.dataset.demoTheme;
-        document.querySelector("#demo-theme-status").textContent = `${button.dataset.demoTheme} selected`;
-      }));
-      document.querySelector("#demo-prompt").addEventListener("submit", event => {
-        event.preventDefault();
-        const input = document.querySelector("#demo-prompt-input");
-        const prompt = input.value.trim();
-        if (!prompt) return;
-        const message = document.createElement("div"); message.className = "demo-message"; message.textContent = prompt;
-        const reply = document.createElement("div"); reply.className = "demo-message";
-        reply.textContent = /terrain|world|biome|explor/i.test(prompt) ? "For this sample pack, try Terralith or Tectonic in Mod search. Those are example matches; the desktop app can query live catalog results." : "Try Mod search to browse the sample catalog, or open the desktop app for live assistant responses.";
-        const chat = document.querySelector(".demo-chat > div"); chat.append(message, reply); input.value = "";
-      });
-      renderDemoPack();
-      renderDemoResults();
-      fetch("https://api.github.com/repos/LvisXVI/modspire/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
-        .then(response => { if (!response.ok) throw new Error("Release lookup failed"); return response.json(); })
-        .then(release => {
-          const version = (release.tag_name || "").replace(/^v/, "");
-          if (version) {
-            document.querySelector("#hero-version").textContent = version;
-            document.querySelector("#release-version").textContent = version;
-          }
-          const portable = release.assets?.find(asset => /Portable\.exe$/i.test(asset.name));
-          const source = release.assets?.find(asset => /Source.*\.zip$/i.test(asset.name));
-          if (portable) document.querySelector("#app-download").href = portable.browser_download_url;
-          if (source) document.querySelector("#release-source").href = source.browser_download_url;
-        })
-        .catch(() => {});
-    </script>
-  </body>
+  </footer>
+  <script src="liquid.js" defer></script>
+</body>
 </html>

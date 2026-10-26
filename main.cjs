@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, safeStorage, shell, clipboard, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, safeStorage, shell, clipboard, dialog, Menu, utilityProcess } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const crypto = require('node:crypto');
@@ -11,14 +11,20 @@ const { createSetupDiscovery } = require('./setup-discovery.cjs');
 const { normalizeOpenCodeUrl, listOpenCodeModels, askOpenCode } = require('./opencode.cjs');
 const { readOllamaChatStream } = require('./ollama-stream.cjs');
 const { createLocalWebServer } = require('./local-web.cjs');
-const { fetchLatestRelease, downloadVerifiedAsset, buildPortableSwapScript } = require('./updater.cjs');
+const { createModStudio } = require('./mod-studio.cjs');
+const { fetchLatestRelease, downloadVerifiedAsset, cleanupUpdateCache, buildPortableSwapScript } = require('./updater.cjs');
 const { recordWeeklySnapshot, buildWeeklyFavoriteRanking, SNAPSHOT_INTERVAL_MS } = require('./weekly-favorites.cjs');
+const { createBookmarkStore } = require('./pack-bookmarks.cjs');
+const { createPackReleaseService } = require('./pack-release.cjs');
+const { createCurseForgeExportService } = require('./pack-curseforge.cjs');
 // Keep packaged upgrades on their original project and credential folder after the product rename.
 if (app.isPackaged && typeof app.setPath === 'function') app.setPath('userData', path.join(app.getPath('appData'), 'Modpack-Werkstatt'));
 const workshopHandlers = new Map();
 let localWeb;
+let modStudio;
 let nativeWebReturnPending=false,webReturnTimer;
 const webLockedActions = new Set(['project:save','projects:create','projects:switch','chat:ask','opencode:start','opencode:save','settings:set-secret','settings:set-username','local-ai:save']);
+for(const action of ['bookmarks:save','bookmarks:remove','project:export-mrpack','project:export-curseforge'])webLockedActions.add(action);
 function handleWorkshop(channel,handler) {
   workshopHandlers.set(channel,handler);
   ipcMain.handle(channel,(event,...args)=>{
@@ -41,6 +47,27 @@ const storePath = () => path.join(app.getPath('userData'), 'settings.json');
 const projectPath = () => path.join(app.getPath('userData'), 'project.json');
 const projectsPath = () => path.join(app.getPath('userData'), 'projects.json');
 const weeklyFavoritesPath = () => path.join(app.getPath('userData'), 'modrinth-weekly-favorites.json');
+let packBookmarkStore;
+const bookmarks = () => packBookmarkStore ||= createBookmarkStore({filePath:path.join(app.getPath('userData'),'bookmarks.json')});
+async function fetchPackWorkflowJson(value){
+  const url=new URL(value);
+  if(url.protocol!=='https:'||url.username||url.password||!new Set(['api.modrinth.com','meta.fabricmc.net','files.minecraftforge.net','maven.minecraftforge.net','maven.neoforged.net','meta.prismlauncher.org','meta.quiltmc.org']).has(url.hostname))throw Error('Diese Metadaten-Adresse ist nicht zugelassen. / Unsupported metadata address.');
+  const response=await fetch(url.href,{headers:{Accept:'application/json','User-Agent':'Modspire/'+app.getVersion()},signal:AbortSignal.timeout(25000)});
+  if(!response.ok)throw Error(`${url.hostname}: HTTP ${response.status}`);
+  return response.json();
+}
+const packReleaseService=createPackReleaseService({fetchJson:fetchPackWorkflowJson});
+async function fetchCurseForgeExportJson(value,{signal}={}){
+  const url=new URL(value);
+  if(url.origin!=='https://api.curseforge.com'||!url.pathname.startsWith('/v1/')||url.username||url.password)throw Error('Unsupported CurseForge metadata address.');
+  const apiKey=await secret('curseforge');
+  if(!apiKey)throw Error('Hinterlege zuerst deinen CurseForge-API-Schlüssel in den Einstellungen. / Add your CurseForge API key in Settings first.');
+  const timeout=AbortSignal.timeout(20000);
+  const response=await fetch(url.href,{headers:{Accept:'application/json','x-api-key':apiKey},redirect:'error',signal:signal?AbortSignal.any([timeout,signal]):timeout});
+  if(!response.ok)throw Error(`CurseForge: HTTP ${response.status}. ${[401,403].includes(response.status)?'Prüfe deinen API-Schlüssel und dessen Freigabe. / Check your API key and access.':'Bitte später erneut versuchen. / Please retry later.'}`);
+  return response.json();
+}
+const curseForgeExportService=createCurseForgeExportService({fetchJson:fetchCurseForgeExportJson,resolveLoader:async project=>(await packReleaseService.prepareExport({...project,mods:[]})).manifest.dependencies});
 Menu.setApplicationMenu(null);
 let managedOpenCode, openCodeStarting;
 let chatGPTClientPromise;
@@ -817,109 +844,178 @@ async function resolveModrinthRequiredDependencies({ mods = [], minecraftVersion
   const roots = mods.filter(mod => (!mod.kind || mod.kind === 'mod') && !mod.dependency);
   const modrinthRoots = roots.filter(mod => mod.provider === 'modrinth');
   const curseForgeRoots = roots.filter(mod => mod.provider === 'curseforge');
-  const seen = new Set(modrinthRoots.map(mod => String(mod.id)));
-  const pending = modrinthRoots.map(mod => ({ id: String(mod.id), depth: 0 }));
-  const dependencies = [];
-  const unresolved = [];
+  let dependencies = [];
+  let unresolved = [];
   const compatibleVersions = new Map();
+  const pinnedVersions = new Map();
+  const projects = new Map();
+  const gameVersion = String(minecraftVersion), selectedLoader = String(loader).toLowerCase();
+  const isCompatible = version => version?.game_versions?.includes(gameVersion) && version?.loaders?.includes(selectedLoader);
   const params = new URLSearchParams({ game_versions: JSON.stringify([String(minecraftVersion)]), loaders: JSON.stringify([String(loader).toLowerCase()]) });
   const compatibleVersionFor = id => {
     const key = String(id);
     if (!compatibleVersions.has(key)) compatibleVersions.set(key, fetchModrinthJson(`https://api.modrinth.com/v2/project/${encodeURIComponent(key)}/version?${params}`)
-      .then(versions => versions.find(item => item.version_type === 'release') || versions[0] || null));
+      .then(versions => { const matches = versions.filter(isCompatible); return matches.find(item => item.version_type === 'release') || matches[0] || null; }));
     return compatibleVersions.get(key);
   };
-  const mapConcurrent = async (items, limit, worker) => {
-    const results = new Array(items.length);
-    let next = 0;
-    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) { const index = next++; results[index] = await worker(items[index], index); }
-    }));
-    return results;
+  const pinnedVersionFor = id => {
+    const key = String(id);
+    if (!pinnedVersions.has(key)) pinnedVersions.set(key, fetchModrinthJson(`https://api.modrinth.com/v2/version/${encodeURIComponent(key)}`));
+    return pinnedVersions.get(key);
   };
-  while (pending.length && dependencies.length < 40) {
-    const wave = pending.splice(0, 3);
-    const compatibleRoots = await mapConcurrent(wave, 3, async current => {
-      if (current.depth >= 5) return null;
-      try { return { current, compatible: await compatibleVersionFor(current.id) }; }
-      catch { if (current.depth) unresolved.push(current.id); return null; }
-    });
-    const required = compatibleRoots.filter(item => item?.compatible).flatMap(({ current, compatible }) =>
-      (compatible.dependencies || []).filter(dependency => dependency.dependency_type === 'required').map(dependency => ({ current, dependency })));
-    const discovered = await mapConcurrent(required, 4, async ({ current, dependency }) => {
-      let dependencyVersion = null;
-      if (dependency.version_id) {
-        try { dependencyVersion = await fetchModrinthJson(`https://api.modrinth.com/v2/version/${encodeURIComponent(dependency.version_id)}`); }
-        catch { /* Resolve the best compatible version by project below. */ }
-      }
-      const projectId = String(dependency.project_id || dependencyVersion?.project_id || '');
-      return projectId ? { projectId, dependencyVersion, depth: current.depth + 1 } : null;
-    });
-    const unique = [];
-    for (const candidate of discovered) {
-      if (!candidate || seen.has(candidate.projectId)) continue;
-      seen.add(candidate.projectId);
-      unique.push(candidate);
-    }
-    const resolved = await mapConcurrent(unique, 4, async candidate => {
+  const projectFor = id => {
+    if (!projects.has(id)) projects.set(id, fetchModrinthJson(`https://api.modrinth.com/v2/project/${encodeURIComponent(id)}`));
+    return projects.get(id);
+  };
+  const rootPins = new Map();
+  const addPin = (pins, id, versionId) => {
+    if (!versionId) return;
+    if (!pins.has(id)) pins.set(id, new Set());
+    pins.get(id).add(String(versionId));
+  };
+  for (const mod of modrinthRoots) addPin(rootPins, String(mod.id), mod.versionId);
+  const pinSignature = pins => JSON.stringify([...pins].map(([id, values]) => [id, [...values].sort()]).sort(([a], [b]) => a.localeCompare(b)));
+  let pinHints = rootPins;
+  // A requirement discovered later can replace an initially unpinned version. Rebuild
+  // its closure so dependencies of the discarded version cannot leak into the pack.
+  for (let pass = 0; pass < 20; pass++) {
+    const discoveredPins = new Map([...rootPins].map(([id, values]) => [id, new Set(values)]));
+    const nodes = new Map(modrinthRoots.map(mod => [String(mod.id), { id: String(mod.id), title: mod.title || String(mod.id), root: true, depth: 0, requiredBy: new Map() }]));
+    const pending = [...nodes.values()];
+    const failures = [];
+    while (pending.length) {
+      // Warm a small independent batch while keeping graph mutations deterministic.
+      await Promise.all(pending.slice(0, 3).flatMap(node => {
+        const pins = new Set([...(pinHints.get(node.id) || []), ...(discoveredPins.get(node.id) || [])]);
+        if (pins.size > 1) return [];
+        const pin = [...pins][0];
+        return [(pin ? pinnedVersionFor(pin) : compatibleVersionFor(node.id)).catch(() => null), ...(!node.root ? [projectFor(node.id).catch(() => null)] : [])];
+      }));
+      const current = pending.shift();
       try {
-        const project = await fetchModrinthJson(`https://api.modrinth.com/v2/project/${encodeURIComponent(candidate.projectId)}`);
-        if (project.project_type !== 'mod') return { project, candidate, selectedVersion: null };
-        const fixedVersion = candidate.dependencyVersion;
-        const compatibleFixedVersion = fixedVersion && fixedVersion.game_versions?.includes(String(minecraftVersion)) && fixedVersion.loaders?.includes(String(loader).toLowerCase());
-        const selectedVersion = compatibleFixedVersion ? fixedVersion : await compatibleVersionFor(candidate.projectId);
-        return { project, candidate, selectedVersion };
-      } catch { unresolved.push(candidate.projectId); return null; }
-    });
-    for (const item of resolved) {
-      if (!item) continue;
-      const { project, candidate, selectedVersion } = item;
-      if (project.project_type !== 'mod') continue;
-      if (!selectedVersion) { unresolved.push(candidate.projectId); continue; }
-      dependencies.push({ id: project.id, provider: 'modrinth', kind: 'mod', title: project.title, summary: project.description || 'Erforderliche Mod-Abhängigkeit.', author: project.author || '', downloads: project.downloads || 0, icon: project.icon_url || '', gallery: [], url: `https://modrinth.com/mod/${project.slug}`, categories: project.categories || [], compatibility: `${minecraftVersion} · ${loader}`, source: 'Modrinth · Pflicht-Abhängigkeit', dependency: true, versionId: selectedVersion.id, versionNumber: selectedVersion.version_number });
-      if (dependencies.length >= 40) break;
-      pending.push({ id: candidate.projectId, depth: candidate.depth });
+        const pins = new Set([...(pinHints.get(current.id) || []), ...(discoveredPins.get(current.id) || [])]);
+        if (pins.size > 1) throw new Error(`Widersprüchliche Versionsvorgaben: ${[...pins].join(', ')}.`);
+        const pin = [...pins][0];
+        const selectedVersion = pin ? await pinnedVersionFor(pin) : await compatibleVersionFor(current.id);
+        if (!selectedVersion || !isCompatible(selectedVersion) || (selectedVersion.project_id && String(selectedVersion.project_id) !== current.id) || (pin && (String(selectedVersion.id) !== pin || String(selectedVersion.project_id) !== current.id))) throw new Error(`Keine passende${pin ? ` festgelegte Version (${pin})` : ' Version'} für ${gameVersion} · ${selectedLoader}.`);
+        let project;
+        if (!current.root) {
+          project = await projectFor(current.id);
+          if (project.project_type !== 'mod') throw new Error('Die erforderliche Abhängigkeit ist keine Mod.');
+          current.title = project.title || current.id;
+          current.mod = { id: current.id, provider: 'modrinth', kind: 'mod', title: current.title, summary: project.description || 'Erforderliche Mod-Abhängigkeit.', author: project.author || '', downloads: project.downloads || 0, icon: project.icon_url || '', gallery: [], url: `https://modrinth.com/mod/${project.slug}`, categories: project.categories || [], compatibility: `${minecraftVersion} · ${loader}`, source: 'Modrinth · Pflicht-Abhängigkeit', dependency: true, versionId: selectedVersion.id, versionNumber: selectedVersion.version_number, clientSide: project.client_side ?? project.clientSide ?? null, serverSide: project.server_side ?? project.serverSide ?? null };
+        }
+        const required = (selectedVersion.dependencies || []).filter(dependency => dependency.dependency_type === 'required');
+        if (current.depth >= 5 && required.length) { failures.push(`${current.id}: Die Abhängigkeitstiefe überschreitet das Prüflimit (5).`); continue; }
+        for (const relation of required) {
+          let id = String(relation.project_id || '');
+          if (!id && relation.version_id) {
+            try { id = String((await pinnedVersionFor(relation.version_id)).project_id || ''); }
+            catch { failures.push(`${current.id}: Erforderliche Version ${relation.version_id} konnte nicht geladen werden.`); continue; }
+          }
+          if (!id) { failures.push(`${current.id}: Erforderliche Abhängigkeit ohne Projekt-ID.`); continue; }
+          addPin(discoveredPins, id, relation.version_id);
+          if (!nodes.has(id)) {
+            if ([...nodes.values()].filter(node => !node.root).length >= 40) { failures.push(`${id}: Das Prüflimit von 40 Abhängigkeiten wurde erreicht.`); continue; }
+            const node = { id, title: id, root: false, depth: current.depth + 1, requiredBy: new Map() };
+            nodes.set(id, node); pending.push(node);
+          }
+          nodes.get(id).requiredBy.set(current.id, { provider: 'modrinth', id: current.id, title: current.title });
+        }
+      } catch (error) { failures.push(`${current.id}: ${error.message || 'Abhängigkeiten konnten nicht geladen werden.'}`); }
     }
+    if (pinSignature(pinHints) !== pinSignature(discoveredPins)) {
+      pinHints = discoveredPins;
+      if (pass === 19) { dependencies = []; unresolved = ['Die Versionsvorgaben der Abhängigkeiten konnten nicht widerspruchsfrei aufgelöst werden.']; }
+      continue;
+    }
+    dependencies = [...nodes.values()].filter(node => node.mod).map(node => ({ ...node.mod, requiredBy: [...node.requiredBy.values()] }));
+    unresolved = failures;
+    break;
   }
   if (curseForgeRoots.length) {
     const apiKey = await secret('curseforge');
     if (!apiKey) unresolved.push('CurseForge-Abhängigkeiten benötigen einen API-Schlüssel.');
     else {
-      const cfSeen = new Set(curseForgeRoots.map(mod => String(mod.id)));
-      const cfPending = curseForgeRoots.map(mod => ({ id: String(mod.id), depth: 0 }));
+      const cfCache = new Map();
       const fetchCf = async endpoint => {
-        const response = await fetch(`https://api.curseforge.com/v1${endpoint}`, { headers: { 'x-api-key': apiKey, Accept: 'application/json' }, signal: AbortSignal.timeout(15000) });
-        if (!response.ok) throw new Error(`CurseForge antwortet mit HTTP ${response.status}.`);
-        return response.json();
+        if (!cfCache.has(endpoint)) cfCache.set(endpoint, (async () => {
+          const response = await fetch(`https://api.curseforge.com/v1${endpoint}`, { headers: { 'x-api-key': apiKey, Accept: 'application/json' }, signal: AbortSignal.timeout(15000) });
+          if (!response.ok) throw new Error(`CurseForge antwortet mit HTTP ${response.status}.`);
+          return response.json();
+        })());
+        return cfCache.get(endpoint);
       };
-      const selectCompatibleFile = files => files.find(file => file.releaseType === 1) || files[0] || null;
-      while (cfPending.length && dependencies.length < 40) {
-        const current = cfPending.shift();
-        if (current.depth >= 5) continue;
-        try {
-          const params = new URLSearchParams({ gameVersion: String(minecraftVersion), modLoaderType: String(loaderId(loader)), pageSize: '20', index: '0' });
-          const files = (await fetchCf(`/mods/${encodeURIComponent(current.id)}/files?${params}`)).data || [];
-          const file = selectCompatibleFile(files);
-          if (!file) { if (current.depth) unresolved.push(`CurseForge:${current.id}`); continue; }
-          for (const relation of file.dependencies || []) {
-            if (Number(relation.relationType) !== 3) continue;
-            const dependencyId = String(relation.modId || '');
-            if (!dependencyId || cfSeen.has(dependencyId)) continue;
-            cfSeen.add(dependencyId);
-            try {
-              const [modResult, dependencyFiles] = await Promise.all([
-                fetchCf(`/mods/${encodeURIComponent(dependencyId)}`),
-                fetchCf(`/mods/${encodeURIComponent(dependencyId)}/files?${params}`),
-              ]);
-              const dependencyMod = modResult.data || {};
-              const dependencyFile = selectCompatibleFile(dependencyFiles.data || []);
-              if (!dependencyFile) { unresolved.push(`CurseForge:${dependencyId}`); continue; }
-              dependencies.push({ id: dependencyId, provider: 'curseforge', kind: 'mod', title: dependencyMod.name || dependencyFile.displayName || `Mod ${dependencyId}`, summary: dependencyMod.summary || 'Erforderliche Mod-Abhängigkeit.', author: dependencyMod.authors?.[0]?.name || '', downloads: dependencyMod.downloadCount || 0, icon: dependencyMod.logo?.thumbnailUrl || '', gallery: [], url: dependencyMod.links?.websiteUrl || '', categories: (dependencyMod.categories || []).map(category => category.name), compatibility: `${minecraftVersion} · ${loader}`, source: 'CurseForge · Pflicht-Abhängigkeit', dependency: true, versionId: String(dependencyFile.id), versionNumber: dependencyFile.displayName || dependencyFile.fileName });
-              cfPending.push({ id: dependencyId, depth: current.depth + 1 });
-              if (dependencies.length >= 40) break;
-            } catch { unresolved.push(`CurseForge:${dependencyId}`); }
-          }
-        } catch { unresolved.push(`CurseForge:${current.id}`); }
+      const cfParams = new URLSearchParams({ gameVersion, modLoaderType: String(loaderId(selectedLoader)), pageSize: '20', index: '0' });
+      const cfCompatible = (file, requireEvidence = false) => {
+        if (!file?.id) return false;
+        const versions = file.gameVersions ?? file.game_versions;
+        if (Array.isArray(versions) && !versions.includes(gameVersion)) return false;
+        const namedLoaders = Array.isArray(file.loaders) ? file.loaders.map(value => String(value).toLowerCase()) : (Array.isArray(versions) ? versions.map(value => String(value).toLowerCase()).filter(value => ['fabric', 'forge', 'neoforge', 'quilt'].includes(value)) : []);
+        if (namedLoaders.length && !namedLoaders.includes(selectedLoader)) return false;
+        if (file.modLoaderType != null && Number(file.modLoaderType) !== 0 && Number(file.modLoaderType) !== Number(loaderId(selectedLoader))) return false;
+        if (requireEvidence && (!Array.isArray(versions) || !versions.includes(gameVersion) || (!namedLoaders.length && !(Number(file.modLoaderType) > 0)))) return false;
+        return true;
+      };
+      const cfRootPins = new Map();
+      for (const mod of curseForgeRoots) addPin(cfRootPins, String(mod.id), mod.versionId ?? mod.fileId);
+      let cfPinHints = cfRootPins;
+      const remainingSlots = Math.max(0, 40 - dependencies.length);
+      for (let pass = 0; pass < 20; pass++) {
+        const discoveredPins = new Map([...cfRootPins].map(([id, values]) => [id, new Set(values)]));
+        const nodes = new Map(curseForgeRoots.map(mod => [String(mod.id), { id: String(mod.id), title: mod.title || String(mod.id), root: true, depth: 0, requiredBy: new Map() }]));
+        const pending = [...nodes.values()], failures = [];
+        while (pending.length) {
+          const current = pending.shift();
+          try {
+            const pins = new Set([...(cfPinHints.get(current.id) || []), ...(discoveredPins.get(current.id) || [])]);
+            if (pins.size > 1) throw new Error(`Widersprüchliche Dateivorgaben: ${[...pins].join(', ')}.`);
+            const pin = [...pins][0], route = `/mods/${encodeURIComponent(current.id)}`;
+            let file;
+            if (pin) {
+              file = (await fetchCf(`${route}/files/${encodeURIComponent(pin)}`)).data;
+              // Exact-file endpoints are unfiltered. Missing metadata needs a
+              // matching ID from the game/loader-filtered listing as evidence.
+              if (cfCompatible(file) && !cfCompatible(file, true)) {
+                const filtered = ((await fetchCf(`${route}/files?${cfParams}`)).data || []).find(item => String(item.id) === pin && (item.modId == null || String(item.modId) === current.id) && cfCompatible(item));
+                if (!filtered) throw new Error(`Die Kompatibilität der festgelegten Datei (${pin}) für ${gameVersion} · ${selectedLoader} konnte nicht bestätigt werden.`);
+              }
+            }
+            else {
+              const files = ((await fetchCf(`${route}/files?${cfParams}`)).data || []).filter(item => cfCompatible(item));
+              file = files.find(item => item.releaseType === 1) || files[0];
+            }
+            if (!cfCompatible(file) || (file.modId != null && String(file.modId) !== current.id) || (pin && String(file.id) !== pin)) throw new Error(`Keine passende${pin ? ` festgelegte Datei (${pin})` : ' Datei'} für ${gameVersion} · ${selectedLoader}.`);
+            if (!current.root) {
+              const dependencyMod = (await fetchCf(route)).data || {};
+              current.title = dependencyMod.name || file.displayName || `Mod ${current.id}`;
+              current.mod = { id: current.id, provider: 'curseforge', kind: 'mod', title: current.title, summary: dependencyMod.summary || 'Erforderliche Mod-Abhängigkeit.', author: dependencyMod.authors?.[0]?.name || '', downloads: dependencyMod.downloadCount || 0, icon: dependencyMod.logo?.thumbnailUrl || '', gallery: [], url: dependencyMod.links?.websiteUrl || '', categories: (dependencyMod.categories || []).map(category => category.name), compatibility: `${minecraftVersion} · ${loader}`, source: 'CurseForge · Pflicht-Abhängigkeit', dependency: true, versionId: String(file.id), versionNumber: file.displayName || file.fileName, clientSide: dependencyMod.clientSide ?? dependencyMod.client_side ?? file.clientSide ?? file.client_side ?? null, serverSide: dependencyMod.serverSide ?? dependencyMod.server_side ?? file.serverSide ?? file.server_side ?? null };
+            }
+            const required = (file.dependencies || []).filter(relation => Number(relation.relationType) === 3);
+            if (current.depth >= 5 && required.length) { failures.push(`CurseForge:${current.id}: Die Abhängigkeitstiefe überschreitet das Prüflimit (5).`); continue; }
+            for (const relation of required) {
+              const id = String(relation.modId || '');
+              if (!id) { failures.push(`CurseForge:${current.id}: Erforderliche Abhängigkeit ohne Mod-ID.`); continue; }
+              // CF normally supplies project requirements; preserve explicit file
+              // requirements too when an imported record/API provides them.
+              addPin(discoveredPins, id, relation.fileId ?? relation.versionId ?? relation.version_id);
+              if (!nodes.has(id)) {
+                if ([...nodes.values()].filter(node => !node.root).length >= remainingSlots) { failures.push(`CurseForge:${id}: Das Prüflimit von 40 Abhängigkeiten wurde erreicht.`); continue; }
+                const node = { id, title: id, root: false, depth: current.depth + 1, requiredBy: new Map() };
+                nodes.set(id, node); pending.push(node);
+              }
+              nodes.get(id).requiredBy.set(current.id, { provider: 'curseforge', id: current.id, title: current.title });
+            }
+          } catch (error) { failures.push(`CurseForge:${current.id}: ${error.message || 'Abhängigkeiten konnten nicht geladen werden.'}`); }
+        }
+        if (pinSignature(cfPinHints) !== pinSignature(discoveredPins)) {
+          cfPinHints = discoveredPins;
+          if (pass === 19) unresolved.push('CurseForge: Die Dateivorgaben der Abhängigkeiten konnten nicht widerspruchsfrei aufgelöst werden.');
+          continue;
+        }
+        dependencies.push(...[...nodes.values()].filter(node => node.mod).map(node => ({ ...node.mod, requiredBy: [...node.requiredBy.values()] })));
+        unresolved.push(...failures);
+        break;
       }
     }
   }
@@ -943,7 +1039,7 @@ async function makeImportedProfile(name, minecraftVersion, loader, references, s
     const id = project?.id || entry.projectId || `mrpack:${String(entry.filename).toLowerCase()}`;
     if (seen.has(id)) return null;
     seen.add(id);
-    return { id, provider: 'modrinth', title, summary: project?.description || `Aus dem Modrinth-Profil importiert (${entry.filename}).`, author: project?.author || '', downloads: project?.downloads || 0, icon: project?.icon_url || '', url: project?.slug ? `https://modrinth.com/mod/${project.slug}` : entry.url || '', categories: project?.categories || [], compatibility: `${minecraftVersion} · ${loader}`, source: project ? 'Modrinth' : 'Modrinth-Profil' };
+    return { id, provider: 'modrinth', title, versionId: String(entry.versionId || ''), kind: project?.project_type || 'mod', clientSide: project?.client_side || null, serverSide: project?.server_side || null, summary: project?.description || `Aus dem Modrinth-Profil importiert (${entry.filename}).`, author: project?.author || '', downloads: project?.downloads || 0, icon: project?.icon_url || '', url: project?.slug ? `https://modrinth.com/${project.project_type || 'mod'}/${project.slug}` : entry.url || '', categories: project?.categories || [], compatibility: `${minecraftVersion} · ${loader}`, source: project ? 'Modrinth' : 'Modrinth-Profil' };
   }).filter(Boolean);
   return { name: String(name || 'Importiertes Modrinth-Profil').slice(0, 48), minecraftVersion: String(minecraftVersion || '1.21.1'), loader: ['fabric','forge','neoforge','quilt'].includes(loader) ? loader : 'fabric', provider: 'modrinth', mods, turns: [], importSummary: summary };
 }
@@ -953,8 +1049,21 @@ async function importMrpackBuffer(buffer) {
   const dependencies = manifest.dependencies || {};
   const minecraftVersion = dependencies.minecraft || '1.21.1';
   const loader = loaderFromDependencies(dependencies);
-  const references = getMrpackModEntries(manifest);
-  return makeImportedProfile(manifest.name || 'Importiertes Modrinth-Profil', minecraftVersion, loader, references, manifest.summary || 'Modrinth-.mrpack importiert.');
+  const references = getMrpackModEntries(manifest, { includePackContent: true });
+  // Modrinth releases may use external download hosts. Recover exact identity
+  // through the documented version_file hash endpoint instead of guessing IDs.
+  for (const entry of references) {
+    if (entry.projectId && entry.versionId) continue;
+    const algorithm=/^[a-fA-F0-9]{128}$/.test(entry.hashes?.sha512 || '')?'sha512':/^[a-fA-F0-9]{40}$/.test(entry.hashes?.sha1 || '')?'sha1':null;
+    if (!algorithm) continue;
+    const hash=entry.hashes[algorithm].toLowerCase();
+    const version=await fetchModrinthJson(`https://api.modrinth.com/v2/version_file/${hash}?algorithm=${algorithm}`);
+    if (!/^[A-Za-z0-9_-]{1,128}$/.test(version?.id || '') || !/^[A-Za-z0-9_-]{1,128}$/.test(version?.project_id || '') || !version.files?.some(file=>file.hashes?.[algorithm]?.toLowerCase()===hash)) throw new Error(`Die Dateiversion für ${entry.filename} konnte nicht anhand des Hashes bestätigt werden.`);
+    entry.projectId=version.project_id;entry.versionId=version.id;
+  }
+  const result=await makeImportedProfile(manifest.name || 'Importiertes Modrinth-Profil', minecraftVersion, loader, references, manifest.summary || 'Modrinth-.mrpack importiert.');
+  result.loaderVersion=dependencies[{'fabric':'fabric-loader','quilt':'quilt-loader',forge:'forge',neoforge:'neoforge'}[loader]];
+  return result;
 }
 
 async function importSharedInvite(inviteId) {
@@ -1347,6 +1456,30 @@ handleWorkshop('project:save', async (_event, project) => {
   store.activeId = target.id;
   await saveProjectStore(store); return true;
 });
+handleWorkshop('bookmarks:list', async () => bookmarks().list());
+handleWorkshop('bookmarks:save', async (_event, entry) => bookmarks().save(entry));
+handleWorkshop('bookmarks:remove', async (_event, key) => bookmarks().remove(key));
+handleWorkshop('mods:updates', async (_event, project) => ({entries:await packReleaseService.checkUpdates(project),checkedAt:new Date().toISOString()}));
+handleWorkshop('project:export-mrpack', async (event, project) => {
+  if(!project||!Array.isArray(project.mods)||!project.mods.length)throw Error('Wähle zuerst Mods für dein Pack aus. / Select mods before exporting.');
+  const owner=BrowserWindow.fromWebContents(event.sender);
+  const name=String(project.name||'Modspire-Pack').replace(/[<>:"/\\|?*]/g,'-').slice(0,48);
+  const {canceled,filePath}=await dialog.showSaveDialog(owner,{title:'Modrinth-Pack exportieren / Export Modrinth pack',defaultPath:name+'.mrpack',filters:[{name:'Modrinth modpack',extensions:['mrpack']}]});
+  if(canceled||!filePath)return {canceled:true};
+  const result=await packReleaseService.prepareExport(project),temporary=filePath+'.'+crypto.randomUUID()+'.tmp';
+  try{await fs.writeFile(temporary,result.buffer,{flag:'wx'});await fs.rename(temporary,filePath)}finally{await fs.rm(temporary,{force:true})}
+  return {canceled:false,filePath,files:result.manifest.files.length,dependencies:result.manifest.dependencies};
+});
+handleWorkshop('project:export-curseforge', async (event, project) => {
+  if(!project||!Array.isArray(project.mods)||!project.mods.length)throw Error('Wähle zuerst Mods für dein Pack aus. / Select mods before exporting.');
+  const owner=BrowserWindow.fromWebContents(event.sender);
+  const name=String(project.name||'Modspire-Pack').replace(/[<>:"/\\|?*]/g,'-').slice(0,48);
+  const {canceled,filePath}=await dialog.showSaveDialog(owner,{title:'CurseForge-Pack exportieren / Export CurseForge pack',defaultPath:name+'.zip',filters:[{name:'CurseForge modpack',extensions:['zip']}]});
+  if(canceled||!filePath)return {canceled:true};
+  const result=await curseForgeExportService.prepareExport(project),temporary=filePath+'.'+crypto.randomUUID()+'.tmp';
+  try{await fs.writeFile(temporary,result.buffer,{flag:'wx'});await fs.rename(temporary,filePath)}finally{await fs.rm(temporary,{force:true})}
+  return {canceled:false,filePath,files:result.manifest.files.length};
+});
 handleWorkshop('project:export', async (event, project) => {
   if (!project || typeof project !== 'object' || !Array.isArray(project.mods)) throw new Error('Das Projekt kann nicht exportiert werden.');
   const owner = BrowserWindow.fromWebContents(event.sender);
@@ -1373,6 +1506,20 @@ handleWorkshop('app:open-external', async (_event, url) => {
   await shell.openExternal(parsed.href);
 });
 
+handleWorkshop('modstudio:open', async () => {
+  const rootDir = app.isPackaged ? path.join(process.resourcesPath, 'mod-studio') : path.join(__dirname, 'integrations', 'mod-studio');
+  const dataDir = path.join(process.env.LOCALAPPDATA || app.getPath('appData'), 'ModStudio');
+  modStudio ||= createModStudio({
+    fork: (...args) => utilityProcess.fork(...args),
+    openExternal: url => shell.openExternal(url),
+    rootDir,
+    archivesDir: app.isPackaged ? path.join(rootDir, 'runtime') : path.join(__dirname, '.mod-studio-runtime'),
+    dataDir,
+    runtimeCache: path.join(dataDir, 'modspire-runtime')
+  });
+  return modStudio.open();
+});
+
 function requirePackagedWindowsUpdater(event) {
   if (!app.isPackaged || process.platform !== 'win32' || event.fromLocalWeb || !event.senderFrame?.url?.startsWith('file://')) throw new Error('Der automatische Updater ist nur in der portablen Windows-App verfügbar.');
 }
@@ -1389,11 +1536,12 @@ handleWorkshop('updates:download', async (event) => {
   const currentExe = path.resolve(process.execPath);
   const stagedExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.modspire-update`);
   const backupExe = path.join(path.dirname(currentExe), `.${path.basename(currentExe)}.previous`);
+  await cleanupUpdateCache(updateDirectory, app.getPath('userData'));
   await fs.mkdir(updateDirectory, { recursive: true });
   await downloadVerifiedAsset({ url: checkedUpdate.asset.url, destination: downloaded, expectedDigest: checkedUpdate.asset.digest, expectedSize: checkedUpdate.asset.size, onProgress: progress => { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('updates:progress', progress); } });
   await fs.rm(stagedExe, { force: true });
   await fs.copyFile(downloaded, stagedExe, require('node:fs').constants.COPYFILE_EXCL);
-  stagedUpdate = { currentExe, stagedExe, backupExe, release: checkedUpdate };
+  stagedUpdate = { currentExe, stagedExe, backupExe, updateDirectory, release: checkedUpdate };
   return { version: checkedUpdate.version, bytes: checkedUpdate.asset.size, ready: true };
 });
 handleWorkshop('updates:install', async event => {
@@ -1447,7 +1595,7 @@ handleWorkshop('web:stop', event => {
   if(server?.hasEditor()&&!event.fromLocalWeb){nativeWebReturnPending=true;server.requestReturn();scheduleClosedBrowserReturn();return {pending:true};}
   return finishLocalWebReturn(server);
 });
-app.on('before-quit',()=>{localWeb?.close();});
+app.on('before-quit',()=>{localWeb?.close();modStudio?.close();});
 app.whenReady().then(() => { getDiagnostics().record('session-start', 'Werkstatt gestartet.'); createWindow(); app.on('activate', () => { if (!BrowserWindow.getAllWindows().length) createWindow(); }); });
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 

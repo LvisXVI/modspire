@@ -4,6 +4,43 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.2] — Liquid Glass (2026-10-26)
+
+### Added
+- **UI Version 5 · Liquid Glass**: a fifth layout choice with frosted, light-catching panels over a Minecraft scene, floating rail and top bar, spring-loaded controls, a pointer-following highlight and soft view, message and dialog transitions. It reuses the UI 4 structure, so every view and control keeps working; reduced-motion turns the animation off.
+
+### Fixed
+- UI 2 (Modern) on dark themes such as Aurora: headings, pack titles and snapshot names were white on light cards. They now follow the layout's own ink colour; the hero no longer sits on a half-filled strip, and the "Your mods" tiles use tinted glass instead of saturated slabs with faint text.
+- Chat follow-ups in all layouts: "Continue with one click" chips and "20 more directions" are one calm chip cloud with a pill toggle instead of nested bordered boxes.
+- UI 3 on bright wallpapers (Fluid): the dashboard gets its own frosted backing so the title and buttons stay readable.
+- English interface: sign-in buttons, chat starters (Magic, Combat), dashboard labels, the welcome message and about 40 tooltips were still German.
+- Classic overview uses more of wide screens.
+
+## [0.3.1] — Local preview (2026-10-25)
+
+### Added
+- Integrate the real Minecraft Mod Studio in all four Modspire layouts. It opens in the browser on a private loopback server, shares Studio's existing local projects, supports source export and supported JAR builds, and includes checksum-verified JDK/Gradle build runtimes. Studio projects stay separate from modpacks; embedded Studio updates ship with Modspire.
+
+### Fixed
+- Keep the Studio chat send control enabled after a completed AI answer, and preserve existing element models when repairing malformed AI element IDs.
+- Block external origins and Host-header rebinding against the embedded Studio server.
+
+## [Unreleased] — 0.3.0 local preview
+
+### Added
+- Compare any two saved Pack Lab snapshots, including added, removed and changed mod versions and game setup.
+- Keep personal cross-pack mod bookmarks with editable notes.
+- Preview compatible Modrinth version updates, choose individual versions, and save a snapshot before applying them.
+- Explain required dependencies and client/server environments in the selection and Pack Lab.
+- Export installable `.mrpack` archives with exact Modrinth versions, required dependencies, hashes, download URLs and a verified loader version. CurseForge entries and unverified shader engines produce actionable errors; shader export currently requires a compatible selected official Iris runtime on Fabric or NeoForge.
+- Improve the website's download and interactive-demo paths, mobile layout and keyboard navigation, with a clearly labeled unreleased preview separate from the current 0.2.98 download.
+
+### Fixed
+- Preserve exact version pins during import and dependency resolution, explain shared dependency parents, and reject contradictory pins.
+- Preserve resource packs, shader packs and server-only entries on archive import; resolve externally hosted Modrinth files by their verified hashes.
+- Keep snapshots and exact loader versions isolated when switching pack projects.
+- Discard obsolete update checks after pack, setup or selection changes.
+
 ## [0.2.98] - 2026-10-19
 
 ### Added

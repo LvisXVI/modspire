@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(error.message));
     await page.route('https://api.github.com/**', route => route.abort());
-    await page.goto(pathToFileURL(path.join(root, 'docs', 'index.html')).href);
+    await page.goto(pathToFileURL(path.join(root, 'docs', 'demo', 'index.html')).href);
 
     await page.locator('#demo').scrollIntoViewIfNeeded();
     await page.waitForFunction(() => document.querySelector('.demo-shell').classList.contains('is-visible'));

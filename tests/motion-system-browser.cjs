@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
   const renderer = fs.readFileSync(path.join(root, 'renderer.js'), 'utf8');
   const appCssFiles = ['styles.css', 'desktop-polish.css', 'modern-ui.css', 'v3-ui.css', 'v4-ui.css'];
   const appCss = appCssFiles.map(file => fs.readFileSync(path.join(root, file), 'utf8')).join('\n');
-  const site = fs.readFileSync(path.join(root, 'docs', 'index.html'), 'utf8');
+  const site = fs.readFileSync(path.join(root, 'docs', 'demo', 'index.html'), 'utf8');
 
   assert.match(appHtml, /id="launch-intro"[^>]*aria-hidden="true"/);
   assert.match(renderer, /intro\.classList\.add\('is-ready'\)/);

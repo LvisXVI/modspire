@@ -1,0 +1,21 @@
+.pack-library,.pack-snapshot-comparison{display:grid;gap:12px;min-width:0}
+.pack-library h3,.pack-snapshot-comparison h3{margin:0;font-size:14px}
+.pack-library-list{display:grid;gap:12px;max-height:520px;overflow:auto}
+.pack-library-entry{display:grid;gap:9px;padding:12px;border:1px solid var(--line);border-radius:12px;min-width:0;overflow-wrap:anywhere}
+.pack-library-note{display:grid;gap:6px;font-size:12px;color:inherit}
+.pack-library-note textarea,.pack-comparison-controls select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);font:inherit;padding:9px}
+.pack-library-note textarea{resize:vertical;min-height:64px}
+.pack-library-actions,.pack-comparison-controls{display:flex;flex-wrap:wrap;gap:8px}
+.pack-library-actions .button{white-space:normal}
+.pack-comparison-controls label{display:grid;gap:6px;min-width:0;flex:1 1 180px;color:inherit;font-size:12px}
+.pack-bookmark-star.button{flex:none;min-width:32px;min-height:32px;padding:4px 7px;font-size:18px;line-height:1;color:var(--green);align-self:center}
+.pack-bookmark-star[aria-pressed=true]{background:var(--green-dark)}
+.pack-library .button:disabled,.pack-bookmark-star:disabled{opacity:.6;cursor:default}
+.pack-library-warning,.pack-library-error{font-size:12px;line-height:1.5;color:var(--text)}
+.pack-library-error{border-left:3px solid var(--red);padding-left:9px}
+.pack-library :focus-visible,.pack-snapshot-comparison :focus-visible,.pack-bookmark-star:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.pack-comparison-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;overflow-wrap:anywhere}
+.pack-comparison-direction{grid-column:1/-1;font-weight:600}
+.pack-comparison-group h4{font-size:12px;margin:0 0 6px}
+.pack-comparison-group ul{margin:0;padding-left:20px;display:grid;gap:6px;font-size:12px;line-height:1.5}
+@media(max-width:600px){.pack-comparison-results{grid-template-columns:1fr}.pack-library-actions .button{flex:1 1 140px}}

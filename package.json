@@ -1,12 +1,14 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.2.98",
+  "version": "0.3.2",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
     "test": "node tests/run-all.cjs",
-    "dist": "electron-builder --win portable --x64"
+    "dist": "electron-builder --win portable --x64",
+    "predist": "node scripts/verify-mod-studio.cjs",
+    "studio:sync": "node scripts/sync-mod-studio.cjs"
   },
   "devDependencies": {
     "electron": "^38.2.0",
@@ -27,6 +29,17 @@
       "v4-ui.js",
       "renderer.js",
       "pack-tools.js",
+      "pack-bookmarks.cjs",
+      "pack-release.cjs",
+      "pack-curseforge.cjs",
+      "pack-library.js",
+      "pack-library.css",
+      "pack-dependencies.js",
+      "pack-workflows.js",
+      "pack-workflows.css",
+      "ui-refresh.css",
+      "glass-ui.css",
+      "glass-ui.js",
       "modern-ui.js",
       "i18n.js",
       "diagnostics.cjs",
@@ -52,7 +65,10 @@
       "web-bootstrap.js",
       "local-web-ui.js",
       "local-web.css",
-      "opencode.cjs"
+      "opencode.cjs",
+      "mod-studio.cjs",
+      "mod-studio-worker.cjs",
+      "mod-studio-runtime.cjs"
     ],
     "win": {
       "icon": "assets/modspire.ico",
@@ -63,7 +79,20 @@
     },
     "directories": {
       "output": "release"
-    }
+    },
+    "extraResources": [
+      {
+        "from": "integrations/mod-studio",
+        "to": "mod-studio"
+      },
+      {
+        "from": ".mod-studio-runtime",
+        "to": "mod-studio/runtime",
+        "filter": [
+          "*.zip"
+        ]
+      }
+    ]
   },
   "author": "Modspire contributors",
   "license": "MIT"

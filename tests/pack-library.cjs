@@ -1,0 +1,23 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const filename = path.join(__dirname, '..', 'pack-library.js');
+assert.ok(fs.existsSync(filename), 'pack library must provide snapshot comparison');
+const { compareSnapshots } = require(filename);
+const mod = (id, versionId, extra = {}) => ({ id, provider: 'modrinth', title: id, versionId, ...extra });
+const left = { id: 'a', data: { minecraftVersion: '1.21.1', loader: 'fabric', mods: [mod('same', 'v1'), mod('updated', 'v1'), mod('removed', 'v1'), mod('label', undefined, { versionNumber: '1.0' }), mod('shared', 'm1')] } };
+const right = { id: 'b', data: { minecraftVersion: '1.21.2', loader: 'neoforge', mods: [mod('same', 'v1'), mod('updated', 'v2'), mod('added', 'v1'), mod('label', undefined, { versionNumber: '2.0' }), mod('shared', 'c1', { provider: 'curseforge' })] } };
+const original = JSON.stringify([left, right]);
+const result = compareSnapshots(left, right);
+assert.deepEqual(result.added.map(entry => `${entry.provider}:${entry.id}`), ['modrinth:added', 'curseforge:shared'], 'provider identity must prevent cross-provider collisions');
+assert.deepEqual(result.removed.map(entry => entry.id), ['removed', 'shared']);
+assert.deepEqual(result.changed.map(entry => [entry.before.id, entry.before.versionId || entry.before.versionNumber, entry.after.versionId || entry.after.versionNumber]), [['updated', 'v1', 'v2'], ['label', '1.0', '2.0']], 'version changes must not be hidden by unchanged mod IDs');
+assert.deepEqual(result.setup, [{ field: 'minecraftVersion', before: '1.21.1', after: '1.21.2' }, { field: 'loader', before: 'fabric', after: 'neoforge' }]);
+assert.equal(JSON.stringify([left, right]), original, 'comparison must never mutate snapshots');
+assert.deepEqual(compareSnapshots(left, left), { added: [], removed: [], changed: [], setup: [] });
+assert.deepEqual(compareSnapshots(null, {}), { added: [], removed: [], changed: [], setup: [] }, 'empty or old snapshots remain readable');
+assert.deepEqual(compareSnapshots({loaderVersion:'0.16.10'}, {loaderVersion:'0.16.11'}).setup, [{field:'loaderVersion',before:'0.16.10',after:'0.16.11'}], 'exact loader updates must be visible');
+assert.equal(compareSnapshots({ mods: [mod('unpinned')] }, { mods: [mod('unpinned', 'v1')] }).changed.length, 1, 'pinning an unpinned mod is a version change');
+assert.equal(compareSnapshots({ mods: [mod('same', 'v1', { versionNumber: 'old label' })] }, { mods: [mod('same', 'v1', { versionNumber: 'new label' })] }).changed.length, 0, 'stable IDs take precedence over display labels');
+console.log('Snapshot comparison: arbitrary direction, provider identity, version pins, labels, setup, legacy inputs and immutability passed.');

@@ -1,0 +1,67 @@
+/* Mod Studio — shared fixes plus the optional "Liquid Glass" surface (html[data-skin="glass"]).
+   The default Werkstatt look stays untouched apart from the tab contrast fix. */
+
+/* Editor tabs sat on a light pill with grey/lime text that was hard to read */
+.mode-tabs { background: rgba(255, 255, 255, .04); border: 1px solid #2a2e30; border-radius: 9px; padding: 3px; gap: 2px; }
+.mode-tab { color: #a7aeb1; border-radius: 6px; transition: color .2s, background .2s; }
+.mode-tab:hover { color: #f4f5f6; background: rgba(255, 255, 255, .05); }
+.mode-tab.active { color: #0c1402; background: #c6ff4a; box-shadow: none; }
+
+/* Switching Gestalten / Dateien & Code / Mod bauen fades the new view in */
+#design-view:not([hidden]), #code-view:not([hidden]), #build-view:not([hidden]) { animation: studioFade .35s ease-out both; }
+@keyframes studioFade { from { opacity: 0; } }
+@keyframes studioViewIn { from { opacity: 0; transform: translateY(10px); filter: blur(6px); } }
+dialog[open] .modal-card { animation: studioDrop .4s cubic-bezier(.34, 1.56, .64, 1) both; }
+@keyframes studioDrop { from { opacity: 0; transform: scale(.94); } }
+.chat-messages > :last-child { animation: studioViewIn .4s cubic-bezier(.16, 1, .3, 1) both; }
+
+/* ---------- Liquid Glass surface ---------- */
+html[data-skin="glass"] {
+  --g-line: rgba(255, 255, 255, .14);
+  --g-glass: linear-gradient(155deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .045) 40%, rgba(255, 255, 255, .03) 65%, rgba(255, 255, 255, .07));
+  --g-rim: inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(255, 255, 255, .05);
+  --g-drop: 0 24px 60px -30px rgba(0, 0, 0, .85);
+  --g-blur: blur(22px) saturate(170%);
+  background: #060a08;
+}
+html[data-skin="glass"] body { background: transparent; }
+html[data-skin="glass"] body::before {
+  content: ""; position: fixed; inset: -4%; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(4, 10, 6, .35), rgba(4, 10, 6, .75)), url("glass-scene.webp") center / cover no-repeat;
+  filter: hue-rotate(-150deg) saturate(1.05);
+}
+html[data-skin="glass"] :is(.app-shell, .main-column, .workbench) { background: transparent !important; }
+html[data-skin="glass"] .editor-surface { background: transparent !important; border: 0 !important; gap: 12px !important; }
+html[data-skin="glass"] :is(.sidebar, .topbar, .assistant-panel, .workflow-node, .editor-surface > *, .code-pane, .build-card, .modal-card, .stage-toolbar) {
+  background: var(--g-glass) !important;
+  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
+  border: 1px solid var(--g-line) !important;
+  box-shadow: var(--g-rim), var(--g-drop) !important;
+}
+html[data-skin="glass"] .sidebar { inset: 10px auto 10px 10px !important; border-radius: 26px !important; height: auto; }
+html[data-skin="glass"] .main-column { padding-left: 12px; }
+html[data-skin="glass"] .topbar { margin: 10px 10px 12px; border-radius: 20px !important; top: 10px; }
+html[data-skin="glass"] :is(.assistant-panel, .editor-surface > *, .workflow-node, .code-pane, .build-card, .stage-toolbar) { border-radius: 22px !important; }
+html[data-skin="glass"] .modal-card { border-radius: 26px !important; background: linear-gradient(155deg, rgba(36, 44, 40, .82), rgba(14, 18, 16, .86)) !important; }
+html[data-skin="glass"] dialog::backdrop { background: rgba(2, 6, 4, .45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+html[data-skin="glass"] :is(input, select, textarea) { background: rgba(0, 0, 0, .32) !important; border-radius: 12px !important; border-color: rgba(255, 255, 255, .12) !important; }
+html[data-skin="glass"] :is(.button, .quiet-button, .icon-button, .tool-button) { border-radius: 999px !important; transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), background .2s !important; }
+html[data-skin="glass"] :is(.button, .quiet-button, .tool-button):hover { transform: translateY(-1px) scale(1.02); }
+html[data-skin="glass"] :is(.button, .quiet-button, .tool-button, .icon-button):active { transform: scale(.96); }
+html[data-skin="glass"] .button-primary { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 10px 26px -12px #c6ff4a !important; }
+html[data-skin="glass"] .mode-tabs { background: rgba(0, 0, 0, .25); border-color: var(--g-line); border-radius: 999px; }
+html[data-skin="glass"] .mode-tab { border-radius: 999px; }
+html[data-skin="glass"] .background-effects { opacity: .55; background: transparent !important; }
+
+/* skin choice in the appearance dialog */
+.skin-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: 0; padding: 0; margin: 0 0 16px; }
+.skin-options legend { font: 600 10px var(--mono, monospace); letter-spacing: .14em; color: #8a9194; margin-bottom: 8px; }
+.skin-choice { display: flex; gap: 10px; align-items: center; padding: 10px; border: 1px solid #2a2e30; border-radius: 12px; cursor: pointer; }
+.skin-choice:has(input:checked) { border-color: #c6ff4a; background: rgba(198, 255, 74, .07); }
+.skin-choice input { accent-color: #c6ff4a; }
+.skin-choice strong { display: block; font-size: 12px; }
+.skin-choice small { display: block; font-size: 10px; color: #8a9194; }
+
+@media (prefers-reduced-motion: reduce) {
+  #design-view, #code-view, #build-view, dialog[open] .modal-card, .chat-messages > :last-child { animation: none !important; }
+}

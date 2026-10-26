@@ -1,0 +1,5 @@
+SHA-256 checksums of the bundled Windows x64 runtime archives:
+
+158f7685b44de51f6c0df1d153526cbcd3e1bc739a8dfc607721cef75de9e541  node-v24.21.0-win-x64.zip (Node.js official SHASUMS256.txt)
+00c847d804f4a78e9f04f2683faf14fed898535b177b7fc704486cb0284e9283  temurin-jdk-25-windows-x64.zip (Eclipse Adoptium API)
+21bd5da2de49b642904077f38c0efdc7778e92b3ed0889392dca61b97e389607  gradle-9.8.2-bin.zip (Gradle official distribution checksum)

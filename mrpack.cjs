@@ -44,10 +44,12 @@ function readIndex(archive) {
   throw new Error('In der Datei fehlt modrinth.index.json. Bitte eine .mrpack-Datei verwenden.');
 }
 
-function modEntries(manifest) {
+function modEntries(manifest, { includePackContent = false } = {}) {
   return manifest.files.filter(file => {
     const normalized = String(file?.path || '').replace(/\\/g, '/');
-    return /^mods\/.+\.jar$/i.test(normalized) && file?.env?.client !== 'unsupported';
+    return includePackContent
+      ? /^(?:mods\/.+\.jar|(?:resourcepacks|shaderpacks)\/.+\.zip)$/i.test(normalized)
+      : /^mods\/.+\.jar$/i.test(normalized) && file?.env?.client !== 'unsupported';
   }).map(file => {
     const filename = String(file.path).replace(/\\/g, '/').split('/').pop();
     const references = (Array.isArray(file.downloads) ? file.downloads : []).map(url => {
@@ -57,7 +59,7 @@ function modEntries(manifest) {
         return match ? { projectId: match[1], versionId: match[2] || '' } : null;
       } catch { return null; }
     }).filter(Boolean);
-    return { filename, ...references[0], url: references.find(ref => ref.projectId)?.projectId ? file.downloads?.[0] || '' : '' };
+    return { filename, ...references[0], hashes: file.hashes, url: file.downloads?.[0] || '' };
   });
 }
 

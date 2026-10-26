@@ -34,6 +34,7 @@ function mapModrinthSearchHit(hit = {}, input = {}) {
     downloads:Number(hit.downloads)||0,follows:Number(hit.follows)||0,relevance:Number(hit.relevance_score)||0,
     datePublished:hit.date_created||'',dateModified:hit.date_modified||'',icon:hit.icon_url||'',gallery:Array.isArray(hit.gallery)?hit.gallery.slice(0,5):[],
     url:`https://modrinth.com/${route}/${hit.slug||''}`,categories:hit.display_categories||[],
+    clientSide:hit.client_side??hit.clientSide??null,serverSide:hit.server_side??hit.serverSide??null,
     compatibility:['shader','resourcepack'].includes(kind)?version:`${version} · ${loader}`,
     source:requestedKind==='shader'?'Modrinth · Shader':requestedKind==='resourcepack'?'Modrinth · Resource-Pack':'Modrinth'
   };

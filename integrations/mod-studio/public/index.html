@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0c0d0e">
+    <meta name="description" content="Lokale Werkbank für eigene Minecraft Java Mods. Beschreiben, zeichnen, bearbeiten und bauen.">
+    <title>Mod Studio — Minecraft Java Creator</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/tailwind.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/industrial.css">
+    <link rel="stylesheet" href="/ai-memory.css">
+    <link rel="stylesheet" href="/glass-skin.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div id="background-effects" class="background-effects" aria-hidden="true"><span class="ambient-orb orb-a"></span><span class="ambient-orb orb-b"></span><span class="ambient-orb orb-c"></span><span class="ambient-orb orb-d"></span><span class="ambient-orb orb-e"></span><span class="ambient-orb orb-f"></span><span class="ambient-orb orb-g"></span><span class="ambient-orb orb-h"></span></div>
+      <aside class="sidebar" aria-label="Projekt-Navigation">
+        <a class="brand" href="/" aria-label="Mod Studio Startseite">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M5 5h12v12H5zM23 5h12v12H23zM5 23h12v12H5zM23 23h12v12H23z"/><path d="M17 11h6M11 17v6M29 17v6M17 29h6"/></svg></span>
+          <span><strong>Mod Studio</strong><small>Minecraft Java</small></span>
+        </a>
+        <button class="button button-primary new-project-button" id="new-project-button" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+          <span>Neues Projekt</span><kbd>Ctrl K</kbd>
+        </button>
+        <div class="sidebar-section">
+          <div class="section-heading"><span>PROJEKTE</span><span id="project-count" class="count-badge">0</span></div>
+          <nav id="project-list" class="project-list" aria-label="Deine Projekte">
+            <p class="sidebar-empty">Deine Mods erscheinen hier.</p>
+          </nav>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-footer">
+          <div class="local-status"><span class="status-dot"></span><span>Nur auf diesem Gerät</span></div>
+          <button class="account-button" id="account-button" type="button" aria-label="ChatGPT-Konto verbinden">
+            <span class="account-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.8a4.3 4.3 0 0 1 7.4 2.9 4.3 4.3 0 0 1-.1 7.5 4.3 4.3 0 0 1-4.4 6 4.3 4.3 0 0 1-5.9 1.1 4.3 4.3 0 0 1-4.9-5.2 4.3 4.3 0 0 1-1-6.8 4.3 4.3 0 0 1 4.2-6.1 4.3 4.3 0 0 1 4.7.6Z"/><path d="M8 9.3 12 7l4 2.3v4.6L12 16l-4-2.3V9.3Z"/></svg></span>
+            <span class="account-copy"><strong id="account-label">ChatGPT verbinden</strong><small id="account-detail">KI-Chat optional</small></span>
+            <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-column">
+        <header class="topbar">
+          <div class="breadcrumb"><span>Projekte</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg><strong id="project-title">Arbeitsbereich</strong></div>
+          <div id="target-controls" class="target-controls" hidden>
+            <label class="target-select-wrap"><span>LOADER</span><select id="loader-select" aria-label="Mod-Loader"></select></label>
+            <span class="target-divider"></span>
+            <label class="target-select-wrap version-wrap"><span>MINECRAFT</span><select id="version-select" aria-label="Minecraft-Version"></select></label>
+            <span id="target-status" class="target-status"></span>
+          </div>
+          <div class="topbar-actions">
+            <div id="time-tracker" class="time-tracker" hidden title="Time Spent Creating Mods — aktive Zeit für dieses Projekt"><span class="time-tracker-dot" aria-hidden="true"></span><span class="time-tracker-label">Time Spent Creating Mods</span><strong id="project-time">0 min</strong></div>
+            <span id="save-status" class="save-status"><span class="save-dot"></span>Gespeichert</span>
+            <button class="update-check-button" id="update-check-button" type="button" title="Nach einer neuen Mod-Studio-Version suchen"><span aria-hidden="true">↻</span> Updates</button>
+            <button class="icon-button" id="appearance-button" aria-label="Hintergrundanimationen einstellen" title="Hintergrundanimationen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6"/><path d="M10 1.5v2m0 13v2m8.5-8.5h-2m-13 0h-2m13.5-6-1.4 1.4m-9.2 9.2L2 16m12-1.2 1.4 1.4m-9.2-9.2L4.8 5.6"/></svg></button>
+            <button class="icon-button" id="help-button" aria-label="Hilfe" title="Tastenkürzel: Strg/⌘+S speichern, Strg/⌘+Z rückgängig" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M8.1 7.3a2 2 0 1 1 3.4 1.4c-.9.7-1.5 1.1-1.5 2.4M10 13.8v.1"/></svg></button>
+          </div>
+        </header>
+
+        <section id="empty-state" class="empty-state grid grid-cols-1 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,1.08fr)]" aria-labelledby="hero-title">
+          <div class="empty-copy">
+            <p class="eyebrow"><span class="eyebrow-rule"></span>MINECRAFT JAVA · MOD-EDITOR</p>
+            <h1 id="hero-title"><span>Du denkst dir</span><span>Mods aus.</span><em><span>Hier baust du</span><span>sie.</span></em></h1>
+            <p>Skizziere, bearbeite echten Java-Code und baue dein Mod-Projekt lokal.</p>
+            <button class="button button-primary empty-cta" id="empty-create-button" type="button">Projekt erstellen <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button>
+            <div class="empty-footnote"><span class="status-dot"></span>Deine Projekte und Dateien bleiben lokal.</div>
+          </div>
+          <div class="hero-visual" aria-label="Abstrakte Oberfläche: die Skizze wartet auf ein echtes Mod-Projekt" role="img">
+            <div class="hero-visual-heading"><span>LIVE-VORSCHAU · JAVA-MOD</span><span>WARTET</span></div>
+            <div class="workflow-grid">
+              <div class="workflow-node workflow-code">
+                <div class="workflow-node-heading"><span class="node-index">01</span><span>DEINE BESCHREIBUNG</span><span class="node-state">EINGABE</span></div>
+                <div class="empty-preview-copy"><span class="empty-preview-rule"></span><span>Aus deiner Idee<br>wird ein editierbares Element.</span></div>
+              </div>
+              <div class="workflow-connector" aria-hidden="true"><span></span></div>
+              <div class="workflow-node workflow-asset">
+                <div class="workflow-node-heading"><span class="node-index">02</span><span>ECHTE SKIZZE</span><span class="node-state">PROJEKTDATEN</span></div>
+                <div class="empty-texture-grid" aria-hidden="true"></div>
+                <div class="workflow-file"><span class="file-mark"></span>Textur erscheint nach dem Erstellen</div>
+              </div>
+            </div>
+            <div class="hero-visual-footer"><span>BESCHREIBUNG → EDITIERBARE ASSETS</span><span><i></i>LOKAL</span></div>
+          </div>
+          <div class="empty-index" aria-hidden="true">JAVA / 01</div>
+        </section>
+
+        <section id="workbench" class="workbench" hidden>
+          <div class="element-bar">
+            <div class="element-tabs" id="element-tabs" role="tablist" aria-label="Mod-Elemente"></div>
+            <div class="element-actions">
+              <button class="quiet-button" id="add-element-button" title="Ein neues Item für deine Mod anlegen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>Neues Item</button>
+              <button class="quiet-button" id="add-block-button" title="Einen neuen Block für deine Mod anlegen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 7 4v8l-7 4-7-4V6l7-4Z"/><path d="m3 6 7 4 7-4m-7 4v8"/></svg>Neuer Block</button>
+              <button class="quiet-button delete-element-button" id="delete-element-button" type="button" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12m-10 0 1 11h6l1-11M8 6V4h4v2"/></svg>Entfernen</button>
+              <button class="button button-outline export-button" id="export-button" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0 3-3m-3 3L7 9M4 14v3h12v-3"/></svg>Projekt exportieren</button>
+            </div>
+          </div>
+          <div class="workbench-grid">
+            <section class="design-column" aria-label="Mod-Editor">
+              <div class="stage-toolbar">
+                <div class="mode-tabs" role="tablist" aria-label="Editor-Ansicht">
+                  <button class="mode-tab active" data-view="design" role="tab" aria-selected="true" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 13.5 9-9a2.1 2.1 0 0 1 3 3l-9 9L4 17l.5-3.5Z"/><path d="m11.5 6 2.5 2.5"/></svg>Gestalten</button>
+                  <button class="mode-tab" data-view="code" role="tab" aria-selected="false" title="Dateien und Java-Code deines Projekts ansehen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5-5 5 5 5m6-10 5 5-5 5m-2-12-2 14"/></svg>Dateien &amp; Code</button>
+                  <button class="mode-tab" data-view="build" role="tab" aria-selected="false" title="Dein Projekt als Minecraft-Mod bauen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 16h14M5 13V7l5-4 5 4v6M8 13V9h4v4"/></svg>Mod bauen</button>
+                </div>
+                <div class="canvas-controls">
+                  <button class="icon-button small" id="undo-button" aria-label="Rückgängig" title="Rückgängig" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 6 3 10l4 4M4 10h7a5 5 0 0 1 5 5"/></svg></button>
+                  <button class="icon-button small" id="redo-button" aria-label="Wiederholen" title="Wiederholen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m13 6 4 4-4 4m3-4H9a5 5 0 0 0-5 5"/></svg></button>
+                  <span class="toolbar-separator"></span>
+                  <button class="icon-button small" id="clear-canvas-button" aria-label="Zeichenfläche leeren" title="Zeichenfläche leeren" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12m-10 0 1 11h6l1-11M8 6V4h4v2"/></svg></button>
+                </div>
+              </div>
+              <div class="design-stage" id="design-view">
+                <div class="stage-meta"><span class="live-indicator"><i></i>LIVE-VORSCHAU</span><span id="selected-element-label">Noch kein Element</span></div>
+                <div class="element-inspector" id="element-inspector" hidden>
+                  <label class="field-label primary-name-label">NAME IM SPIEL<input id="element-name" maxlength="72" type="text" placeholder="Zum Beispiel: Mondstein"></label>
+                  <details class="element-advanced">
+                    <summary>Weitere Einstellungen <span>Technische Kennung, Beschreibung und Spielverhalten</span></summary>
+                    <div class="element-advanced-fields">
+                      <label class="field-label">TECHNISCHE KENNUNG<div class="namespace-input"><span id="namespace-prefix">new_mod:</span><input id="element-identifier" maxlength="48" type="text" placeholder="mondstein"></div></label>
+                      <label class="field-label compact">BESCHREIBUNG <span class="field-hint">Optional</span><textarea id="element-description" maxlength="500" rows="2" placeholder="Was macht dieses Element?"></textarea></label>
+                      <div id="item-properties" class="property-fields"></div>
+                    </div>
+                  </details>
+                </div>
+                <div class="editor-surface">
+                  <div class="texture-editor">
+                    <div class="surface-heading"><div><span>TEXTUR ZEICHNEN</span><small>Farbe auswählen, dann Felder anklicken. Jeder Strich wird gespeichert.</small></div><span class="dimension-chip">16 × 16</span></div>
+                    <div class="pixel-canvas-wrap"><canvas id="pixel-canvas" width="320" height="320" aria-label="16 mal 16 Pixel Zeichenfläche" role="application"></canvas><div class="pixel-ruler ruler-top">0&nbsp; &nbsp; 4&nbsp; &nbsp; 8&nbsp; &nbsp; 12&nbsp; &nbsp; 15</div><div class="pixel-ruler ruler-left">0<br><br>4<br><br>8<br><br>12<br><br>15</div></div>
+                    <div class="draw-tools" role="toolbar" aria-label="Zeichenwerkzeuge">
+                      <button class="tool-button selected" data-tool="pencil" title="Stift (B)" aria-label="Stift" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 13.5 9-9a2.1 2.1 0 0 1 3 3l-9 9L4 17l.5-3.5Z"/><path d="m11.5 6 2.5 2.5"/></svg><span>Stift</span></button>
+                      <button class="tool-button" data-tool="eraser" title="Radierer (E)" aria-label="Radierer" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4.5 11 7-7a2 2 0 0 1 2.8 0l2 2a2 2 0 0 1 0 2.8L9 15.1H6.4L3.8 12.5A1.1 1.1 0 0 1 4.5 11Z"/><path d="m7.7 7.8 4.5 4.5"/></svg><span>Radierer</span></button>
+                      <button class="tool-button" data-tool="fill" title="Fläche füllen (G)" aria-label="Fläche füllen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 9 6-6 6 6-6 6-6-6Z"/><path d="m11 15 2 2h4v-4l-2-2"/></svg><span>Füllen</span></button>
+                      <span class="tool-divider"></span>
+                      <label class="color-input-wrap" title="Farbe auswählen"><input id="color-picker" type="color" value="#465E84" aria-label="Zeichenfarbe wählen"><span id="color-swatch" class="color-swatch"></span></label>
+                      <div class="palette" id="palette" aria-label="Farbpalette"></div>
+                    </div>
+                  </div>
+                  <div class="preview-editor">
+                    <div class="surface-heading"><div><span>3D-VORSCHAU</span><small id="model-preview-caption">Modellvorschau aus deiner Textur</small></div><button class="icon-button small" id="rotate-preview-button" aria-label="Vorschau drehen" title="Vorschau drehen" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 9a6.5 6.5 0 0 0-11-3L3 8m0-4v4h4m-3 3a6.5 6.5 0 0 0 11 3l2-2m0 4v-4h-4"/></svg></button></div>
+                    <div class="voxel-preview" id="voxel-preview" aria-label="Modellvorschau"><canvas id="voxel-canvas" width="360" height="360"></canvas><span id="preview-empty" class="preview-empty">Zeichne auf dem<br>Raster, um zu starten.</span><span class="floor-shadow"></span></div>
+                    <div class="blockbench-actions" id="blockbench-actions" hidden>
+                      <button class="quiet-button" id="blockbench-open-button" type="button">Blockbench öffnen <span aria-hidden="true">↗</span></button>
+                      <button class="quiet-button" id="blockbench-import-button" type="button">Blockbench-Datei übernehmen</button>
+                      <input id="blockbench-file-input" type="file" accept=".json,.bbmodel,application/json" hidden>
+                      <small>.bbmodel direkt öffnen oder Java-Block/Item-JSON importieren. Textur und Cube-Geometrie werden lokal ins Mod-Projekt übernommen.</small>
+                    </div>
+                    <button class="add-first-element" id="add-first-element" type="button"><span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></span>Erstes Element hinzufügen</button>
+                  </div>
+                </div>
+                <div class="asset-strip"><div class="asset-strip-title"><span>MOD-INHALT</span><span id="asset-count">0 Elemente</span></div><div id="asset-list" class="asset-list"><span class="asset-empty">Elemente, Texturen und Rezepte erscheinen hier.</span></div></div>
+              </div>
+              <section id="code-view" class="code-view" hidden><div class="file-sidebar"><div class="file-heading">PROJEKT-DATEIEN</div><div id="file-list" class="file-list"><span class="asset-empty">Noch kein Quellprojekt erstellt.</span></div></div><div class="code-pane"><div class="code-tabbar"><span id="open-file-label">Projektdateien</span><button id="refresh-source-button" class="quiet-button" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 9a6.5 6.5 0 0 0-11-3L3 8m0-4v4h4m-3 3a6.5 6.5 0 0 0 11 3l2-2m0 4v-4h-4"/></svg>Aktualisieren</button></div><textarea id="code-output" class="code-output" spellcheck="false" aria-label="Mod-Quellcode" placeholder="Erzeuge ein Mod-Element, um die echten Projektdateien zu sehen." readonly></textarea></div></section>
+            <section id="build-view" class="build-view" hidden><div class="build-card"><div class="build-heading"><div><span class="build-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 15V8l6-4 6 4v7M10 15v-4h4v4"/></svg></span><div><h2>Mod bauen</h2><p>Erzeuge ein installierbares Mod-JAR aus deinem Projekt.</p></div></div><div class="build-actions"><a id="download-jar-button" class="button button-outline" href="#" hidden>JAR herunterladen</a><button id="build-button" class="button button-primary" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6V4Z"/></svg>Build starten</button></div></div><div id="build-requirements" class="build-requirements"><p>Build-Voraussetzungen werden geladen.</p></div><div id="build-log" class="build-log" aria-live="polite"><span>Build-Ausgabe erscheint hier.</span></div></div></section>
+            </section>
+            <aside class="assistant-panel" aria-label="KI-Mod-Assistent">
+              <div class="assistant-header"><div class="assistant-title"><span class="assistant-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.8a4.3 4.3 0 0 1 7.4 2.9 4.3 4.3 0 0 1-.1 7.5 4.3 4.3 0 0 1-4.4 6 4.3 4.3 0 0 1-5.9 1.1 4.3 4.3 0 0 1-4.9-5.2 4.3 4.3 0 0 1-1-6.8 4.3 4.3 0 0 1 4.2-6.1 4.3 4.3 0 0 1 4.7.6Z"/><path d="M8 9.3 12 7l4 2.3v4.6L12 16l-4-2.3V9.3Z"/></svg></span><div><strong>Mod-Assistent</strong><small><span class="assistant-dot" id="assistant-dot"></span><span id="assistant-state">lokale Vorschau</span></small></div></div><button class="quiet-button memory-open-button" id="assistant-menu-button" aria-label="KI-Gedächtnis verwalten" title="Gelernte Regeln ansehen und bearbeiten" type="button">Gedächtnis <span id="memory-count">0</span></button></div>
+              <div id="chat-messages" class="chat-messages"><div class="welcome-message"><span class="welcome-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4.8a5.8 5.8 0 0 1 10 3.9 5.8 5.8 0 0 1-.2 10.1 5.8 5.8 0 0 1-5.9 8.1 5.8 5.8 0 0 1-8 1.5 5.8 5.8 0 0 1-6.6-7.1 5.8 5.8 0 0 1-1.3-9.2 5.8 5.8 0 0 1 5.7-8.3 5.8 5.8 0 0 1 6.3.9Z"/><path d="m10.4 12.4 5.6-3.2 5.6 3.2v6.4l-5.6 3.2-5.6-3.2v-6.4Z"/></svg></span><p class="assistant-step-label">DEIN MOD-ASSISTENT</p><h2>Wir bauen deine Idee gemeinsam.</h2><p>Beschreibe, was deine Mod können soll. Ich schlage Änderungen vor, die du prüfen kannst, bevor sie übernommen werden.</p><div class="prompt-chips"><button type="button" data-prompt="Ich habe noch keine fertige Idee. Hilf mir, eine einfache Minecraft-Mod-Idee zu finden. Stelle mir nacheinander kurze Fragen und erkläre jeden Schritt verständlich.">Ich brauche erst eine Idee <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 5 5-5 5"/></svg></button><button type="button" data-prompt="Erkläre mir Schritt für Schritt, wie ich ein erstes Item zu dieser Mod hinzufüge. Nutze einfache Sprache und frage nach, bevor du Änderungen übernimmst.">Mein erstes Item erstellen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 5 5-5 5"/></svg></button><button type="button" data-prompt="Füge diesem Element ein passendes Crafting-Rezept hinzu und erkläre mir die Zutaten und das Muster einfach.">Ein Rezept hinzufügen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 5 5-5 5"/></svg></button><button type="button" data-prompt="Suche in der offiziellen Minecraft- und Loader-Dokumentation nach einer aktuellen, passenden Anleitung für mein Projektziel. Erkläre mir die konkrete Umsetzung und verlinke die Quellen.">Offizielle Modding-Doku suchen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 5 5-5 5"/></svg></button></div></div></div>
+              <div class="composer-wrap"><div class="ai-provider-bar"><label for="ai-provider-select">KI</label><select id="ai-provider-select" aria-label="KI-Anbieter"><option value="chatgpt">ChatGPT-Konto</option><option value="ollama">Ollama · lokal</option></select><select id="ai-model-select" aria-label="KI-Modell"></select></div><div id="auth-nudge" class="auth-nudge"><span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 9v4m0-7h.1"/></svg></span><p>Verbinde dein ChatGPT-Konto für den Mod-Assistenten oder richte ein lokales Ollama-Modell ein.</p><button id="connect-chat-button" type="button">ChatGPT verbinden</button><a id="manage-chatgpt-usage" href="https://chatgpt.com/settings/usage" target="_blank" rel="noreferrer" hidden>ChatGPT-Nutzung verwalten</a></div><div class="composer"><textarea id="chat-input" rows="2" maxlength="6000" placeholder="Zum Beispiel: Erstelle ein Item, das nachts leuchtet …" aria-label="Beschreibe deine Mod-Idee für den Mod-Assistenten" disabled></textarea><div class="composer-footer"><span><kbd>↵</kbd> Senden <span class="composer-hint">· Shift + ↵ für neue Zeile</span></span><button id="send-chat-button" class="send-button" type="button" aria-label="Nachricht senden" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 3 9.4 16l-1.2-5.2L3 9.5 17 3Z"/><path d="m8.2 10.8 4-3.8"/></svg></button></div></div><p class="composer-disclaimer">Du entscheidest, bevor KI-Vorschläge übernommen werden.</p><p class="search-disclaimer">Live-Doku-Suche nur auf ausdrückliche Bitte; Limits oder Zusatzkosten deines KI-Anbieters können gelten. Ollama bleibt lokal.</p></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+    <dialog id="new-project-dialog" class="modal-dialog">
+      <form id="new-project-form" method="dialog" class="modal-card">
+        <div class="modal-heading"><div><p class="eyebrow"><span class="eyebrow-rule"></span>NEUES PROJEKT</p><h2>Was bauen wir?</h2></div><button class="icon-button" id="close-dialog-button" type="button" aria-label="Schließen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+        <label class="field-label modal-field">PROJEKTNAME<input id="project-name-input" required maxlength="72" value="Neues Mod-Projekt" autocomplete="off"></label>
+        <label class="field-label modal-field">BESCHREIBUNG <span class="optional">OPTIONAL</span><textarea id="project-description-input" rows="3" maxlength="1000" placeholder="Was soll die Mod im Spiel verändern?"></textarea></label>
+        <div class="modal-platform"><span class="platform-mark"><svg viewBox="0 0 22 22" aria-hidden="true"><path d="M2 4h8v8H2zm10 0h8v8h-8zM2 14h8v6H2zm10 0h8v6h-8z"/></svg></span><span><strong>Minecraft Java</strong><small>Mod-Loader und Version später einstellbar</small></span><span class="selected-tag">AUSGEWÄHLT</span></div>
+        <div class="modal-actions"><button class="button button-outline" id="cancel-dialog-button" type="button">Abbrechen</button><button class="button button-primary" type="submit">Projekt erstellen <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button></div>
+      </form>
+    </dialog>
+    <dialog id="ai-memory-dialog" class="modal-dialog memory-dialog">
+      <section class="modal-card" aria-labelledby="memory-title">
+        <div class="modal-heading"><div><p class="eyebrow"><span class="eyebrow-rule"></span>DEIN LOKALES KI-GEDÄCHTNIS</p><h2 id="memory-title">Was soll ich mir merken?</h2></div><button class="icon-button" id="close-memory-dialog" type="button" aria-label="Schließen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+        <p class="memory-description">Der Assistent übernimmt klare, dauerhafte Vorlieben und wiederkehrende Korrekturen automatisch. Flüchtige Mod-Aufträge und sensible Daten speichert er nicht. Alles bleibt lokal, ist hier einsehbar und lässt sich jederzeit löschen.</p>
+        <form id="memory-form" class="memory-form"><label class="field-label">ARBEITSREGEL<textarea id="memory-input" rows="2" maxlength="500" placeholder="Zum Beispiel: Erkläre neue Begriffe kurz und verständlich."></textarea></label><label class="field-label">GILT FÜR<select id="memory-scope"><option value="global">Alle Mod-Projekte</option><option value="project">Nur dieses Projekt</option></select></label><button class="button button-primary" type="submit">Regel speichern</button></form>
+        <div class="memory-list-heading"><span>GESPEICHERTE REGELN</span><span id="memory-list-count">0</span></div><div id="memory-list" class="memory-list" aria-live="polite"><p class="memory-empty">Noch keine Regeln gespeichert.</p></div>
+        <div class="modal-actions"><button class="button button-outline" id="close-memory-dialog-footer" type="button">Fertig</button></div>
+      </section>
+    </dialog>
+      <dialog id="appearance-dialog" class="modal-dialog appearance-dialog">
+        <form method="dialog" class="modal-card">
+          <div class="modal-heading"><div><p class="eyebrow"><span class="eyebrow-rule"></span>ANSICHT</p><h2>Hintergrund</h2></div><button class="icon-button" id="close-appearance-dialog" aria-label="Schließen" type="submit"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+          <fieldset class="skin-options" aria-label="Oberfläche"><legend>OBERFLÄCHE</legend><label class="skin-choice"><input type="radio" name="skin-style" value="workshop"><span><strong>Werkstatt</strong><small>Klar und kontraststark</small></span></label><label class="skin-choice"><input type="radio" name="skin-style" value="glass"><span><strong>Liquid Glass</strong><small>Milchglas über einer Minecraft-Welt</small></span></label></fieldset>
+          <p class="appearance-description">Wähle eine ruhige Animation für deine Mod-Werkstatt.</p>
+          <fieldset class="background-options" aria-label="Animierter Hintergrund">
+            <label class="background-choice"><input type="radio" name="background-style" value="orbs"><span class="background-preview preview-orbs" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>Schwebende Kugeln</strong><small>Langsam treibende Glaskreise</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="aurora"><span class="background-preview preview-aurora" aria-hidden="true"></span><span><strong>Smaragd-Aurora</strong><small>Weiches, wanderndes Licht</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="grid"><span class="background-preview preview-grid" aria-hidden="true"></span><span><strong>Animiertes Raster</strong><small>Feine Linien mit Lichtimpuls</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="crystal"><span class="background-preview preview-crystal" aria-hidden="true"></span><span><strong>Kristall-Nebel</strong><small>Türkise und violette Lichtfelder</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="flow"><span class="background-preview preview-flow" aria-hidden="true"></span><span><strong>Ozeanfluss</strong><small>Langsame, fließende Lichtbahnen</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="circuit"><span class="background-preview preview-circuit" aria-hidden="true"></span><span><strong>Redstone-Signal</strong><small>Ruhiger Impuls entlang feiner Leiterbahnen</small></span></label>
+            <label class="background-choice"><input type="radio" name="background-style" value="off"><span class="background-preview preview-off" aria-hidden="true"></span><span><strong>Aus</strong><small>Statischer Hintergrund</small></span></label>
+          </fieldset>
+          <div class="modal-actions"><button class="button button-outline" value="close">Fertig</button></div>
+        </form>
+      </dialog>
+    <dialog id="update-dialog" class="modal-dialog update-dialog">
+      <section class="modal-card" aria-labelledby="update-title">
+        <div class="modal-heading"><div><p class="eyebrow"><span class="eyebrow-rule"></span>MOD STUDIO UPDATE</p><h2 id="update-title">Neue Version verfügbar</h2></div><button class="icon-button" id="close-update-dialog" type="button" aria-label="Schließen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+        <p class="update-version-line">Version <strong id="update-version"></strong> · Windows</p>
+        <div class="update-notes" id="update-notes">Fehlerkorrekturen und Verbesserungen.</div>
+        <p class="update-data-note">Deine Projekte und Anmeldedaten bleiben lokal gespeichert. Der Installer öffnet sich nach Download und Prüfsummenprüfung.</p>
+        <div class="modal-actions"><button class="button button-outline" id="close-update-button" type="button">Später</button><button class="button button-primary" id="install-update-button" type="button">Jetzt aktualisieren <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0 3-3m-3 3L7 9M4 14v3h12v-3"/></svg></button></div>
+      </section>
+    </dialog>
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>

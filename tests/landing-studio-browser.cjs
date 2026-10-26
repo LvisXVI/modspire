@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.route('https://api.github.com/**', route => route.abort());
-      await page.goto(pathToFileURL(path.join(root, 'docs', 'index.html')).href);
+      await page.goto(pathToFileURL(path.join(root, 'docs', 'demo', 'index.html')).href);
 
       const pageWidth = await page.evaluate(() => document.documentElement.scrollWidth);
       assert.ok(pageWidth <= viewport.width + 1, `no horizontal page overflow at ${viewport.width}px (${pageWidth}px)`);

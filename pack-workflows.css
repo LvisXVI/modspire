@@ -1,0 +1,18 @@
+#pack-workflows-panel { grid-column: 1 / -1; }
+.pack-workflow-actions,.pack-export-actions { display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:12px 0; }
+html body .pack-workflow-actions .button,html body .pack-export-actions .button { min-height:36px;padding:8px 14px; }
+.pack-export-actions>label { display:grid;gap:7px;flex:1 1 260px;font-size:12px; }
+html body #export-loader-version { min-height:36px;min-width:0;padding:8px 10px;border:1px solid var(--dialog-line);border-radius:9px;background:transparent!important;color:inherit!important;font:inherit; }
+.pack-update-results { display:grid;gap:8px;max-height:360px;overflow:auto; }
+.pack-update-row { padding:10px;border:1px solid var(--dialog-line);border-radius:10px; }
+.pack-update-row label { display:flex;gap:12px;align-items:center; }
+.pack-update-row label>span { display:grid;gap:4px;min-width:0;overflow-wrap:anywhere; }
+.pack-update-row input { width:20px;height:20px;flex:none;accent-color:var(--custom-accent); }
+.pack-update-row strong,.pack-update-row span,.pack-update-row small { color:inherit!important; }
+.pack-workflow-status { min-height:18px;overflow-wrap:anywhere; }
+#pack-workflows-panel :focus-visible { outline:2px solid var(--custom-accent);outline-offset:3px; }
+#dependency-explanations .pack-dependency-list { display:grid;gap:9px;max-height:280px;overflow:auto;margin:12px 0; }
+#dependency-explanations .pack-dependency-list p { display:grid;gap:4px;margin:0;padding-bottom:8px;border-bottom:1px solid var(--dialog-line);overflow-wrap:anywhere; }
+#dependency-explanations .pack-dependency-list span { color:inherit!important;font-size:11px; }
+#dependency-explanations .pack-dependency-warning { border-left:3px solid currentColor;padding-left:9px;overflow-wrap:anywhere; }
+.pack-dependency-note { display:block;white-space:normal;line-height:1.4; }

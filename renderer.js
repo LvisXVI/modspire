@@ -161,7 +161,7 @@ async function chooseBestSetup(query){
     if(best.unchanged){setStatus(best.reason);return;}
     const changed=state.project.minecraftVersion!==best.minecraftVersion||state.project.loader!==best.loader;
     if(!changed)return;
-    state.applyingAutoSetup=true;state.project.minecraftVersion=best.minecraftVersion;state.project.loader=best.loader;
+    state.applyingAutoSetup=true;state.project.minecraftVersion=best.minecraftVersion;state.project.loader=best.loader;delete state.project.loaderVersion;
     state.project.mods=state.project.mods.map(mod=>({...mod,compatibility:`${best.minecraftVersion} · ${best.loader}`}));
     state.project.setupRecommendation={...best,queries:Array.isArray(query)?query:[query]};
     $('auto-setup-toggle').dataset.tooltipText=`Minecraft ${best.minecraftVersion} · ${best.loader}: ${best.coverage||1}/${best.queryCount||1} Themen und ${best.count} geprüfte Modtreffer. Bereits ausgewählte Mods werden beibehalten.`;
@@ -218,7 +218,7 @@ async function switchProject(id){
   clearTimeout(state.saveTimer);await save();
   try{
     const project=await window.workshop.switchProject(id);
-    state.project={...state.project,...project,mods:Array.isArray(project.mods)?project.mods:[],turns:Array.isArray(project.turns)?project.turns:[]};state.activeProjectId=project.id;state.batchSelection.clear();state.packFilter='';
+    state.project={name:'Neues Abenteuer',minecraftVersion:'1.21.1',loader:'fabric',provider:'modrinth',...project,mods:Array.isArray(project.mods)?project.mods:[],turns:Array.isArray(project.turns)?project.turns:[]};state.activeProjectId=project.id;state.batchSelection.clear();state.packFilter='';
     state.lastSearchQueries=[];window.lastResults=[];$('mod-search').value='';$('mod-results').replaceChildren();$('results-hint').textContent='Suche nach einem Mod oder beschreibe im Chat, was du suchst.';
     $('pack-name').value=state.project.name;selectMinecraftVersion(state.project.minecraftVersion);$('loader').value=state.project.loader;$('provider').value=state.project.provider;
     renderProjectSwitcher();renderSelected();renderChat();showView('chat');loadPopularMods();reconcilePackDependencies();setStatus(`„${state.project.name}“ geöffnet`);
@@ -233,6 +233,37 @@ async function createProjectFromForm(event){
     $('new-pack-overlay').hidden=true;$('pack-name').value=state.project.name;selectMinecraftVersion(state.project.minecraftVersion);$('loader').value=state.project.loader;$('provider').value=state.project.provider;
     state.lastSearchQueries=[];window.lastResults=[];$('mod-search').value='';$('mod-results').replaceChildren();renderProjectSwitcher();renderSelected();renderChat();showView('chat');loadPopularMods();setStatus(`„${state.project.name}“ erstellt`);
   }catch(error){setStatus(`Modpack konnte nicht erstellt werden: ${error.message}`);alert(error.message)}
+}
+async function applyPackVersionUpdates(entries,expectedKey){
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');
+  if(window.WorkshopPackWorkflows.fingerprint(state.project)!==expectedKey)throw Error(english?'The pack changed. Check updates again.':'Das Pack wurde geändert. Bitte erneut prüfen.');
+  if(state.pendingDependencies||state.pendingSetup||state.pendingModSearches||state.sending||state.applyingAutoSetup)throw Error(english?'Wait for the current search or dependency check.':'Warte bitte auf die aktuelle Suche oder Abhängigkeitsprüfung.');
+  const changes=new Map(entries.map(entry=>[entry.key,entry]));
+  const next=state.project.mods.map(mod=>{
+    const entry=changes.get(`${mod.provider}:${mod.id}`);if(!entry)return mod;
+    if(!entry.candidate?.versionId||entry.candidate.provider!==mod.provider||entry.candidate.id!==mod.id||mod.dependency)throw Error(english?'The update selection is invalid.':'Die Update-Auswahl ist ungültig.');
+    return {...mod,...entry.candidate,dependency:mod.dependency};
+  });
+  if(!changes.size)return;
+  if([...changes.keys()].some(key=>!state.project.mods.some(mod=>`${mod.provider}:${mod.id}`===key)))throw Error(english?'The pack changed. Check updates again.':'Das Pack wurde geändert. Bitte erneut prüfen.');
+  saveSnapshot(english?'Before mod updates':'Vor Mod-Updates');
+  state.dependencyGeneration++;state.compatibilityGeneration++;state.compatibilityReport=null;state.project.mods=next;
+  queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat();await reconcilePackDependencies();
+}
+function initPackExtensions(){
+  const common={getProject:()=>state.project,getLocale:()=>window.workshopI18n?.locale||'de',status:setStatus};
+  window.WorkshopPackWorkflows?.init({...common,checkUpdates:project=>window.workshop.checkModUpdates(project),applyUpdates:applyPackVersionUpdates,exportMrpack:project=>window.workshop.exportMrpack(project),exportCurseForge:project=>window.workshop.exportCurseForge(project)});
+  return window.WorkshopPackLibrary?.init({...common,listBookmarks:()=>window.workshop.listBookmarks(),saveBookmark:entry=>window.workshop.saveBookmark({...entry,mod:{...entry.mod,minecraftVersion:entry.mod.minecraftVersion||state.project.minecraftVersion,loader:entry.mod.loader||state.project.loader}}),deleteBookmark:key=>window.workshop.deleteBookmark(key),addMod:mod=>addSelectedMod(mod)});
+}
+function renderDependencyNotes(){
+  const target=$('dependency-explanations');if(!target||!window.WorkshopPackDependencies)return;
+  const english=(window.workshopI18n?.locale||'de').startsWith('en');target.replaceChildren();
+  const title=document.createElement('h3');title.textContent=english?'Dependencies & environment':'Abhängigkeiten & Einsatzort';target.append(title);
+  const list=document.createElement('div');list.className='pack-dependency-list';
+  for(const mod of state.project.mods){const row=document.createElement('p');const label=document.createElement('strong');label.textContent=mod.title;const detail=document.createElement('span');detail.textContent=window.WorkshopPackDependencies.describe(mod,state.project.mods,window.workshopI18n?.locale||'de');row.append(label,detail);list.append(row)}
+  if(!state.project.mods.length){const empty=document.createElement('p');empty.textContent=english?'Add mods to inspect their dependencies and environment.':'Füge Mods hinzu, um Abhängigkeiten und Einsatzort zu prüfen.';list.append(empty)}
+  target.append(list);
+  for(const warning of state.dependencyWarnings||[]){const item=document.createElement('p');item.className='pack-dependency-warning';item.textContent=String(warning);target.append(item)}
 }
 function renderSelectionHistory() {
   const english=(window.workshopI18n?.locale||'de').startsWith('en');
@@ -294,6 +325,8 @@ function renderSelected() {
   if(!filtered.length){list.innerHTML=`<div class="empty-selected">${english?'No mods match this filter.':'Keine Mods passen zu diesem Filter.'}</div>`;scheduleCompatibilityCheck();renderLab();window.WorkshopModernUI?.render();return}
   list.innerHTML = filtered.map(({mod:m,index:i}) => {const status=modStatus(m,english);return `<div class="selected-mod ${m.dependency?'is-dependency':''}">${m.icon ? `<img src="${safe(m.icon)}" alt="" loading="lazy">` : '<div class="mod-icon-placeholder">✦</div>'}<div class="selected-mod-copy"><strong>${safe(m.title)}</strong><span class="selected-mod-status ${status.warning?'warning':''}" title="${safe(status.title)}">${safe(status.label)}</span><small>${safe(m.source)}</small></div><button class="remove-mod" data-remove="${i}" aria-label="${safe(m.title)} ${english?'remove':'entfernen'}" title="${m.dependency?(english?'Required by another mod':'Wird automatisch von einer anderen Mod benötigt'):(english?'Remove mod':'Mod entfernen')}" ${m.dependency?'disabled':''}>${m.dependency?'⌁':'×'}</button></div>`}).join('');
   list.querySelectorAll('[data-remove]').forEach(b => b.onclick = () => { const mod=state.project.mods[Number(b.dataset.remove)];if(mod?.dependency)return;recordSearchFeedback(mod,-1);state.project.mods.splice(Number(b.dataset.remove), 1); queueSave(); renderSelected(); renderResults(window.lastResults || []); renderChat(); reconcilePackDependencies(); });
+  list.querySelectorAll('.selected-mod').forEach(row=>{const index=Number(row.querySelector('[data-remove]')?.dataset.remove),mod=state.project.mods[index];if(!mod||!window.WorkshopPackDependencies)return;const note=document.createElement('small');note.className='pack-dependency-note';note.textContent=window.WorkshopPackDependencies.describe(mod,state.project.mods,window.workshopI18n?.locale||'de');row.querySelector('.selected-mod-copy')?.append(note)});
+  window.WorkshopPackLibrary?.decorate(list,state.project.mods);
   scheduleCompatibilityCheck();renderLab();window.WorkshopModernUI?.render();
 }
 function modStatus(mod,english=(window.workshopI18n?.locale||'de').startsWith('en')){
@@ -322,19 +355,22 @@ function addPackMods(mods,{quiet=false}={}){
 }
 async function reconcilePackDependencies({projectId=state.project.id}={}){
   const generation=++state.dependencyGeneration;
+  state.dependencyWarnings=[];
   const roots=state.project.mods.filter(mod=>!mod.dependency&&(!mod.kind||mod.kind==='mod'));
   if(!window.workshop.resolveRequiredDependencies)return;
-  if(!roots.length){const clean=state.project.mods.filter(mod=>!mod.dependency);if(clean.length!==state.project.mods.length){state.project.mods=clean;queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat()}return}
+  if(!roots.length){const clean=state.project.mods.filter(mod=>!mod.dependency);if(clean.length!==state.project.mods.length){state.project.mods=clean;queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat()}renderDependencyNotes();return}
   state.pendingDependencies=(state.pendingDependencies||0)+1;
   try{
     const result=await window.workshop.resolveRequiredDependencies({mods:roots,minecraftVersion:state.project.minecraftVersion,loader:state.project.loader});
     if(state.project.id!==projectId||generation!==state.dependencyGeneration)return;
+    state.dependencyWarnings=result.unresolved||[];
     const rootKeys=new Set(state.project.mods.filter(mod=>!mod.dependency).map(mod=>`${mod.provider}:${mod.id}`));
     const required=(result.dependencies||[]).filter(mod=>!rootKeys.has(`${mod.provider}:${mod.id}`));
     const unique=[...new Map(required.map(mod=>[`${mod.provider}:${mod.id}`,mod])).values()];
     const next=[...state.project.mods.filter(mod=>!mod.dependency),...unique];
-    const before=state.project.mods.map(mod=>`${mod.provider}:${mod.id}:${mod.versionId||''}`).join('|'),after=next.map(mod=>`${mod.provider}:${mod.id}:${mod.versionId||''}`).join('|');
+    const before=JSON.stringify(state.project.mods),after=JSON.stringify(next);
     if(before!==after){state.project.mods=next;queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat()}
+    renderDependencyNotes();
     if(unique.length||result.unresolved?.length){const parts=[];if(unique.length)parts.push(`${unique.length} Pflicht-Abhängigkeit${unique.length===1?'':'en'} automatisch ergänzt`);if(result.unresolved?.length)parts.push(`${result.unresolved.length} Abhängigkeit${result.unresolved.length===1?'':'en'} ohne passende Version geprüft`);setStatus(parts.join(' · '))}
   }catch(error){if(state.project.id===projectId&&generation===state.dependencyGeneration)setStatus(`Abhängigkeiten konnten nicht geprüft werden: ${error.message}`)}
   finally{state.pendingDependencies--;}
@@ -369,6 +405,8 @@ function renderLab(){
   const worldMods=mods.filter(mod=>/biome|world|dimension|structure|terrain|generation|terra|region/i.test((mod.title||'')+' '+(mod.description||''))),world=$('worldgen-check');world.replaceChildren();const note=document.createElement('p');note.className='lab-note '+(worldMods.length>1?'warn':'good');note.textContent=!worldMods.length?'Keine Weltgenerator-Mod anhand der Namen erkannt.':worldMods.length===1?worldMods[0].title+' verändert vermutlich die Welt. Neue Chunks oder eine frische Welt können nötig sein.':worldMods.length+' mögliche Weltgeneratoren: '+worldMods.map(mod=>mod.title).join(', ')+'. Überschneidungen sind nicht bestätigt; vor dem Weltwechsel Backup erstellen.';world.append(note);
   const bars=$('soundcheck-bars');bars.replaceChildren();const max=Math.max(1,...Object.values(counts));labRoles.forEach(role=>{const row=document.createElement('div');row.className='sound-row';row.innerHTML='<span>'+safe(role.name)+'</span><div><i style="width:'+Math.round(counts[role.name]/max*100)+'%;--role-color:'+role.color+'"></i></div><b>'+counts[role.name]+'</b>';bars.append(row)});
   renderMoodboard();renderSnapshots();
+  const extensionsKey=JSON.stringify([state.project.id,state.project.minecraftVersion,state.project.loader,state.project.loaderVersion,mods.map(mod=>[mod.provider,mod.id,mod.title,mod.versionId,mod.versionNumber,mod.requiredBy,mod.clientSide,mod.serverSide]),(state.project.snapshots||[]).map(snapshot=>[snapshot.id,snapshot.name]),state.dependencyWarnings,window.workshopI18n?.locale]);
+  if(state.packExtensionsRenderKey!==extensionsKey){state.packExtensionsRenderKey=extensionsKey;renderDependencyNotes();window.WorkshopPackWorkflows?.render();void window.WorkshopPackLibrary?.render()}
 }
 function renderMoodboard(){
   const target=$('mood-chips');if(!target)return;target.replaceChildren();const notes=Array.isArray(state.project.moodboard)?state.project.moodboard:[];
@@ -379,8 +417,8 @@ function renderMoodboard(){
 function saveSnapshot(name){
   const english=(window.workshopI18n?.locale||'de').startsWith('en');
   const field=$('snapshot-name'),customName=String(name??field?.value??'').trim().slice(0,80);
-  const data={};['id','name','minecraftVersion','loader','provider','mods','moodboard'].forEach(key=>{data[key]=JSON.parse(JSON.stringify(state.project[key]??(['mods','moodboard'].includes(key)?[]:null)))});
-  const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[],snapshot={id:crypto.randomUUID(),name:customName||(english?'Snapshot ':'Stand ')+(all.length+1),createdAt:new Date().toISOString(),mods:state.project.mods.length,data};state.project.snapshots=[...all,snapshot].slice(-12);if(field&&name==null)field.value='';queueSave();renderSnapshots();window.WorkshopModernUI?.render();setStatus(english?'Snapshot “'+snapshot.name+'” saved':'Pack-Stand „'+snapshot.name+'“ gesichert');
+  const data={};['id','name','minecraftVersion','loader','loaderVersion','provider','mods','moodboard'].forEach(key=>{data[key]=JSON.parse(JSON.stringify(state.project[key]??(['mods','moodboard'].includes(key)?[]:null)))});
+  const all=Array.isArray(state.project.snapshots)?state.project.snapshots:[],snapshot={id:crypto.randomUUID(),name:customName||(english?'Snapshot ':'Stand ')+(all.length+1),createdAt:new Date().toISOString(),mods:state.project.mods.length,data};state.project.snapshots=[...all,snapshot].slice(-12);if(field&&name==null)field.value='';queueSave();renderSnapshots();window.WorkshopModernUI?.render();setStatus(english?'Snapshot “'+snapshot.name+'” saved':'Pack-Stand „'+snapshot.name+'“ gesichert');void window.WorkshopPackLibrary?.render();
 }
 function renderSnapshots(){
   const target=$('snapshot-list');if(!target)return;
@@ -399,6 +437,7 @@ function renderSnapshots(){
       const copies=state.project.snapshots;
       state.dependencyGeneration++;state.compatibilityGeneration++;state.compatibilityReport=null;state.batchSelection.clear();
       state.project={...state.project,...JSON.parse(JSON.stringify(snapshot.data)),snapshots:copies};
+      if (!snapshot.data.loaderVersion) delete state.project.loaderVersion;
       $('pack-name').value=state.project.name;selectMinecraftVersion(state.project.minecraftVersion);$('loader').value=state.project.loader;$('provider').value=state.project.provider;
       queueSave();renderSelected();renderResults(window.lastResults||[]);renderChat();reconcilePackDependencies();
       setStatus(english?'“'+snapshot.name+'” restored':'„'+snapshot.name+'“ wiederhergestellt');
@@ -635,6 +674,7 @@ function renderModCards(area,items,{selection=null,onToggle=null,compact=false}=
     gallery.querySelectorAll('img').forEach(image=>image.addEventListener('load',sync,{once:true}));requestAnimationFrame(sync);
   });
   area.querySelectorAll('[data-add]').forEach(button=>button.onclick=()=>{const index=Number(button.dataset.add);if(!selection){togglePackMod(items,index);return}toggleSelection(items,index,selection,onToggle)});
+  window.WorkshopPackLibrary?.decorate(area,items);
 }
 function toggleSelection(items,index,selection,onToggle){
   const mod=items[index];if(!mod)return;
@@ -663,7 +703,7 @@ function openModDetails(mod){
   $('mod-details-title').textContent=mod.title|| (english?'Mod details':'Mod-Details');
   $('mod-details-source').textContent=mod.source||'Modrinth';
   $('mod-details-author').textContent=mod.author|| (english?'Unknown author':'Unbekannter Autor');
-  $('mod-details-compatibility').textContent=mod.compatibility||'';
+  $('mod-details-compatibility').textContent=[mod.compatibility,window.WorkshopPackDependencies?.describe(mod,state.project.mods,window.workshopI18n?.locale||'de')].filter(Boolean).join(' · ');
   $('mod-details-downloads').textContent=`↓ ${formatDownloads(mod.downloads||0)}`;
   $('mod-details-description').textContent=String(mod.summary|| (english?'Loading full description …':'Vollständige Beschreibung wird geladen …')).replace(/^\s*[-–—•]+\s*/,'').replace(/\s+[—–]\s+/g,', ');
   $('mod-details-description-status').textContent=english?'Loading full description …':'Vollständige Beschreibung wird geladen …';
@@ -1311,7 +1351,7 @@ function renderChat() {
     { label: '🖼 Resource-Packs', kind:'resourcepack' }
   ];
   suggestions.innerHTML=`<div class="suggestion-row">${starterPrompts.map(item=>`<button class="suggestion" data-prompt="${safe(item.prompt||'')}" data-search-kind="${item.kind||''}">${safe(item.label)}</button>`).join('')}</div>`;
-  const initial=document.createElement('div');initial.className='message assistant-message';initial.innerHTML='<div class="avatar assistant-avatar" aria-label="Pack-Assistent"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#76502e" stroke="#111d32" stroke-width="2" d="M5 12 16 7l11 5v14H5z"/><path fill="#bd8242" stroke="#111d32" stroke-width="2" d="m5 12 11 5 11-5-11-5z"/><path fill="#e3b65e" d="m9 12 7 3 7-3-7-3z"/><path fill="#f1cc76" stroke="#111d32" stroke-width="1.5" d="M13 17h6v5h-6z"/><path fill="#3d83cb" d="M14 18h4v3h-4z"/><path fill="#8ee0ff" d="M15 18h2v2h-2z"/><path fill="#c5eaff" d="m23 5 1-2 1 2 2 1-2 1-1 2-1-2-2-1z"/></svg></div><div class="bubble"><p>Hey! Was für ein Modpack schwebt dir vor?</p><p>Nenne Mods oder Modpacks als Beispiel, beschreibe die Richtung oder wähle ein Video aus. Bei Bedrock-Add-ons frage ich dich erst, bevor ich Java-Alternativen suche.</p></div>';
+  const initial=document.createElement('div');initial.className='message assistant-message';initial.innerHTML='<div class="avatar assistant-avatar" aria-label="Pack-Assistent"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#76502e" stroke="#111d32" stroke-width="2" d="M5 12 16 7l11 5v14H5z"/><path fill="#bd8242" stroke="#111d32" stroke-width="2" d="m5 12 11 5 11-5-11-5z"/><path fill="#e3b65e" d="m9 12 7 3 7-3-7-3z"/><path fill="#f1cc76" stroke="#111d32" stroke-width="1.5" d="M13 17h6v5h-6z"/><path fill="#3d83cb" d="M14 18h4v3h-4z"/><path fill="#8ee0ff" d="M15 18h2v2h-2z"/><path fill="#c5eaff" d="m23 5 1-2 1 2 2 1-2 1-1 2-1-2-2-1z"/></svg></div><div class="bubble">'+((window.workshopI18n?.locale||'de').startsWith('en')?'<p>Hey! What kind of modpack do you have in mind?</p><p>Name example mods or modpacks, describe the direction or choose a video. For Bedrock add-ons I ask first before looking for Java alternatives.</p>':'<p>Hey! Was für ein Modpack schwebt dir vor?</p><p>Nenne Mods oder Modpacks als Beispiel, beschreibe die Richtung oder wähle ein Video aus. Bei Bedrock-Add-ons frage ich dich erst, bevor ich Java-Alternativen suche.</p>')+'</div>';
   const popular=document.createElement('section');popular.className='popular-section';
   const english=(window.workshopI18n?.locale||'de').startsWith('en'),weeklyData=state.weeklyFavorites,weeklyReady=weeklyData?.ranking==='weekly',rankMode=state.popularRankMode;
   const fallback=state.project.provider==='curseforge'&&!state.settings.hasCurseForgeKey;
@@ -1654,7 +1694,16 @@ async function runProfileImport(fromFile=false){
 }
 $('modrinth-import-form').addEventListener('submit',event=>{event.preventDefault();runProfileImport(false)});
 $('choose-mrpack').onclick=async()=>{try{const imported=await window.workshop.importModrinthFile();if(imported?.canceled)return;$('mrpack-file-status').textContent=`${imported.name} · ${imported.mods.length} Mods`;await applyImportedProfile(imported)}catch(error){setStatus(`Modrinth-Import fehlgeschlagen: ${error.message}`);alert(`Modrinth-Import fehlgeschlagen: ${error.message}`)}};
-$('nav-mod-creator').onclick=()=>{state.creatorMode=true;showView('chat');renderChat();$('chat-input').value=(window.workshopI18n?.locale||'de')==='en'?'I want to create a new Minecraft Java mod. Help me shape a clear, actionable specification and starter code for the best loader and Minecraft version. Ask for missing details first and do not add anything to my modpack.':'Ich möchte eine neue Minecraft-Java-Mod erstellen. Hilf mir, daraus eine klare, umsetzbare Mod-Spezifikation und ein passendes Code-Grundgerüst für den besten Modloader und die passende Minecraft-Version zu entwickeln. Frag zuerst nach den fehlenden Details und füge nichts zu meinem Modpack hinzu.';$('chat-input').focus({preventScroll:true});setStatus((window.workshopI18n?.locale||'de')==='en'?'AI Mod Creator · describe your idea and send':'KI-Mod-Creator · Idee beschreiben und absenden');};
+$('nav-mod-creator').onclick=async()=>{
+  const button=$('nav-mod-creator');if(button.disabled)return;
+  button.disabled=true;button.setAttribute('aria-busy','true');
+  setStatus(document.documentElement.lang==='en'?'Starting Mod Studio · preparing local build tools on first launch…':'Mod Studio startet · beim ersten Start werden die lokalen Build-Werkzeuge vorbereitet …');
+  try{
+    await window.workshop.openModStudio();
+    setStatus(document.documentElement.lang==='en'?'Mod Studio is open in your browser. Keep Modspire open while using it.':'Mod Studio ist im Browser geöffnet. Lass Modspire während der Nutzung geöffnet.');
+  }catch(error){setStatus(error.message);}
+  finally{button.disabled=false;button.removeAttribute('aria-busy');}
+};
 $('creator-context-exit').onclick=()=>{state.creatorMode=false;renderChat();$('chat-input').focus({preventScroll:true})};
 $('cancel-new-pack').onclick=$('cancel-new-pack-secondary').onclick=()=>$('new-pack-overlay').hidden=true;
 $('new-pack-overlay').addEventListener('click',event=>{if(event.target===$('new-pack-overlay'))$('new-pack-overlay').hidden=true});
@@ -1671,9 +1720,9 @@ $('wallpaper-motion').addEventListener('change',event=>applyWallpaperMotion(even
 function readThemeColors(){return{accent:$('theme-accent').value,surface:$('theme-surface').value,background:$('theme-background').value}}
 ['theme-accent','theme-surface','theme-background'].forEach(id=>$(id).addEventListener('input',()=>applyTheme('blue',readThemeColors())));
 $('reset-theme-colors').onclick=()=>applyTheme(currentTheme,defaultThemeColors);
-$('minecraft-version').addEventListener('change', e=>{if(!state.applyingAutoSetup){state.autoSetup=false;localStorage.setItem('mw-auto-setup','false');updateAutoSetupButton()}state.batchSelection.clear();state.project.minecraftVersion=e.target.value;queueSave();setStatus('Minecraft-Version geändert · Abhängigkeiten und Modauswahl werden erneut geprüft');renderSelected();reconcilePackDependencies();loadPopularMods();if(state.lastSearchQueries.length)searchMods(state.lastSearchQueries,false,{kind:state.searchKind})});
+$('minecraft-version').addEventListener('change', e=>{if(!state.applyingAutoSetup){state.autoSetup=false;localStorage.setItem('mw-auto-setup','false');updateAutoSetupButton()}state.batchSelection.clear();state.project.minecraftVersion=e.target.value;delete state.project.loaderVersion;queueSave();setStatus('Minecraft-Version geändert · Abhängigkeiten und Modauswahl werden erneut geprüft');renderSelected();reconcilePackDependencies();loadPopularMods();if(state.lastSearchQueries.length)searchMods(state.lastSearchQueries,false,{kind:state.searchKind})});
 $('project-select').addEventListener('change',event=>{if(event.target.value==='__create__'){event.target.value=state.activeProjectId||'';openNewPack();return}switchProject(event.target.value)});
-$('loader').addEventListener('change', e=>{if(!state.applyingAutoSetup){state.autoSetup=false;localStorage.setItem('mw-auto-setup','false');updateAutoSetupButton()}state.batchSelection.clear();state.project.loader=e.target.value;queueSave();setStatus('Modloader geändert · Abhängigkeiten und Modauswahl werden erneut geprüft');renderSelected();reconcilePackDependencies();loadPopularMods();if(state.lastSearchQueries.length)searchMods(state.lastSearchQueries,false,{kind:state.searchKind})});
+$('loader').addEventListener('change', e=>{if(!state.applyingAutoSetup){state.autoSetup=false;localStorage.setItem('mw-auto-setup','false');updateAutoSetupButton()}state.batchSelection.clear();state.project.loader=e.target.value;delete state.project.loaderVersion;queueSave();setStatus('Modloader geändert · Abhängigkeiten und Modauswahl werden erneut geprüft');renderSelected();reconcilePackDependencies();loadPopularMods();if(state.lastSearchQueries.length)searchMods(state.lastSearchQueries,false,{kind:state.searchKind})});
 $('auto-setup-toggle').onclick=()=>{state.autoSetup=!state.autoSetup;localStorage.setItem('mw-auto-setup',String(state.autoSetup));updateAutoSetupButton();setStatus(state.autoSetup?'Auto-Auswahl für Modloader und Version aktiviert':'Manuelle Auswahl aktiviert')};
 $('add-all-results').onclick=()=>addModBatch(window.lastResults||[]);$('add-ai-results').onclick=()=>addAiRecommendations(window.lastResults||[]);
 $('provider').addEventListener('change', e=>{if(e.target.value==='curseforge'&&!state.settings.hasCurseForgeKey){state.project.provider='modrinth';e.target.value='modrinth';state.batchSelection.clear();queueSave();openCurseforgeNotice();loadPopularMods();return}state.batchSelection.clear();state.project.provider=e.target.value;queueSave();loadPopularMods();if($('mod-search').value)searchMods($('mod-search').value)});
@@ -1732,7 +1781,7 @@ $('startup-demo').onclick=enterDemo;$('profile-demo').onclick=enterDemo;
 $('sidebar-snapshot').onclick=()=>{saveSnapshot();showView('lab')};
 $('sidebar-crash').onclick=()=>{showView('lab');requestAnimationFrame(()=>$('crash-log-input').click())};
 $('save-snapshot').onclick=()=>saveSnapshot();
-$('compare-snapshots').onclick=()=>{const all=state.project.snapshots||[];if(all.length<2){setStatus('Zum Vergleichen brauchst du mindestens zwei gespeicherte Stände');return}const a=all[all.length-2],b=all[all.length-1],ids=snapshot=>new Set(snapshot.data.mods.map(mod=>mod.provider+':'+mod.id)),left=ids(a),right=ids(b),added=b.data.mods.filter(mod=>!left.has(mod.provider+':'+mod.id)),removed=a.data.mods.filter(mod=>!right.has(mod.provider+':'+mod.id));alert(a.name+' → '+b.name+'\n\n+'+(added.map(mod=>mod.title).join(', ')||'keine Mods')+'\n−'+(removed.map(mod=>mod.title).join(', ')||'keine Mods'))};
+$('compare-snapshots').onclick=()=>{showView('lab');window.WorkshopPackLibrary?.openComparison()};
 $('mood-add').onclick=()=>{const value=$('mood-input').value.trim();if(!value)return;state.project.moodboard=Array.isArray(state.project.moodboard)?state.project.moodboard:[];if(!state.project.moodboard.includes(value))state.project.moodboard.push(value);$('mood-input').value='';queueSave();renderMoodboard()};
 $('mood-input').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();$('mood-add').click()}});
 $('crash-log-input').addEventListener('change',async event=>{
@@ -1802,7 +1851,7 @@ const hoverDescriptions = {
   'sidebar-diagnostics': 'Zeigt lokale Fehlerprotokolle der Werkstatt und bietet Speichern, Kopieren und Öffnen des Log-Ordners.',
   'open-modrinth-import': 'Importiert ein Modrinth-Profil, Pack-Link oder eine .mrpack-Datei.',
   'open-design': 'Öffnet alle Designs und den Farbeditor.',
-  'nav-mod-creator': 'Öffnet den KI-Mod-Creator für eine Mod-Idee, Spezifikation und ein Code-Grundgerüst.',
+  'nav-mod-creator': 'Öffnet das Minecraft Mod Studio in deinem Browser.',
   'toggle-fullscreen': 'Wechselt zwischen Fenster- und Vollbildmodus. F11 schaltet ebenfalls um.',
   'auto-setup-toggle': 'Sucht für deine Modpack-Idee die Version und den Modloader mit den meisten passenden Modrinth-Treffern. Manuell gewählte Einstellungen schalten die Automatik aus.',
   'add-all-results': 'Fügt alle noch nicht ausgewählten Treffer auf einmal zu diesem Modpack hinzu.',
@@ -1828,7 +1877,7 @@ const hoverDescriptionsEn={
   'sidebar-diagnostics':'Shows local app error logs and lets you save, copy, or open the log folder.',
   'open-modrinth-import':'Imports a Modrinth profile, pack link, or .mrpack file.',
   'open-design':'Opens all app themes and the color editor.',
-  'nav-mod-creator':'Opens the AI mod creator to develop a mod idea and starter specification.',
+  'nav-mod-creator':'Opens Minecraft Mod Studio in your browser.',
   'toggle-fullscreen':'Switches between windowed and fullscreen mode. F11 also toggles it.',
   'auto-setup-toggle':'Finds the Minecraft version and loader with the most matching Modrinth results.',
   'add-all-results':'Adds every remaining search result to this modpack.',
@@ -1908,5 +1957,5 @@ window.WorkshopModernUI?.init({
   exportProject:()=>$('sidebar-export').click(),openMod:mod=>openModDetails(mod),
   syncClassicView:()=>{$('project-overview').hidden=state.currentView!=='project'||window.WorkshopModernUI?.mode!=='classic';$('chat-panel').hidden=state.currentView!=='chat';$('mods-panel').hidden=state.currentView!=='mods';$('lab-panel').hidden=state.currentView!=='lab'}
 });
-window.WorkshopProjectReady=load().then(()=>{state.projectLoaded=true;if(window.workshop.checkForUpdates)setTimeout(()=>checkForUpdates(),9000);return true}).catch(error=>{setStatus(`Projekt konnte nicht geladen werden: ${error.message}`);window.workshop.reportError?.({message:error.message,stack:error.stack}).catch(()=>{});return false;});
+window.WorkshopProjectReady=load().then(async()=>{await initPackExtensions();state.projectLoaded=true;renderSelected();if(window.workshop.checkForUpdates)setTimeout(()=>checkForUpdates(),9000);return true}).catch(error=>{setStatus(`Projekt konnte nicht geladen werden: ${error.message}`);window.workshop.reportError?.({message:error.message,stack:error.stack}).catch(()=>{});return false;});
 window.addEventListener('pagehide',()=>{if(window.workshop.isWebVersion&&state.projectLoaded&&!state.webHandoff&&document.body.dataset.webReturning!=='true')window.workshop.saveProjectOnUnload?.(state.project);});

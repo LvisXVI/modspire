@@ -1,0 +1,65 @@
+/* UI refresh: cross-layout fixes found by capturing all 4 layouts × 9 themes.
+   Loaded after every layout stylesheet so these rules win without touching them. */
+
+/* --- Chat follow-ups: one calm chip cloud instead of nested bordered boxes --- */
+html body[data-theme] #chat-panel .chat-messages .assistant-followups { display: grid !important; justify-items: center; gap: 10px !important; }
+html body[data-theme] #chat-panel .chat-messages .assistant-followups > .suggestion-row,
+html body[data-theme] #chat-panel .chat-messages .assistant-followups .more-suggestions > .suggestion-row {
+  border: 0 !important; background: none !important; box-shadow: none !important; outline: 0 !important;
+  padding: 0 !important; margin: 0 !important; justify-content: center !important; gap: 8px !important;
+}
+html body[data-theme] #chat-panel .chat-messages .assistant-followups details.more-suggestions {
+  display: grid; justify-items: center; gap: 10px; width: 100% !important;
+  border: 0 !important; background: none !important; box-shadow: none !important; padding: 0 !important;
+}
+html body[data-theme] #chat-panel .chat-messages .assistant-followups details.more-suggestions > summary {
+  display: inline-flex !important; align-items: center; gap: 8px; width: auto !important; min-height: 34px;
+  padding: 0 16px !important; border-radius: 999px !important; cursor: pointer; list-style: none;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent) !important;
+  background: color-mix(in srgb, currentColor 8%, transparent) !important;
+  color: inherit !important; font-weight: 700; box-shadow: none !important;
+  transition: background .2s, transform .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+html body[data-theme] #chat-panel .chat-messages .assistant-followups details.more-suggestions > summary::-webkit-details-marker { display: none; }
+html body[data-theme] #chat-panel .chat-messages .assistant-followups details.more-suggestions > summary:hover { background: color-mix(in srgb, currentColor 14%, transparent) !important; transform: translateY(-1px); }
+
+/* --- Modern dashboard: headings followed dark-theme ink on light cards (Aurora etc.) --- */
+body.ui-modern .modern-dashboard :is(h1, h2, h3) { color: var(--modern-ink) !important; }
+body.ui-modern .modern-dashboard :is(.modern-card, .modern-hero) strong { color: inherit !important; }
+body.ui-modern .modern-dashboard .modern-eyebrow { color: color-mix(in srgb, var(--modern-ink) 62%, var(--modern-accent)) !important; }
+
+/* the hero read as a half-filled strip; let it sit on the canvas like the cards do */
+body.ui-modern .modern-dashboard .modern-hero { background: none !important; border: 0 !important; box-shadow: none !important; }
+
+/* "Your mods" tiles: tinted glass instead of saturated slabs with faint white text */
+body.ui-modern .modern-dashboard .modern-asset {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--modern-accent) 24%, var(--modern-card)), color-mix(in srgb, var(--modern-accent) 8%, var(--modern-card))) !important;
+  color: var(--modern-ink) !important;
+  border: 1px solid color-mix(in srgb, var(--modern-accent) 32%, var(--modern-line)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), 0 10px 26px -16px var(--modern-accent) !important;
+}
+body.ui-modern .modern-dashboard .modern-asset:not(.primary) {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--modern-accent) 14%, var(--modern-card)), color-mix(in srgb, var(--modern-accent) 4%, var(--modern-card))) !important;
+}
+body.ui-modern .modern-dashboard .modern-asset * { color: inherit !important; }
+body.ui-modern .modern-dashboard .modern-asset small { color: var(--modern-muted) !important; }
+body.ui-modern .modern-dashboard .modern-asset:hover { transform: translateY(-2px); }
+
+/* --- UI 3 on bright wallpapers (Fluid): give the dashboard its own frosted backing --- */
+body.ui-v3[data-wallpaper]:not([data-wallpaper="none"]) .v3-dashboard:not([hidden]) {
+  background: color-mix(in srgb, var(--panel, #0d1b28) 58%, transparent) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border-radius: 24px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 24px 60px -30px rgba(0, 0, 0, .6);
+}
+
+/* --- Classic overview: use more of wide screens --- */
+@media (min-width: 1500px) {
+  body:not(.ui-modern):not(.ui-v3):not(.ui-v4) .project-overview { max-width: 1280px !important; }
+}
+
+/* --- Small-scale polish shared by all layouts --- */
+html body .suggestion { transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s; }
+html body .suggestion:hover { transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) {
+  html body .suggestion, html body .modern-asset { transition: none !important; transform: none !important; }
+}

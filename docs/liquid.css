@@ -53,7 +53,10 @@ button { font: inherit; color: inherit; }
 .lg-scene::before {
   content: ""; position: absolute; inset: -6%;
   background: var(--scene) center 30% / cover no-repeat;
-  transform: translate3d(0, calc(var(--scroll, 0) * -40px), 0) scale(1.06);
+  transform: translate3d(0, calc(var(--scroll, 0) * -40px), 0);
+  translate: -.55% 0;
+  scale: 1.06;
+  animation: aurora-scene var(--scene-motion-duration, 68s) ease-in-out infinite alternate;
   filter: var(--scene-filter, saturate(1.15));
 }
 .lg-scene::after {
@@ -62,10 +65,22 @@ button { font: inherit; color: inherit; }
     radial-gradient(120% 80% at 50% 0%, transparent 0 30%, rgba(4, 8, 20, .55) 70%),
     linear-gradient(180deg, rgba(5, 9, 19, .25) 0%, rgba(5, 9, 19, .55) 45%, rgba(5, 9, 19, .9) 100%);
 }
-.lg-orb { position: absolute; width: 46vmax; aspect-ratio: 1; border-radius: 50%; filter: blur(70px); opacity: .32; mix-blend-mode: screen; animation: orb 26s var(--ease-out) infinite alternate; }
-.lg-orb.a { background: var(--accent); left: -12vmax; top: -10vmax; }
-.lg-orb.b { background: var(--accent-2); right: -16vmax; top: 30vh; animation-duration: 32s; animation-delay: -8s; }
-@keyframes orb { to { transform: translate3d(12vmax, 8vmax, 0) scale(1.15); } }
+body[data-repo="LvisXVI/minecraft-mod-studio"] { --scene-motion-duration: 76s; }
+body[data-repo="LvisXVI/minecraft-mod-studio"] .lg-scene::before { animation-name: emerald-scene; }
+body[data-repo="LvisXVI/minecraft-host"] { --scene-motion-duration: 88s; }
+body[data-repo="LvisXVI/minecraft-host"] .lg-scene::before { animation-name: blossom-scene; }
+@keyframes aurora-scene {
+  from { translate: -.7% -.25%; scale: 1.06; }
+  to { translate: .7% .3%; scale: 1.115; }
+}
+@keyframes emerald-scene {
+  from { translate: .45% -.2%; scale: 1.065; filter: hue-rotate(-150deg) saturate(1.05) brightness(.9); }
+  to { translate: -.45% .25%; scale: 1.12; filter: hue-rotate(-147deg) saturate(1.12) brightness(.98); }
+}
+@keyframes blossom-scene {
+  from { translate: .5% .1%; scale: 1.065; filter: saturate(1.12) brightness(.96); }
+  to { translate: -.5% -.2%; scale: 1.12; filter: saturate(1.18) brightness(1.02); }
+}
 
 /* ---------- Glass material ---------- */
 .glass {
@@ -351,6 +366,7 @@ pre { margin: 0; padding: 18px 20px; border-radius: 18px; background: rgba(0, 0,
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .lg-scene::before { animation-duration: var(--scene-motion-duration, 68s) !important; animation-iteration-count: infinite !important; }
   [data-reveal], .hero [data-hero] { opacity: 1; transform: none; filter: none; }
   #lg-intro { display: none; }
 }

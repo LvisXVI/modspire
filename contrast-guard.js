@@ -1,5 +1,5 @@
 'use strict';
-// Contrast guard: 9 themes × 5 layouts each set their own colours, and some combinations left text
+// Contrast and rounding guard: 9 themes × 5 layouts each set their own colours, and some combinations left text
 // in the same tone as its panel. After every theme, layout or view change this measures text against
 // the background it actually sits on and switches unreadable text to dark or light ink.
 // Only elements with a solid, measurable background chain are touched; images and gradients are skipped.
@@ -48,9 +48,28 @@ const startContrastGuard = () => {
     }
   };
 
+  // Rounding guard: buttons, fields and boxes left with square corners get the app's radius.
+  const ROUND = 'button, input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea, section, article, details, dialog, aside, .panel, .card';
+  const round = () => {
+    document.querySelectorAll('[data-round-guard]').forEach(el => { el.style.removeProperty('border-radius'); el.removeAttribute('data-round-guard'); });
+    const root = document.querySelector('.app-shell');
+    if (!root) return;
+    for (const el of root.querySelectorAll(ROUND)) {
+      if (!el.offsetParent || el.closest('svg, table, .wallpaper-fx, .sidebar')) continue;
+      const box = el.getBoundingClientRect();
+      if (box.width < 28 || box.height < 22) continue;
+      const style = getComputedStyle(el);
+      if (parseFloat(style.borderTopLeftRadius) >= 6) continue;
+      const painted = style.backgroundColor !== 'rgba(0, 0, 0, 0)' || style.backgroundImage !== 'none' || parseFloat(style.borderTopWidth) > 0;
+      if (!painted) continue;
+      el.style.setProperty('border-radius', box.height > 120 ? '20px' : '12px', 'important');
+      el.setAttribute('data-round-guard', '');
+    }
+  };
+
   let timer = 0;
   // after theme/layout transitions have settled
-  const schedule = () => { clearTimeout(timer); timer = setTimeout(() => requestAnimationFrame(check), 700); };
+  const schedule = () => { clearTimeout(timer); timer = setTimeout(() => requestAnimationFrame(() => { check(); round(); }), 700); };
   new MutationObserver(schedule).observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
   document.addEventListener('click', event => { if (event.target.closest('[data-view], [data-theme-choice], [id^="ui-mode-"]')) schedule(); }, true);
   schedule();

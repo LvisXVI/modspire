@@ -19,7 +19,7 @@
 
 ---
 
-> **New in [0.3.5](CHANGELOG.md):** fixes from a full UI audit (readable text in every theme and layout, no more top-bar overlaps). **0.3.4:** the full Blockbench editor inside Mod Studio with guided steps, a redesigned AI chat in every layout, animated Minecraft backgrounds (switchable) and a glass launch animation.
+> **New in [0.3.6](CHANGELOG.md):** calmer, consistent surfaces, a redesigned sidebar with an icon rail in UI 4/5 and a resizable window again. **0.3.5:** fixes from a full UI audit (readable text in every theme and layout, no more top-bar overlaps). **0.3.4:** the full Blockbench editor inside Mod Studio with guided steps, a redesigned AI chat in every layout, animated Minecraft backgrounds (switchable) and a glass launch animation.
 >
 > **0.3.2:** **UI 5 · Liquid Glass** – frosted panels over your Minecraft world with soft transitions – plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.
 >

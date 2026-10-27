@@ -1,0 +1,86 @@
+/* One surface system for the workspace panels in every layout (Classic, Modern, UI 3, UI 4, Glass)
+   and every theme. Before, nearly every row inside a panel painted its own background, often in a
+   slightly different tone, which showed up as stripes and odd boxes.
+   Level 0 – the panel itself keeps the layout's look.
+   Level 1 – structural rows (headings, search rows, toolbars, lists) are transparent.
+   Level 2 – inset cards and fields share one tint derived from the panel's own text colour, so they
+             match light and dark themes without per-theme rules. */
+html body #workspace-grid#workspace-grid .panel {
+  --surface-1: color-mix(in srgb, currentColor 5%, transparent);
+  --surface-2: color-mix(in srgb, currentColor 8%, transparent);
+  --surface-line: color-mix(in srgb, currentColor 13%, transparent);
+  --surface-line-strong: color-mix(in srgb, currentColor 22%, transparent);
+  --surface-accent: var(--custom-accent, var(--green, #69b8ff));
+}
+
+/* Level 1: rows that only structure the panel */
+html body #workspace-grid#workspace-grid .panel :is(.panel-heading, .search-row, .mod-search-modes, .mod-results-toolbar, .selected-heading,
+  .selected-filter-row, #mod-results, .lab-content, .lab-card-head, .dna-layout, .compass-stats, .lab-note-list, .sound-bars) {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html body #workspace-grid#workspace-grid .panel .panel-heading { border-bottom: 1px solid var(--surface-line) !important; }
+html body #workspace-grid#workspace-grid .panel .selected-heading { border: 0 !important; }
+
+/* Level 2: inset cards */
+html body #workspace-grid#workspace-grid .panel :is(.selected-section, .catalog-search, .lab-card, .compatibility-panel, .crash-output, .night-plan,
+  .empty-selected, .log-picker, .overview-card, .welcome-card) {
+  background: var(--surface-1) !important;
+  background-image: none !important;
+  border: 1px solid var(--surface-line) !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+html body #workspace-grid#workspace-grid .panel .empty-selected { border-style: dashed !important; background: transparent !important; }
+html body #workspace-grid#workspace-grid .panel .lab-card { border-radius: 20px !important; }
+html body #workspace-grid#workspace-grid .panel .lab-card:hover { border-color: var(--surface-line-strong) !important; }
+html body #workspace-grid#workspace-grid .panel :is(.lab-card, .selected-section, .catalog-search) :is(h2, h3, strong) { color: inherit !important; }
+
+/* small tiles inside cards */
+html body #workspace-grid#workspace-grid .panel .compass-stats > span { background: var(--surface-2) !important; border: 1px solid var(--surface-line) !important; border-radius: 12px !important; color: inherit !important; }
+html body #workspace-grid#workspace-grid .panel .lab-note { background: var(--surface-2) !important; border: 1px solid var(--surface-line) !important; color: inherit !important; }
+html body #workspace-grid#workspace-grid .panel .lab-note.good { background: color-mix(in srgb, #3ccf7f 12%, transparent) !important; border-color: color-mix(in srgb, #3ccf7f 38%, transparent) !important; }
+html body #workspace-grid#workspace-grid .panel .lab-note.warn { background: color-mix(in srgb, #f0b429 12%, transparent) !important; border-color: color-mix(in srgb, #f0b429 40%, transparent) !important; }
+html body #workspace-grid#workspace-grid .panel .sound-row { color: inherit !important; }
+html body #workspace-grid#workspace-grid .panel .sound-row > div { background: var(--surface-2) !important; }
+
+/* fields: one look for search boxes, inputs and selects */
+html body #workspace-grid#workspace-grid .panel .search-box { background: var(--surface-2) !important; border: 1px solid var(--surface-line) !important; border-radius: 16px !important; box-shadow: none !important; }
+html body #workspace-grid#workspace-grid .panel .search-box > input { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+html body #workspace-grid#workspace-grid .panel :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]), select, textarea):not(#chat-input):not(.search-box > input) {
+  background-color: var(--surface-2) !important;
+  border: 1px solid var(--surface-line) !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+html body #workspace-grid#workspace-grid .panel :is(input, select, textarea):focus-visible { border-color: var(--surface-accent) !important; outline: 0 !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--surface-accent) 22%, transparent) !important; }
+html body #workspace-grid#workspace-grid .panel select option { color: #14202c; background: #f3f7fc; }
+
+/* secondary buttons and chips inside panels */
+html body #workspace-grid#workspace-grid .panel :is(.mode-chip, .view-toggle button, #copy-mod-list, #export-pack-json, #undo-selection, #redo-selection):not([aria-pressed="true"]):not(.active) {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--surface-line) !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+html body #workspace-grid#workspace-grid .panel :is(.mode-chip, .view-toggle button):is([aria-pressed="true"], .active) {
+  background: color-mix(in srgb, var(--surface-accent) 20%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--surface-accent) 55%, transparent) !important;
+  color: inherit !important;
+}
+html body #workspace-grid#workspace-grid .panel .catalog-search > summary { background: transparent !important; color: inherit !important; }
+html body #workspace-grid#workspace-grid .panel .catalog-search > summary, html body #workspace-grid#workspace-grid .panel .catalog-search > summary * { background: transparent !important; background-image: none !important; box-shadow: none !important; border: 0 !important; }
+/* every card in the mod view keeps the same inset as the search area */
+html body #workspace-grid#workspace-grid .panel.mods-panel .selected-section { margin: 4px 16px 16px !important; width: auto !important; }
+html body #workspace-grid#workspace-grid .panel.mods-panel .catalog-search { margin-inline: 16px !important; }
+html body #workspace-grid#workspace-grid .panel :is(.results-hint-row, .results-hint, .selected-list) { background: transparent !important; background-image: none !important; box-shadow: none !important; }
+
+/* rounding: one radius scale everywhere (fields 12, cards 18–20, panels 24) */
+html body .app-shell :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) { border-radius: 12px !important; }
+html body #workspace-grid#workspace-grid .panel { border-radius: 24px !important; overflow: hidden; }
+html body .app-shell :is(.mod-card, .selected-mod, .popular-card, .settings-card, .api-card, .test-card) { border-radius: 18px !important; }
+html body :is(dialog, .design-card, .modal, .mod-preview-dialog, .mod-selection-dialog) { border-radius: 24px !important; }
+html body .app-shell :is(.setup-strip, .topbar, .bottom-bar) :is(button, select) { border-radius: 12px; }
+html body .app-shell :is(.modern-table-wrap, .v4-pack-control) { border-radius: 14px !important; overflow: hidden; }

@@ -329,7 +329,8 @@ async function secret(key) {
 function createWindow() {
   const win = new BrowserWindow({
     width: 1420, height: 920, minWidth: 1024, minHeight: 680, center: true,
-    backgroundColor: '#00000000', transparent: true, title: 'Modspire', frame: false,
+    // not transparent: Windows cannot resize transparent windows; the dark base avoids a white flash on start
+    backgroundColor: '#070b14', title: 'Modspire', frame: false, resizable: true, thickFrame: true,
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true }
   });
   mainWindow = win;

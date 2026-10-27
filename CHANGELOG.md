@@ -4,6 +4,16 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.6] — Calmer surfaces, new sidebar, resizable window (2026-10-27)
+
+### Changed
+- One surface system in all five layouts and every theme: panel rows no longer paint their own slightly different backgrounds; cards, fields and tiles share one subtle tint derived from the panel colour. The stripes and off-colour boxes (for example the navy bars in the mod view) are gone.
+- Sidebar buttons redesigned in every layout: rounded, gentle hover lift, an accent marker on the active page and a visible keyboard focus. UI 4 and UI 5 get a compact icon rail with centred, larger icons; the label stays as a tooltip.
+- Consistent rounding: fields 12 px, cards 18–20 px, panels 24 px; a small guard rounds any square box left over.
+
+### Fixed
+- The window can be resized again by dragging its edges (a transparent window cannot be resized on Windows).
+
 ## [0.3.5] — UI audit fixes (2026-10-27)
 
 ### Fixed

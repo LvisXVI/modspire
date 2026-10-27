@@ -12,7 +12,7 @@ const MIME_TYPES = {
 };
 const MAX_BODY_BYTES = 2_000_000;
 
-export function createServer({ publicDir, projectStore, services, updates, version = '0.1.0-alpha.3' }) {
+export function createServer({ publicDir, projectStore, services, updates, version = '1.0.0' }) {
   const root = resolve(publicDir);
   return createHttpServer(async (req, res) => {
     try {

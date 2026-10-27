@@ -4,6 +4,11 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.8] — Mod Studio 1.0.0 (2026-10-28)
+
+### Changed
+- Embedded Mod Studio is now **1.0.0**, the first full release after the alpha series: it brings its own app icon (a pixel-art block with a pencil) in the launcher, tray and browser tab, and the removal of the last alpha wording.
+
 ## [0.3.7] — New icon, personal desktop shortcut (2026-10-27)
 
 ### Changed

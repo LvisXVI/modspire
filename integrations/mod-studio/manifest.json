@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/LvisXVI/minecraft-mod-studio",
-  "version": "0.1.0-alpha.12",
-  "sourceRevision": "59be5672da00e395cc467e7e94e43ef70242226e",
+  "version": "1.0.0",
+  "sourceRevision": "df53b53d3d3d4678c0934c957d3c3969f1f6a444",
   "files": [
     {
       "path": "licenses/blockbench/LICENSE.MD",
@@ -25,7 +25,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "ce8c3a872aaa547494a5998951953f22048dcc66c6d5a92be45c0565adb1d843"
+      "sha256": "798561ac78811aed03b232f87d6fb4dc20b515d4ac188edc10f7e869a0766059"
     },
     {
       "path": "public/ai-memory.css",
@@ -681,7 +681,7 @@
     },
     {
       "path": "public/favicon.svg",
-      "sha256": "7e9b2334d7f91c3863b39a31e0305ad6c38454eafcf4c93e38733e591104d670"
+      "sha256": "40b88ba6d6136137dff32ddf341869b7a77a7339d437d389cebf814e3c65815a"
     },
     {
       "path": "public/fonts/geist-mono-latin-wght-normal.woff2",
@@ -753,7 +753,7 @@
     },
     {
       "path": "server/http.js",
-      "sha256": "1ac9b28120e77023790899d01f2b2704d8dd403416c155314800c0e4f0574e76"
+      "sha256": "8631cb99dcbf1b6a4c71a4e9e0cccb3c87dea58d80265310106cc2d2ce4a2513"
     },
     {
       "path": "server/index.js",

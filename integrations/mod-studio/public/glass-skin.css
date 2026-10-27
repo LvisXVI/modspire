@@ -65,3 +65,7 @@ html[data-skin="glass"] .background-effects { opacity: .55; background: transpar
 @media (prefers-reduced-motion: reduce) {
   #design-view, #code-view, #build-view, dialog[open] .modal-card, .chat-messages > :last-child { animation: none !important; }
 }
+
+/* top-bar surface switch */
+.skin-toggle[aria-pressed="true"] { color: #0c1402; background: #c6ff4a; border-color: #c6ff4a; }
+.skin-toggle svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }

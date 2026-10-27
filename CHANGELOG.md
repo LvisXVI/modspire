@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.3] — Lighter build, Studio alpha 10 (2026-10-27)
+
+### Changed
+- Embedded Mod Studio updated to 0.1.0-alpha.11: Liquid Glass is its default surface, with a one-click Workshop/Glass switch in the top bar.
+
+### Fixed
+- Mod Studio no longer reverts an edit (for example a freshly typed element name) when a save that started earlier finishes afterwards.
+- Minecraft wallpapers ship as WebP instead of PNG (7.2 MB → 0.8 MB), so backgrounds decode faster and the portable build is smaller. README-only brand artwork is no longer packaged.
+
 ## [0.3.2] — Liquid Glass (2026-10-26)
 
 ### Added

@@ -240,14 +240,14 @@ const { chromium } = require('playwright');
       light: getComputedStyle(node, '::after').backgroundImage,
       motion: getComputedStyle(node, '::before').animationName
     }));
-    assert.match(fluidWallpaper.wallpaper, /shader-crystal-valley\.png/, `Fluid Glass retains the selected wallpaper: ${JSON.stringify(fluidWallpaper)}`);
+    assert.match(fluidWallpaper.wallpaper, /shader-crystal-valley.webp/, `Fluid Glass retains the selected wallpaper: ${JSON.stringify(fluidWallpaper)}`);
     assert.match(fluidWallpaper.light, /radial-gradient/, `Fluid Glass lighting uses a separate overlay: ${JSON.stringify(fluidWallpaper)}`);
     assert.equal(fluidWallpaper.motion, 'minecraft-wallpaper-pan', 'Minecraft wallpaper motion is enabled by default');
     await page.locator('body').evaluate(node => { node.dataset.wallpaperMotion = 'off'; });
     assert.equal(await page.locator('body').evaluate(node => getComputedStyle(node, '::before').animationName), 'none', 'Minecraft wallpaper motion can be switched off');
     await page.locator('body').evaluate(node => { node.dataset.wallpaperMotion = 'on'; });
     await page.locator('body').evaluate(node => { node.dataset.theme = 'blue'; });
-    assert.match(await page.locator('body').evaluate(node => getComputedStyle(node, '::before').backgroundImage), /shader-crystal-valley\.png/, 'switching away from Fluid Glass preserves the chosen wallpaper');
+    assert.match(await page.locator('body').evaluate(node => getComputedStyle(node, '::before').backgroundImage), /shader-crystal-valley.webp/, 'switching away from Fluid Glass preserves the chosen wallpaper');
     await page.setContent(`<section class="ui-mode-overlay"><div class="ui-mode-card"><header><div><h2>Wähle deine Oberfläche</h2><p>Pack, Chat, Einstellungen und Werkzeuge bleiben in allen vier Oberflächen verbunden.</p></div></header><div class="ui-mode-options"><button class="ui-mode-option"><span class="ui-mode-preview"></span><strong>Klassische Werkstatt</strong><small>Die bisherige Werkstatt-Ansicht mit Modpack-Auswahl, Chat, Einstellungen und allen Werkzeugen.</small></button><button class="ui-mode-option"><span class="ui-mode-preview"></span><strong>Moderne Übersicht</strong><small>Ein helles, großzügiges Pack-Dashboard mit übersichtlicher Navigation und denselben Funktionen.</small></button><button class="ui-mode-option" id="ui-mode-v3"><span class="ui-mode-preview"></span><strong>UI Version 3 · Modpack Studio</strong><small>Eigenständige Studio-Ansicht, Schnellstart und Minecraft-Welten mit allen vorhandenen Funktionen.</small></button><button class="ui-mode-option" id="ui-mode-v4"><span class="ui-mode-preview"></span><strong>UI Version 4 · Deep Grove</strong><small>Dichtes, dunkles Werkstatt-Dashboard mit Pack-Metriken und thematischer Akzentpalette.</small></button></div><section id="v3-appearance"></section></div></section>`);
     await page.addStyleTag({ content: css });
     for (const mode of ['modern', 'v3']) {

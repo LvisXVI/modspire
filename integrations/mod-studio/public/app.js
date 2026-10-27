@@ -155,8 +155,17 @@ function initializeBackgroundSettings() {
 }
 
 function initializeSkin() {
-  let skin = 'workshop';
-  try { skin = localStorage.getItem('modstudio.skin') || 'workshop'; } catch {}
+  let skin = 'glass';
+  try { skin = localStorage.getItem('modstudio.skin') || 'glass'; } catch {}
+  // One-click switch in the top bar; the appearance dialog keeps the same choice.
+  const actions = document.querySelector('.topbar-actions');
+  if (actions && !document.getElementById('skin-toggle')) {
+    const toggle = document.createElement('button');
+    toggle.id = 'skin-toggle'; toggle.type = 'button'; toggle.className = 'icon-button skin-toggle';
+    toggle.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Z"/><path d="M10 2.5v15" /><path d="M10 6.5h5.8M10 10h7.5M10 13.5h5.8"/></svg>';
+    toggle.addEventListener('click', () => setSkin(document.documentElement.dataset.skin === 'glass' ? 'workshop' : 'glass'));
+    actions.prepend(toggle);
+  }
   setSkin(skin, false);
   document.querySelectorAll('input[name="skin-style"]').forEach((input) => input.addEventListener('change', () => setSkin(input.value)));
 }
@@ -166,6 +175,8 @@ function setSkin(skin, persist = true) {
   const apply = () => { document.documentElement.dataset.skin = selected; };
   if (persist && document.startViewTransition && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(apply); else apply();
   document.querySelectorAll('input[name="skin-style"]').forEach((input) => { input.checked = input.value === selected; });
+  const toggle = document.getElementById('skin-toggle');
+  if (toggle) { const label = selected === 'glass' ? 'Zur Werkstatt-Oberfläche wechseln' : 'Zur Liquid-Glass-Oberfläche wechseln'; toggle.title = label; toggle.setAttribute('aria-label', label); toggle.setAttribute('aria-pressed', String(selected === 'glass')); }
   if (persist) { try { localStorage.setItem('modstudio.skin', selected); } catch { toast('Die Oberfläche konnte nicht lokal gespeichert werden.'); } }
 }
 
@@ -297,12 +308,14 @@ function renderPalette() {
 }
 function paintThumbnail(canvas, pixels) { const ctx=canvas.getContext('2d'); const image=ctx.createImageData(16,16); pixels.forEach((color,index)=>{if(!color)return;const n=parseInt(color.slice(1,7),16),at=index*4;image.data[at]=(n>>16)&255;image.data[at+1]=(n>>8)&255;image.data[at+2]=n&255;image.data[at+3]=color.length===9?parseInt(color.slice(7,9),16):255;});ctx.putImageData(image,0,0); }
 
-function scheduleSave() { setSaveStatus('Änderungen …'); $('#download-jar-button').hidden=true; clearTimeout(dirtyTimer); dirtyTimer=setTimeout(saveNow,500); }
+// Bumped on every local edit so a save response never overwrites edits made while it was in flight.
+let editRevision=0;
+function scheduleSave() { editRevision++; setSaveStatus('Änderungen …'); $('#download-jar-button').hidden=true; clearTimeout(dirtyTimer); dirtyTimer=setTimeout(saveNow,500); }
 async function saveNow() {
   if (!project) return;
   clearTimeout(dirtyTimer);
-  const projectId=project.id;const savedTime=project.timeSpentMs||0;
-  try { const saved=await api(`/api/projects/${projectId}`,{method:'PUT',body:jsonBody(project)});if(project?.id===projectId){const elapsedDuringSave=Math.max(0,(project.timeSpentMs||0)-savedTime);project=saved.project;project.timeSpentMs+=elapsedDuringSave;timerDirty=elapsedDuringSave>0;renderProjectTime();}setSaveStatus('Gespeichert'); await refreshProjects(); }
+  const projectId=project.id;const savedTime=project.timeSpentMs||0;const revision=editRevision;
+  try { const saved=await api(`/api/projects/${projectId}`,{method:'PUT',body:jsonBody(project)});if(editRevision!==revision){setSaveStatus('Änderungen …');return;}if(project?.id===projectId){const elapsedDuringSave=Math.max(0,(project.timeSpentMs||0)-savedTime);project=saved.project;project.timeSpentMs+=elapsedDuringSave;timerDirty=elapsedDuringSave>0;renderProjectTime();}setSaveStatus('Gespeichert'); await refreshProjects(); }
   catch(error){setSaveStatus('Speichern fehlgeschlagen');toast(error.message);}
 }
 function setSaveStatus(value){$('#save-status').lastChild.textContent=value;}

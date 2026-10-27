@@ -19,7 +19,9 @@
 
 ---
 
-> **New in [0.3.2](CHANGELOG.md):** **UI 5 · Liquid Glass** – frosted panels over your Minecraft world with soft transitions – plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.
+> **New in [0.3.3](CHANGELOG.md):** a lighter build (WebP wallpapers, 7.2 MB → 0.8 MB) and Mod Studio alpha 11 with Liquid Glass as default and a fix for lost edits during saves.
+>
+> **0.3.2:** **UI 5 · Liquid Glass** – frosted panels over your Minecraft world with soft transitions – plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.
 >
 > **0.3.0 – 0.3.1:** the real **Mod Studio** built in, snapshot comparisons, cross-pack bookmarks, selective updates with automatic backups, dependency explanations and installable `.mrpack` export.
 

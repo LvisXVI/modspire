@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -60,6 +60,8 @@
       "package.json",
       "vendor/**/*",
       "!vendor/siwc-runtime.mjs",
+      "!assets/shader-*.png",
+      "!assets/brand/**",
       "local-web.cjs",
       "web-bridge.js",
       "web-bootstrap.js",

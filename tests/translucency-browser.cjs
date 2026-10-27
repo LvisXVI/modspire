@@ -50,7 +50,7 @@ const { chromium } = require('playwright');
         image: getComputedStyle(node, '::before').backgroundImage,
         animation: getComputedStyle(node, '::before').animationName
       }));
-      assert.match(wallpaper.image, /shader-crystal-valley\.png/, `${mode} shows the selected Minecraft wallpaper: ${JSON.stringify(wallpaper)}`);
+      assert.match(wallpaper.image, /shader-crystal-valley.webp/, `${mode} shows the selected Minecraft wallpaper: ${JSON.stringify(wallpaper)}`);
       assert.equal(wallpaper.animation, 'minecraft-wallpaper-pan', `${mode} animates the selected Minecraft wallpaper when enabled`);
       await page.evaluate(() => { document.body.dataset.wallpaperMotion = 'off'; });
       assert.equal(await page.locator('body').evaluate(node => getComputedStyle(node, '::before').animationName), 'none', `${mode} stops wallpaper movement when switched off`);

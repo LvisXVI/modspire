@@ -44,6 +44,8 @@ const {_electron,chromium}=require('playwright');
   await page.locator('#project-name-input').fill('Integrated Studio QA');
   await page.locator('#new-project-form button[type="submit"]').click();
   await page.locator('#add-element-button').click();
+  // the new element is created asynchronously; type only once the editor shows it
+  await page.waitForFunction(()=>document.querySelector('#element-name')?.value==='Neues Item');
   await page.locator('#element-name').fill('Studio Crystal');
   await page.locator('#element-name').press('Tab');
   await page.waitForTimeout(1800);

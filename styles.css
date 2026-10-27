@@ -227,13 +227,13 @@ body[data-theme="clear"] .compat-chip,body[data-theme="clear"] .source-tag,body[
 .wallpaper-thumb{display:block;width:68px;height:42px;border:1px solid #cbdced;border-radius:9px;background-size:cover;background-position:center}
 .wallpaper-none{background:linear-gradient(135deg,#122f4a,#173f64 45%,#081a2d)}
 .wallpaper-voxel{background-image:url("assets/voxel-shader.svg")}
-.wallpaper-crystal{background-image:url("assets/shader-crystal-valley.png")}
-.wallpaper-aurora{background-image:url("assets/shader-aurora-lake.png")}
-.wallpaper-grove{background-image:url("assets/shader-cherry-grove.png")}
+.wallpaper-crystal{background-image:url("assets/shader-crystal-valley.webp")}
+.wallpaper-aurora{background-image:url("assets/shader-aurora-lake.webp")}
+.wallpaper-grove{background-image:url("assets/shader-cherry-grove.webp")}
 body[data-wallpaper="voxel"]::before{background:linear-gradient(110deg,#0b1d3480,#10284024 55%,#0b1d344d),url("assets/voxel-shader.svg") center/cover fixed no-repeat}
-body[data-wallpaper="crystal"]::before{background:linear-gradient(110deg,#07182c9c,#10233f42 58%,#0b19373d),url("assets/shader-crystal-valley.png") center/cover fixed no-repeat}
-body[data-wallpaper="aurora"]::before{background:linear-gradient(110deg,#07182ca8,#10233f46 58%,#0b193748),url("assets/shader-aurora-lake.png") center/cover fixed no-repeat}
-body[data-wallpaper="grove"]::before{background:linear-gradient(110deg,#1022369c,#12284144 58%,#15233952),url("assets/shader-cherry-grove.png") center/cover fixed no-repeat}
+body[data-wallpaper="crystal"]::before{background:linear-gradient(110deg,#07182c9c,#10233f42 58%,#0b19373d),url("assets/shader-crystal-valley.webp") center/cover fixed no-repeat}
+body[data-wallpaper="aurora"]::before{background:linear-gradient(110deg,#07182ca8,#10233f46 58%,#0b193748),url("assets/shader-aurora-lake.webp") center/cover fixed no-repeat}
+body[data-wallpaper="grove"]::before{background:linear-gradient(110deg,#1022369c,#12284144 58%,#15233952),url("assets/shader-cherry-grove.webp") center/cover fixed no-repeat}
 body[data-wallpaper="none"]::before{background:transparent!important}
 body[data-wallpaper]:not([data-wallpaper="none"]),body[data-theme="clear"]{background:transparent!important}
 body[data-wallpaper] .app-shell,body[data-wallpaper] .main-content,body[data-wallpaper] .workspace-grid{background:transparent!important}

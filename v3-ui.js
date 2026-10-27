@@ -3,12 +3,12 @@
 (function () {
   const STORAGE = Object.freeze({ style: 'mw-ui-v3-style', scene: 'mw-ui-v3-scene' });
   const SCENES = Object.freeze([
-    { id: 'deep-dark', name: 'Ancient City', en: 'Ancient City', note: 'Sculk · Tiefenblau', noteEn: 'Sculk · deep blue', image: 'assets/shader-aurora-lake.png', accent: '#58dfd6' },
+    { id: 'deep-dark', name: 'Ancient City', en: 'Ancient City', note: 'Sculk · Tiefenblau', noteEn: 'Sculk · deep blue', image: 'assets/shader-aurora-lake.webp', accent: '#58dfd6' },
     { id: 'lush-caves', name: 'Lush Caves', en: 'Lush Caves', note: 'Sporen · Mooslicht', noteEn: 'Spores · moss light', image: 'assets/biome-deep-forest.svg', accent: '#9adc8c' },
     { id: 'nether', name: 'Nether Fortress', en: 'Nether Fortress', note: 'Basalt · Glutrot', noteEn: 'Basalt · ember red', image: 'assets/biome-nether-forge.svg', accent: '#ff8564' },
-    { id: 'cherry', name: 'Kirschblütenhain', en: 'Cherry Grove', note: 'Abendrosa · Nebel', noteEn: 'Dusk pink · mist', image: 'assets/shader-cherry-grove.png', accent: '#f39cc1' },
-    { id: 'end', name: 'End Void', en: 'End Void', note: 'Amethyst · Leere', noteEn: 'Amethyst · the void', image: 'assets/shader-crystal-valley.png', accent: '#ae91ff' },
-    { id: 'aurora', name: 'Aurora-See', en: 'Aurora Lake', note: 'Sternenlicht · Cyan', noteEn: 'Starlight · cyan', image: 'assets/shader-aurora-lake.png', accent: '#55c9f3' }
+    { id: 'cherry', name: 'Kirschblütenhain', en: 'Cherry Grove', note: 'Abendrosa · Nebel', noteEn: 'Dusk pink · mist', image: 'assets/shader-cherry-grove.webp', accent: '#f39cc1' },
+    { id: 'end', name: 'End Void', en: 'End Void', note: 'Amethyst · Leere', noteEn: 'Amethyst · the void', image: 'assets/shader-crystal-valley.webp', accent: '#ae91ff' },
+    { id: 'aurora', name: 'Aurora-See', en: 'Aurora Lake', note: 'Sternenlicht · Cyan', noteEn: 'Starlight · cyan', image: 'assets/shader-aurora-lake.webp', accent: '#55c9f3' }
   ]);
   const PALETTES = Object.freeze({
     pro: { accent: '#69dce9', accentSoft: 'rgba(105,220,233,.13)', bg: '#09121b', rail: '#0c1721', canvas: '#0d1822', card: '#14212c', inset: '#101c27', line: '#2b3d4b', ink: '#eff7fb', muted: '#a3b6c3', green: '#71d5aa', red: '#ff8f95' },

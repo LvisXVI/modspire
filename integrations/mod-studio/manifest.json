@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/LvisXVI/minecraft-mod-studio",
-  "version": "0.1.0-alpha.8",
-  "sourceRevision": "75c17edfe92026f4379e301614802b6853d1f863",
+  "version": "0.1.0-alpha.11",
+  "sourceRevision": "a532d9a36decd55175b2bc332a33ed4ca29350f7",
   "files": [
     {
       "path": "licenses/Geist-Mono-OFL-1.1.txt",
@@ -17,7 +17,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "1a338df9ef697457a5988052447d1f5a71f7808b79d33b1d15c2dedbb43d8959"
+      "sha256": "344e214f061828408b957c83cf7a4e77daaf32523a8cb18638085ec3e4f28470"
     },
     {
       "path": "public/ai-memory.css",
@@ -29,7 +29,7 @@
     },
     {
       "path": "public/app.js",
-      "sha256": "52b7fcfddd338ef1aa39176e0a35ecd9bbbfe79e3a3c5b908996f5a8e4444750"
+      "sha256": "18d9602e91d7284cbfe0c93be77c097da90b89cfe56bcab0565cd89ce89e1dd6"
     },
     {
       "path": "public/blockbench.js",
@@ -53,7 +53,7 @@
     },
     {
       "path": "public/glass-skin.css",
-      "sha256": "486c7d6a373e9a88e6fb6672d61b5e371c1e902b25ddbe2a4f9b598e1033db4b"
+      "sha256": "e705657f830c5e02b33b54204bb4cd35abd393413dfe15a1fe47c9aed2c4d5c2"
     },
     {
       "path": "public/index.html",
@@ -105,7 +105,7 @@
     },
     {
       "path": "server/http.js",
-      "sha256": "d24529ee6f6dc1741b13e9d36c7bdbd1c28a11e2166a50439862dcdaa51a48db"
+      "sha256": "f6f9f62c717b4c12028a266c015035ca8cca9a2e888c7f9f3a1a0f34046826b2"
     },
     {
       "path": "server/index.js",

@@ -280,7 +280,7 @@ const profileIconTools = require('../main.cjs');
   assert.match(styles, /body\[data-theme="ender"\]/);
   assert.doesNotMatch(styles, /body\[data-theme="voxel"\]/);
   assert.ok(fs.existsSync(path.join(__dirname, '..', 'assets', 'voxel-shader.svg')));
-  for (const wallpaper of ['shader-crystal-valley.png', 'shader-aurora-lake.png', 'shader-cherry-grove.png']) assert.ok(fs.existsSync(path.join(__dirname, '..', 'assets', wallpaper)));
+  for (const wallpaper of ['shader-crystal-valley.webp', 'shader-aurora-lake.webp', 'shader-cherry-grove.webp']) assert.ok(fs.existsSync(path.join(__dirname, '..', 'assets', wallpaper)));
   assert.match(html, /style-src 'self' 'unsafe-inline'/);
   assert.match(renderer, /!\$\('username-setup-overlay'\)\.hidden/);
   assert.match(renderer, /select\.innerHTML=state\.projects\.map/);

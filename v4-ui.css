@@ -27,18 +27,18 @@ html body[data-wallpaper-motion="on"][data-wallpaper]:not([data-wallpaper="none"
 html body[data-wallpaper-motion="off"]::before,html body.ui-v3[data-wallpaper-motion="off"]::before{animation:none!important;will-change:auto}
 html body.ui-v3[data-wallpaper]:not([data-wallpaper="none"])::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),var(--v3-scene-image);background-position:center;background-size:cover;opacity:.96}
 html body.ui-v3[data-wallpaper="voxel"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/voxel-shader.svg")!important}
-html body.ui-v3[data-wallpaper="crystal"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-crystal-valley.png")!important}
-html body.ui-v3[data-wallpaper="aurora"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-aurora-lake.png")!important}
-html body.ui-v3[data-wallpaper="grove"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-cherry-grove.png")!important}
+html body.ui-v3[data-wallpaper="crystal"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-crystal-valley.webp")!important}
+html body.ui-v3[data-wallpaper="aurora"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-aurora-lake.webp")!important}
+html body.ui-v3[data-wallpaper="grove"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-cherry-grove.webp")!important}
 html body.ui-v3[data-wallpaper="deep-forest"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/biome-deep-forest.svg")!important}
 html body.ui-v3[data-wallpaper="nether-forge"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/biome-nether-forge.svg")!important}
 html body.ui-v3[data-wallpaper="none"]::before{background-image:radial-gradient(ellipse at 14% 12%,color-mix(in srgb,var(--v3-accent) 16%,transparent),transparent 33%),radial-gradient(ellipse at 88% 84%,color-mix(in srgb,var(--v3-accent) 11%,transparent),transparent 35%),var(--v3-scene-image)!important}
 html body.ui-v4{position:relative;isolation:isolate}
 html body.ui-v4::before{content:"";position:fixed;inset:-5%;z-index:-1;pointer-events:none;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:.9;transform:scale(1.025)}
 html body.ui-v4[data-wallpaper="voxel"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/voxel-shader.svg")}
-html body.ui-v4[data-wallpaper="crystal"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-crystal-valley.png")}
-html body.ui-v4[data-wallpaper="aurora"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-aurora-lake.png")}
-html body.ui-v4[data-wallpaper="grove"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-cherry-grove.png")}
+html body.ui-v4[data-wallpaper="crystal"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-crystal-valley.webp")}
+html body.ui-v4[data-wallpaper="aurora"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-aurora-lake.webp")}
+html body.ui-v4[data-wallpaper="grove"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/shader-cherry-grove.webp")}
 html body.ui-v4[data-wallpaper="deep-forest"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/biome-deep-forest.svg")}
 html body.ui-v4[data-wallpaper="nether-forge"]::before{background-image:linear-gradient(115deg,rgba(4,12,20,.35),rgba(5,15,22,.12) 52%,rgba(4,10,18,.3)),url("assets/biome-nether-forge.svg")}
 html body.ui-v4[data-wallpaper="none"]::before{background-image:none}

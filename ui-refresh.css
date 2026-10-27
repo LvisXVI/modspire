@@ -139,3 +139,62 @@ html body dialog[open], html body .startup-gate:not([hidden]) .startup-card, htm
   html body .launch-intro::before, html body .launch-intro-mark, html body .view-entering, html body dialog[open] { animation: none !important; }
   body.intro-active .app-shell { filter: none; transform: none; }
 }
+
+/* Top bar in every layout: the pack name shrinks (ellipsis) instead of running under the buttons,
+   and with less room the secondary buttons collapse to their icons (title keeps the label). */
+html body .topbar { gap: 14px !important; }
+html body .topbar .title-drag-region { flex: 1 1 0 !important; min-width: 140px !important; max-width: none !important; overflow: hidden !important; }
+html body .topbar .project-title-row { display: flex !important; align-items: center !important; gap: 10px !important; min-width: 0 !important; max-width: 100% !important; }
+html body .topbar .project-title-row .pack-title { flex: 1 1 auto !important; width: auto !important; min-width: 0 !important; max-width: 100% !important; text-overflow: ellipsis !important; }
+html body .topbar .save-status { flex: none !important; position: static !important; white-space: nowrap !important; }
+html body .topbar .top-actions { flex: 0 1 auto !important; min-width: 0 !important; flex-wrap: nowrap !important; margin-left: auto !important; }
+html body .topbar .top-actions > * { flex: none !important; }
+@media (max-width: 1500px) {
+  html body .topbar .top-actions .button-quiet:not(.language-toggle) > span { display: none !important; }
+  html body .topbar .top-actions .button-quiet:not(.language-toggle) { padding-inline: 11px !important; min-width: 40px !important; justify-content: center !important; gap: 0 !important; }
+}
+@media (max-width: 1100px) {
+  html body .topbar .top-actions .button-primary > span { display: none !important; }
+  html body .topbar .top-actions .button-primary { padding-inline: 12px !important; gap: 0 !important; }
+  html body .topbar .eyebrow { display: none !important; }
+}
+
+/* Setup strip: labels never break mid-word, the status chip keeps its text on one line,
+   and when the row runs out of room it wraps instead of squeezing. */
+html body .setup-strip { flex-wrap: wrap !important; row-gap: 8px !important; }
+html body .setup-strip > label { white-space: nowrap !important; flex: none !important; }
+html body .setup-strip .compat-chip { flex: none !important; white-space: nowrap !important; }
+
+/* "Your pack" heading kept the light-theme navy on the dark UI 3/UI 4/Glass panels */
+html body.ui-v4 .selected-section .selected-heading h3, html body.ui-v3 .selected-section .selected-heading h3 { color: inherit !important; }
+
+/* Pack Lab on the dark Glass panels: light-theme fills (stat tiles, notes, bar tracks) turned dark text unreadable */
+html body.ui-glass .compass-stats > span { background: rgba(255, 255, 255, .07) !important; border-color: rgba(255, 255, 255, .12) !important; color: rgba(226, 236, 252, .72) !important; }
+html body.ui-glass .compass-stats > span strong, html body.ui-glass .compass-stats > span b { color: #f2f7ff !important; }
+html body.ui-glass .lab-note { background: rgba(255, 255, 255, .06) !important; border-color: rgba(255, 255, 255, .14) !important; color: rgba(226, 236, 252, .85) !important; }
+html body.ui-glass .lab-note.good { background: rgba(110, 231, 160, .1) !important; border-color: rgba(110, 231, 160, .32) !important; }
+html body.ui-glass .lab-note.warn { background: rgba(255, 196, 80, .1) !important; border-color: rgba(255, 196, 80, .35) !important; }
+html body.ui-glass .sound-row { color: rgba(226, 236, 252, .7) !important; }
+html body.ui-glass .sound-row > div { background: rgba(255, 255, 255, .1) !important; }
+
+/* UI 4: Pack Lab cards kept the light-theme fill under light text */
+html body.ui-v4:not(.ui-glass) .lab-card { background: rgba(255, 255, 255, .05) !important; border-color: rgba(255, 255, 255, .1) !important; color: inherit !important; }
+html body.ui-v4 .lab-card .lab-empty, html body.ui-v4 .lab-card p { color: rgba(226, 236, 252, .72) !important; }
+html body.ui-v4 kbd.desktop-search-shortcut { color: rgba(226, 236, 252, .8) !important; background: rgba(255, 255, 255, .08) !important; border-color: rgba(255, 255, 255, .16) !important; }
+html body.ui-v4 .lab-card h3, html body.ui-v4 .lab-card strong { color: #eef5ff !important; }
+html body.ui-v4 .compass-stats > span { background: rgba(255, 255, 255, .07) !important; border-color: rgba(255, 255, 255, .12) !important; color: rgba(226, 236, 252, .72) !important; }
+html body.ui-v4 .compass-stats > span strong, html body.ui-v4 .compass-stats > span b { color: #f2f7ff !important; }
+html body.ui-v4 .lab-note { background: rgba(255, 255, 255, .06) !important; border-color: rgba(255, 255, 255, .14) !important; color: rgba(226, 236, 252, .85) !important; }
+html body.ui-v4 .lab-note.good { background: rgba(110, 231, 160, .1) !important; border-color: rgba(110, 231, 160, .32) !important; }
+html body.ui-v4 .lab-note.warn { background: rgba(255, 196, 80, .1) !important; border-color: rgba(255, 196, 80, .35) !important; }
+html body.ui-v4 .sound-row { color: rgba(226, 236, 252, .7) !important; }
+html body.ui-v4 .sound-row > div { background: rgba(255, 255, 255, .1) !important; }
+
+/* Modern layout + Emerald is a light look, but inherited the light text of the dark themes */
+html body.ui-modern[data-theme="emerald"] .main-content .setup-strip > label { color: #3d6656 !important; }
+html body.ui-modern[data-theme="emerald"] .lab-card { color: #1c3a2f !important; }
+html body.ui-modern[data-theme="emerald"] .lab-card :is(h3, strong, p, small, span, .lab-empty, .lab-footnote, .lab-note, .sound-row) { color: inherit !important; }
+html body.ui-modern[data-theme="emerald"] .lab-card :is(p, small, .lab-footnote, .lab-empty) { color: #557a6b !important; }
+/* Modern layout + Nether: status chip was white on its white pill */
+html body.ui-modern[data-theme="nether"] .main-content #compat-status { color: #4a1d18 !important; }
+html body.ui-modern[data-theme="nether"] .main-content .selected-heading h3 { color: #fbe9e4 !important; }

@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.5] — UI audit fixes (2026-10-27)
+
+### Fixed
+- Top bar: a long pack name no longer runs under the buttons ("Saved" and the language button overlapped it). With less room the secondary buttons collapse to icons with tooltips.
+- Setup strip labels never break mid-word and the status chip stays on one line.
+- Unreadable text found by an automated audit of all 9 themes × 5 layouts × 4 views at two window sizes: Pack Lab cards and tiles in UI 4 and Glass, "Your pack" heading, the setup strip in Modern + Emerald, the status chip in Modern + Nether, and the search shortcut hint.
+- A new contrast guard checks text against its real background after every theme, layout or view change and switches unreadable text to dark or light ink.
+- "KI-Hinweise" is translated in the English interface.
+
 ## [0.3.4] — Blockbench built in, new chat (2026-10-27)
 
 ### Added

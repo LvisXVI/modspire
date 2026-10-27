@@ -40,6 +40,7 @@
       "ui-refresh.css",
       "glass-ui.css",
       "glass-ui.js",
+      "design-quick.js",
       "modern-ui.js",
       "i18n.js",
       "diagnostics.cjs",

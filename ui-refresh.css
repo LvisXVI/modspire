@@ -63,3 +63,26 @@ html body .suggestion:hover { transform: translateY(-1px); }
 @media (prefers-reduced-motion: reduce) {
   html body .suggestion, html body .modern-asset { transition: none !important; transform: none !important; }
 }
+
+/* --- Quick design menu (top-bar "Designs"), same look as Minecraft Host / Mod Studio --- */
+.design-quick { position: fixed; z-index: 2000; width: 300px; max-height: min(78vh, 640px); overflow: auto; padding: 8px; border-radius: 22px; display: grid; gap: 4px;
+  background: linear-gradient(155deg, rgb(30, 38, 54), rgb(14, 18, 28)); border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 26px 60px -24px rgba(0, 0, 0, .8); color: #f2f6ff;
+  transform-origin: top right; animation: dqIn .35s cubic-bezier(.34, 1.56, .64, 1) both; }
+.design-quick[hidden] { display: none; }
+@keyframes dqIn { from { opacity: 0; transform: scale(.95) translateY(-4px); } }
+.design-quick .dq-list { display: grid; gap: 2px; }
+.design-quick .dq-option { display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 10px; border-radius: 14px; border: 1px solid transparent; background: transparent; color: inherit; text-align: left; cursor: pointer; transition: background .2s; }
+.design-quick .dq-option:hover { background: rgba(255, 255, 255, .08); }
+.design-quick .dq-option[aria-checked="true"] { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); }
+.design-quick .dq-option i { width: 46px !important; height: 30px !important; min-width: 46px; border-radius: 10px !important; flex: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); margin: 0 !important; }
+.design-quick .dq-option strong { display: block; font-size: 13px; color: #f2f6ff; }
+.design-quick .dq-option small { display: block; font-size: 11px; color: rgba(220, 230, 250, .62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.design-quick .dq-label { margin: 8px 10px 2px; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(220, 230, 250, .55); }
+.design-quick .dq-layouts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 4px; border-radius: 14px; background: rgba(0, 0, 0, .25); }
+.design-quick .dq-layouts button { min-height: 30px; padding: 0 4px; border-radius: 10px; border: 0; background: transparent; color: rgba(230, 238, 255, .75); font-size: 11.5px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+.design-quick .dq-layouts button:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+.design-quick .dq-layouts button[aria-pressed="true"] { background: linear-gradient(180deg, #8fd8ff, #4aa8f0); color: #04121c; }
+.design-quick .dq-all { margin-top: 4px; min-height: 36px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: inherit; font-weight: 700; font-size: 12.5px; cursor: pointer; }
+.design-quick .dq-all:hover { background: rgba(255, 255, 255, .12); }
+@media (prefers-reduced-motion: reduce) { .design-quick { animation: none; } }

@@ -50,14 +50,10 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Scene: the world behind the glass ---------- */
 .lg-scene { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
-.lg-scene::before {
-  content: ""; position: absolute; inset: -6%;
-  background: var(--scene) center 30% / cover no-repeat;
-  transform: translate3d(0, calc(var(--scroll, 0) * -40px), 0);
-  translate: -.55% 0;
-  scale: 1.06;
-  animation: aurora-scene var(--scene-motion-duration, 68s) ease-in-out infinite alternate;
-  filter: var(--scene-filter, saturate(1.15));
+.lg-scene__video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+  filter: var(--scene-filter, saturate(1.08));
 }
 .lg-scene::after {
   content: ""; position: absolute; inset: 0;
@@ -65,21 +61,43 @@ button { font: inherit; color: inherit; }
     radial-gradient(120% 80% at 50% 0%, transparent 0 30%, rgba(4, 8, 20, .55) 70%),
     linear-gradient(180deg, rgba(5, 9, 19, .25) 0%, rgba(5, 9, 19, .55) 45%, rgba(5, 9, 19, .9) 100%);
 }
-body[data-repo="LvisXVI/minecraft-mod-studio"] { --scene-motion-duration: 76s; }
-body[data-repo="LvisXVI/minecraft-mod-studio"] .lg-scene::before { animation-name: emerald-scene; }
-body[data-repo="LvisXVI/minecraft-host"] { --scene-motion-duration: 88s; }
-body[data-repo="LvisXVI/minecraft-host"] .lg-scene::before { animation-name: blossom-scene; }
-@keyframes aurora-scene {
-  from { translate: -.7% -.25%; scale: 1.06; }
-  to { translate: .7% .3%; scale: 1.115; }
+
+
+/* ---------- Minecraft music playlist ---------- */
+.music-player {
+  position: fixed; right: 18px; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 70;
+  width: 64px; overflow: hidden; transition: width .25s ease;
+  border: 1px solid rgba(255,255,255,.2); border-radius: 22px;
+  background: rgba(13, 20, 37, .88); box-shadow: 0 18px 54px rgba(0,0,0,.38);
+  -webkit-backdrop-filter: blur(22px) saturate(155%); backdrop-filter: blur(22px) saturate(155%);
 }
-@keyframes emerald-scene {
-  from { translate: .45% -.2%; scale: 1.065; filter: hue-rotate(-150deg) saturate(1.05) brightness(.9); }
-  to { translate: -.45% .25%; scale: 1.12; filter: hue-rotate(-147deg) saturate(1.12) brightness(.98); }
+.music-player__toggle {
+  display: flex; width: 100%; min-height: 64px; align-items: center; justify-content: center; gap: 12px;
+  padding: 10px; border: 0; background: transparent; text-align: left; cursor: pointer;
 }
-@keyframes blossom-scene {
-  from { translate: .5% .1%; scale: 1.065; filter: saturate(1.12) brightness(.96); }
-  to { translate: -.5% -.2%; scale: 1.12; filter: saturate(1.18) brightness(1.02); }
+.music-player__toggle:hover, .music-player__toggle[aria-expanded="true"] { background: rgba(255,255,255,.08); }
+.music-player.is-open { width: min(360px, calc(100vw - 36px)); }
+.music-player.is-open .music-player__toggle { justify-content: flex-start; padding: 10px 14px; }
+.music-player:not(.is-open) .music-player__label, .music-player:not(.is-open) .music-player__chevron { display: none; }
+.music-player:not(.is-open) .music-player__label, .music-player:not(.is-open) .music-player__chevron { display: none; }
+.music-player__icon {
+  display: grid; width: 40px; height: 40px; flex: none; place-items: center;
+  border-radius: 14px; color: var(--accent-ink); background: linear-gradient(145deg,var(--accent),var(--accent-2));
+  font-size: 23px; font-weight: 800; box-shadow: 0 6px 18px color-mix(in srgb,var(--accent) 28%,transparent);
+}
+.music-player__label { display: grid; gap: 1px; }
+.music-player__label strong { font-size: 14px; }
+.music-player__label small { color: var(--ink-3); font-size: 12px; }
+.music-player__chevron { margin-left: auto; color: var(--ink-2); font-size: 18px; transition: transform .2s ease; }
+.music-player__toggle[aria-expanded="true"] .music-player__chevron { transform: rotate(180deg); }
+.music-player__panel { padding: 0 10px 10px; }
+.music-player__panel iframe { display: block; width: 100%; height: 352px; border: 0; border-radius: 14px; }
+.music-player__meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 2px 0; color: var(--ink-3); font-size: 11px; }
+.music-player__meta a { color: var(--accent); white-space: nowrap; text-decoration: none; }
+.music-player__meta a:hover { text-decoration: underline; }
+@media (max-width: 480px) {
+  .music-player { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); width: 64px; }
+  .music-player.is-open { width: min(340px, calc(100vw - 24px)); }
 }
 
 /* ---------- Glass material ---------- */
@@ -268,7 +286,7 @@ pre { margin: 0; padding: 18px 20px; border-radius: 18px; background: rgba(0, 0,
 .note b { color: var(--ink); }
 
 /* ---------- Footer ---------- */
-.footer { margin-top: 120px; padding: 34px 0 44px; border-top: 1px solid var(--line-soft); background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .4)); }
+.footer { margin-top: 120px; padding: 34px 0 120px; border-top: 1px solid var(--line-soft); background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .4)); }
 .footer .wrap { display: flex; flex-wrap: wrap; gap: 18px 32px; justify-content: space-between; align-items: flex-start; font-size: 14px; color: var(--ink-3); }
 .footer nav { display: flex; flex-wrap: wrap; gap: 6px 20px; }
 .footer a { text-decoration: none; color: var(--ink-2); }
@@ -366,7 +384,6 @@ pre { margin: 0; padding: 18px 20px; border-radius: 18px; background: rgba(0, 0,
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .lg-scene::before { animation-duration: var(--scene-motion-duration, 68s) !important; animation-iteration-count: infinite !important; }
   [data-reveal], .hero [data-hero] { opacity: 1; transform: none; filter: none; }
   #lg-intro { display: none; }
 }

@@ -18,13 +18,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="media/bg/aurora-lake.webp">
+  <link rel="preload" as="image" href="media/bg/aurora-lake-poster.webp">
   <link rel="stylesheet" href="liquid.css">
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Modspire","applicationCategory":"DeveloperApplication","softwareVersion":"0.3.3","operatingSystem":"Windows 10, Windows 11","url":"https://lvisxvi.github.io/modspire/","downloadUrl":"https://github.com/LvisXVI/modspire/releases/latest","author":{"@type":"Person","name":"LvisXVI"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"A local-first Minecraft Java modpack studio with Modrinth search, optional AI planning, Pack Lab snapshots, .mrpack export and an integrated Mod Studio."}
   </script>
   <style>
-    body { --scene: url("media/bg/aurora-lake.webp"); --accent: #7ff0e4; --accent-2: #a98bff; --accent-ink: #03161b; }
+    body { --scene: url("media/bg/aurora-lake-poster.webp"); --accent: #7ff0e4; --accent-2: #a98bff; --accent-ink: #03161b; }
     .hero h1 .grad { display: inline-block; padding-bottom: .08em; }
     .new-ribbon { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink-2); margin-bottom: 26px; }
     .new-ribbon b { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); color: var(--ink); font-size: 12px; }
@@ -42,7 +42,7 @@
 </head>
 <body data-repo="LvisXVI/modspire" data-asset="Portable\.exe$">
   <a class="skip" href="#main">Skip to content</a>
-  <div class="lg-scene" aria-hidden="true"></div>
+  <div class="lg-scene" aria-hidden="true"><video class="lg-scene__video" autoplay muted loop playsinline poster="media/bg/aurora-lake-poster.webp"><source src="media/bg/aurora-lake-loop.mp4" type="video/mp4"></video></div>
 
   <div id="lg-intro" aria-hidden="true">
     <div class="intro-core">
@@ -273,6 +273,7 @@ pnpm dist</pre>
       </nav>
     </div>
   </footer>
+  <script src="music-player.js" defer></script>
   <script src="liquid.js" defer></script>
 </body>
 </html>

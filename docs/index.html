@@ -32,6 +32,12 @@
     .studio-card { overflow: hidden; }
     .studio-card .orbit { position: absolute; right: -60px; bottom: -60px; width: 260px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 40%), linear-gradient(140deg, var(--accent), var(--accent-2)); filter: blur(2px); opacity: .32; z-index: -1; }
   </style>
+  <style>
+    .ui5-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); align-items: center; gap: 32px; }
+    .ui5-card .ui5-shot { display: block; width: 100%; height: auto; border-radius: 18px; box-shadow: 0 30px 60px -24px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.12); transition: transform .8s var(--ease-spring); }
+    .ui5-card:hover .ui5-shot { transform: translateY(-6px) rotate(-.6deg); }
+    @media (max-width: 900px) { .ui5-card { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body data-repo="LvisXVI/modspire" data-asset="Portable\.exe$">
   <a class="skip" href="#main">Skip to content</a>
@@ -101,12 +107,14 @@
         <p>Pack workflows grew up: keep variants side by side, update safely, and hand friends something they can install.</p>
       </div>
       <div class="bento">
-        <article class="card glass tint span-6 feature-wide" data-reveal style="flex-direction:column;align-items:stretch;gap:0">
-          <div class="sr-only">
+        <article class="card glass tint span-6 feature-wide ui5-card" data-reveal>
+          <div>
+            <div class="ico">🫧</div>
             <h3>UI 5 · Liquid Glass</h3>
-            <p>A fifth layout: frosted, light-catching panels over your Minecraft world, a floating rail, spring-loaded controls and soft view transitions. Plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface. Version 0.3.2.</p>
+            <p>A fifth layout: frosted, light-catching panels over your Minecraft world, a floating rail, spring-loaded controls and soft view transitions. Plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.</p>
+            <span class="tag">0.3.2</span>
           </div>
-          <img src="screenshots/glass-ui-full.webp" width="1548" height="823" alt="Modspire UI 5 Liquid Glass: frosted panels, floating rail and the Neues Abenteuer workshop with selected mods and pack categories over an aurora landscape" loading="lazy" style="flex:none;width:100%;height:auto">
+          <img class="ui5-shot" src="screenshots/glass-ui-window.webp" width="620" height="803" loading="lazy" alt="Modspire UI 5 Liquid Glass: the app window with the workshop rail, the active modpack Neues Abenteuer and pack categories over an aurora landscape">
         </article>
         <article class="card glass tint span-4 studio-card feature-wide" data-reveal>
           <div>

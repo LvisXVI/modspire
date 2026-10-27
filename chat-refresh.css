@@ -40,6 +40,11 @@
 #chat-panel#chat-panel .more-suggestions > summary, #chat-panel#chat-panel .more-suggestions-title, #chat-panel#chat-panel .composer-hint, #chat-panel#chat-panel .attach-row > span { color: var(--chat-muted) !important; }
 #chat-panel#chat-panel :is(.chat-model-control, .chat-model-control > span) { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
 
+/* the "added to your pack" note floats in the corner so the mod list does not jump under the cursor */
+#chat-panel#chat-panel .chat-mod-compact { position: relative !important; }
+#chat-panel#chat-panel .chat-mod-selection-notice { position: absolute !important; top: 10px !important; right: 12px !important; z-index: 3 !important; max-width: min(60%, 360px) !important; margin: 0 !important; pointer-events: none !important;
+  box-shadow: 0 10px 24px -14px rgba(0, 0, 0, .8) !important; backdrop-filter: blur(10px) !important; animation: chatIn .3s ease both !important; }
+
 /* composer: one rounded field, accent glow while typing */
 #chat-panel#chat-panel .chat-form { display: flex !important; flex-direction: column !important; gap: 2px !important; position: relative !important; margin: 10px max(14px, calc((100% - 900px) / 2)) 6px !important; padding: 10px 12px 10px 16px !important; border-radius: 24px !important; background: var(--chat-surface) !important; border: 1px solid var(--chat-line) !important; box-shadow: 0 18px 40px -28px rgba(0, 0, 0, .9) !important; transition: border-color .25s, box-shadow .25s !important; }
 #chat-panel#chat-panel .chat-form:focus-within { border-color: color-mix(in srgb, var(--chat-accent) 60%, transparent) !important; box-shadow: 0 0 0 4px color-mix(in srgb, var(--chat-accent) 16%, transparent), 0 18px 40px -28px rgba(0, 0, 0, .9) !important; }
@@ -66,6 +71,6 @@
 #chat-panel#chat-panel .chat-header-action { border-radius: 999px !important; transition: transform .3s var(--chat-ease), background .2s !important; }
 #chat-panel#chat-panel .chat-header-action:hover { transform: translateY(-1px) !important; }
 
-@keyframes chatIn { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+@keyframes chatIn { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { #chat-panel#chat-panel .message, #chat-panel#chat-panel .assistant-followups { animation: none !important; } }
 @media (max-width: 760px) { #chat-panel#chat-panel .bubble, #chat-panel#chat-panel .user-message .bubble { max-width: 88% !important; } #chat-panel#chat-panel .composer-hint { display: none !important; } }

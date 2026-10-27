@@ -39,6 +39,8 @@
       "pack-workflows.css",
       "ui-refresh.css",
       "chat-refresh.css",
+      "wallpaper-fx.css",
+      "wallpaper-fx.js",
       "glass-ui.css",
       "glass-ui.js",
       "design-quick.js",

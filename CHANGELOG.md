@@ -9,12 +9,15 @@ For the retrospective history from the first local build and a consolidated feat
 ### Added
 - Embedded Mod Studio 0.1.0-alpha.12 contains the full **Blockbench 5.2.2** editor (GPL-3.0, unmodified). "Edit in Blockbench" opens it inside the app with three guided steps (build shape, paint texture, preview in game), hints for each step, undo/redo, a short first-run guide and a guard against losing unsaved changes. "Apply" or Ctrl+S takes the model back into the project.
 - Launch animation: a glass droplet intro over the Minecraft scene, then the app fades in. Views and dialogs open with softer transitions.
+- **Animated backgrounds:** blocky Minecraft clouds drift across the sky wallpapers, plus one effect per scene – a swaying aurora, falling cherry petals, crystal sparkles, forest fireflies and rising Nether embers. The "move backgrounds" switch turns everything off and is now also in the quick Designs menu; reduced-motion systems get a still background.
 
 ### Changed
 - The AI chat is redesigned in all five layouts and all themes: message bubbles (yours on the right in the accent colour), suggestions aligned under the latest answer instead of repeated after every reply, a single rounded composer with a focus glow, round send and voice buttons, and messages that slide in.
 
 ### Fixed
 - Assistant messages could be light grey on light grey in some layout/theme combinations; chat surfaces now derive from the panel's own text colour.
+- Adding a mod from the chat no longer pushes the list down under the cursor: the "added to your pack" note floats in the corner.
+- The launch intro no longer scales the app while it is hidden, so early clicks land where they should.
 
 ## [0.3.3] — Lighter build, Studio alpha 10 (2026-10-27)
 

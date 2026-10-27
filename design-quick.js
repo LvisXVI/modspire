@@ -33,9 +33,16 @@ const startDesignQuick = () => {
     }).join('')}</div>
       <div class="dq-label">${english() ? 'Layout' : 'Layout'}</div>
       <div class="dq-layouts">${LAYOUTS.map(([id, en, de]) => `<button type="button" data-dq-layout="${id}">${english() ? en : de}</button>`).join('')}</div>
+      <label class="dq-motion"><span>${english() ? 'Animated backgrounds' : 'Bewegte Hintergründe'}</span><input type="checkbox" role="switch" id="dq-motion"><i aria-hidden="true"></i></label>
       <button class="dq-all" type="button" id="dq-all">${english() ? 'All designs & colours …' : 'Alle Designs & Farben …'}</button>`;
     document.body.appendChild(el);
+    // mirrors the "move backgrounds" switch of the full design dialog, which stores the setting
+    el.querySelector('#dq-motion').addEventListener('change', event => {
+      const source = $('wallpaper-motion');
+      if (source && source.checked !== event.target.checked) { source.checked = event.target.checked; source.dispatchEvent(new Event('change')); }
+    });
     el.addEventListener('click', event => {
+      if (event.target.closest('.dq-motion')) return;
       const theme = event.target.closest('[data-dq-theme]');
       const layout = event.target.closest('[data-dq-layout]');
       if (theme) document.querySelector(`[data-theme-choice="${theme.dataset.dqTheme}"]`)?.click();
@@ -53,6 +60,7 @@ const startDesignQuick = () => {
     const theme = document.body.dataset.theme, layout = activeLayout();
     menu.querySelectorAll('[data-dq-theme]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.dqTheme === theme)));
     menu.querySelectorAll('[data-dq-layout]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.dqLayout === layout)));
+    menu.querySelector('#dq-motion').checked = document.body.dataset.wallpaperMotion !== 'off';
   };
 
   const close = () => { if (menu) menu.hidden = true; $('open-design')?.setAttribute('aria-expanded', 'false'); };
@@ -80,6 +88,6 @@ const startDesignQuick = () => {
   document.addEventListener('click', event => { if (event.isTrusted && menu && !menu.hidden && !event.target.closest('#design-quick, #open-design')) close(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
   addEventListener('resize', close);
-  new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+  new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme', 'data-wallpaper-motion'] });
 };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startDesignQuick, { once: true }); else startDesignQuick();

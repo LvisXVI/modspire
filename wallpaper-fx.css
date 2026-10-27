@@ -1,0 +1,48 @@
+/* Animated Minecraft backgrounds (wallpaper-fx.js). Only transform/opacity animate, so the
+   compositor does the work. Off when the wallpaper is "none", motion is switched off, or the
+   system asks for reduced motion. */
+.wallpaper-fx { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; contain: strict; }
+body[data-wallpaper="none"] .wallpaper-fx, body[data-wallpaper-motion="off"] .wallpaper-fx { display: none; }
+body:not([data-wallpaper-motion="off"]) .wallpaper-fx { animation: wfxFadeIn 1.6s ease both; }
+
+/* block clouds: a wide strip of a seamless tile slides left by exactly one tile width */
+.wfx-clouds { position: absolute; left: 0; height: 300px; background-repeat: repeat-x; will-change: transform;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent); mask-image: linear-gradient(180deg, #000 55%, transparent); }
+.wfx-clouds-far { top: 2vh; width: calc(100% + 1600px); height: 240px; background-image: url("assets/clouds-far.svg"); opacity: .26; animation: wfxDriftFar 210s linear infinite; }
+.wfx-clouds-near { top: 9vh; width: calc(100% + 2400px); background-image: url("assets/clouds-near.svg"); opacity: .34; animation: wfxDriftNear 150s linear infinite; filter: drop-shadow(0 10px 0 rgba(170, 190, 220, .25)); }
+.wallpaper-fx[data-scene="nether-forge"] .wfx-clouds { display: none; }
+.wallpaper-fx[data-scene="deep-forest"] .wfx-clouds { opacity: .16; }
+.wallpaper-fx[data-scene="grove"] .wfx-clouds-near { opacity: .4; }
+
+/* aurora: two soft ribbons that sway and shift colour */
+.wfx-aurora { position: absolute; inset: -10% -20% 45%; background:
+  radial-gradient(60% 40% at 30% 60%, rgba(80, 255, 190, .28), transparent 70%),
+  radial-gradient(50% 35% at 70% 45%, rgba(120, 140, 255, .24), transparent 70%);
+  filter: blur(30px); mix-blend-mode: screen; will-change: transform, opacity; animation: wfxAurora 18s ease-in-out infinite alternate; }
+
+/* nether: heat glow from below */
+.wfx-haze { position: absolute; inset: 55% -10% -10%; background: radial-gradient(70% 60% at 50% 100%, rgba(255, 110, 40, .32), transparent 70%);
+  mix-blend-mode: screen; will-change: opacity, transform; animation: wfxHaze 6s ease-in-out infinite alternate; }
+
+/* particles: position and timing come from custom properties set per element */
+.wallpaper-fx > i { position: absolute; left: var(--x); display: block; will-change: transform, opacity; animation-duration: var(--d); animation-delay: var(--delay); animation-iteration-count: infinite; }
+.wfx-petal { top: -4%; width: calc(9px * var(--s)); height: calc(7px * var(--s)); border-radius: 70% 0 70% 0; background: linear-gradient(135deg, #ffd3e6, #ff8fbf);
+  box-shadow: 0 0 6px rgba(255, 160, 200, .5); animation-name: wfxFall; animation-timing-function: linear; }
+.wfx-ember { bottom: -3%; width: calc(4px * var(--s)); height: calc(4px * var(--s)); background: #ffb347; box-shadow: 0 0 8px 2px rgba(255, 120, 30, .8);
+  animation-name: wfxRise; animation-timing-function: ease-out; animation-duration: calc(var(--d) * .55); }
+.wfx-firefly { top: var(--y); width: calc(5px * var(--s)); height: calc(5px * var(--s)); border-radius: 50%; background: #e8ff8a; box-shadow: 0 0 10px 3px rgba(200, 255, 90, .55);
+  animation-name: wfxFirefly; animation-timing-function: ease-in-out; animation-direction: alternate; }
+.wfx-sparkle { top: calc(var(--y) * .7); width: calc(6px * var(--s)); height: calc(6px * var(--s)); background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 4px rgba(170, 230, 255, .9)); opacity: 0; animation-name: wfxTwinkle; animation-timing-function: ease-in-out; animation-duration: calc(var(--d) * .4); }
+
+@keyframes wfxFadeIn { from { opacity: 0; } }
+@keyframes wfxDriftFar { to { transform: translate3d(-1600px, 0, 0); } }
+@keyframes wfxDriftNear { to { transform: translate3d(-2400px, 0, 0); } }
+@keyframes wfxAurora { 0% { transform: translate3d(-4%, 0, 0) skewX(-6deg) scaleY(1); opacity: .65; } 50% { opacity: 1; } 100% { transform: translate3d(5%, 2%, 0) skewX(8deg) scaleY(1.15); opacity: .8; } }
+@keyframes wfxHaze { from { opacity: .55; transform: scaleY(1); } to { opacity: 1; transform: scaleY(1.12); } }
+@keyframes wfxFall { 0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; } 8% { opacity: .95; } 100% { transform: translate3d(calc(var(--drift) * 3), 108vh, 0) rotate(560deg); opacity: .8; } }
+@keyframes wfxRise { 0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate3d(var(--drift), -70vh, 0) scale(.2); opacity: 0; } }
+@keyframes wfxFirefly { 0% { transform: translate3d(0, 0, 0); opacity: .15; } 50% { opacity: 1; } 100% { transform: translate3d(var(--drift), calc(var(--drift) * -.8), 0); opacity: .25; } }
+@keyframes wfxTwinkle { 0%, 100% { opacity: 0; transform: scale(.3) rotate(0); } 50% { opacity: .95; transform: scale(1) rotate(45deg); } }
+
+@media (prefers-reduced-motion: reduce) { .wallpaper-fx { display: none; } }

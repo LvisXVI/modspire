@@ -1547,7 +1547,7 @@ function showView(view) {
   window.WorkshopModernUI?.render();
   if(view==='chat'){chatFollowLatest=true;const area=$('chat-messages');requestAnimationFrame(()=>{area._scheduleLatestChatScroll?.();area.scrollTop=area.scrollHeight;if(!$('username-setup-overlay').hidden)$('username-input').focus();else if(!$('startup-login-overlay').hidden)$('startup-connect').focus();else $('chat-input').focus({preventScroll:true})})}
 }
-(()=>{const intro=$('launch-intro');if(!intro)return;requestAnimationFrame(()=>intro.classList.add('is-ready'));window.setTimeout(()=>intro.classList.add('is-leaving'),1550);window.setTimeout(()=>intro.remove(),2150)})();
+(()=>{const intro=$('launch-intro');if(!intro)return;document.body.classList.add('intro-active');requestAnimationFrame(()=>intro.classList.add('is-ready'));window.setTimeout(()=>{intro.classList.add('is-leaving');document.body.classList.remove('intro-active')},1550);window.setTimeout(()=>intro.remove(),2150)})();
 function openSettings() { $('settings-overlay').hidden=false;document.querySelectorAll('.nav-item').forEach(button=>button.classList.toggle('active',button.id==='nav-settings'));refreshChatGPTStatus().catch(()=>{});refreshLocalModels().catch(()=>{});if(state.settings.appVersion)$('updater-current-version').textContent=`v${state.settings.appVersion}`; }
 function closeSettings() { $('settings-overlay').hidden=true;document.querySelectorAll('.nav-item').forEach(button=>button.classList.toggle('active',button.dataset.view===state.currentView)); }
 function setUpdaterMessage(message,state=''){$('updater-copy').textContent=message;$('updater-state').textContent=state||message}

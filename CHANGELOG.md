@@ -4,6 +4,18 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.4] — Blockbench built in, new chat (2026-10-27)
+
+### Added
+- Embedded Mod Studio 0.1.0-alpha.12 contains the full **Blockbench 5.2.2** editor (GPL-3.0, unmodified). "Edit in Blockbench" opens it inside the app with three guided steps (build shape, paint texture, preview in game), hints for each step, undo/redo, a short first-run guide and a guard against losing unsaved changes. "Apply" or Ctrl+S takes the model back into the project.
+- Launch animation: a glass droplet intro over the Minecraft scene, then the app fades in. Views and dialogs open with softer transitions.
+
+### Changed
+- The AI chat is redesigned in all five layouts and all themes: message bubbles (yours on the right in the accent colour), suggestions aligned under the latest answer instead of repeated after every reply, a single rounded composer with a focus glow, round send and voice buttons, and messages that slide in.
+
+### Fixed
+- Assistant messages could be light grey on light grey in some layout/theme combinations; chat surfaces now derive from the panel's own text colour.
+
 ## [0.3.3] — Lighter build, Studio alpha 10 (2026-10-27)
 
 ### Changed

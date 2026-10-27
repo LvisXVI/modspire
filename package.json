@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -38,6 +38,7 @@
       "pack-workflows.js",
       "pack-workflows.css",
       "ui-refresh.css",
+      "chat-refresh.css",
       "glass-ui.css",
       "glass-ui.js",
       "design-quick.js",

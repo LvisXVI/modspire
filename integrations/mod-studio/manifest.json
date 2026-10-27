@@ -1,8 +1,16 @@
 {
   "source": "https://github.com/LvisXVI/minecraft-mod-studio",
-  "version": "0.1.0-alpha.11",
-  "sourceRevision": "a532d9a36decd55175b2bc332a33ed4ca29350f7",
+  "version": "0.1.0-alpha.12",
+  "sourceRevision": "59be5672da00e395cc467e7e94e43ef70242226e",
   "files": [
+    {
+      "path": "licenses/blockbench/LICENSE.MD",
+      "sha256": "81cbae84a29ce7e770bf2bc7b178e50bda0ce8de6067aba661b0bc7b05b562f8"
+    },
+    {
+      "path": "licenses/blockbench/README.md",
+      "sha256": "50e0891acc24f05ebdc2b449b41112168a9fa8d99d6bae5ca0509d5260a8f6f4"
+    },
     {
       "path": "licenses/Geist-Mono-OFL-1.1.txt",
       "sha256": "ccfad5385ab52bf92e501be984746ebf4fdc21db251f56af45d82ff6caaf8c2e"
@@ -17,7 +25,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "344e214f061828408b957c83cf7a4e77daaf32523a8cb18638085ec3e4f28470"
+      "sha256": "ce8c3a872aaa547494a5998951953f22048dcc66c6d5a92be45c0565adb1d843"
     },
     {
       "path": "public/ai-memory.css",
@@ -29,11 +37,643 @@
     },
     {
       "path": "public/app.js",
-      "sha256": "18d9602e91d7284cbfe0c93be77c097da90b89cfe56bcab0565cd89ce89e1dd6"
+      "sha256": "e37e0152459d91e9765c3f69dab9ba52727b886ca0786c364545637bac2e0997"
+    },
+    {
+      "path": "public/blockbench-embed.js",
+      "sha256": "dfccfff95c2ffca7fc4c65a1145db284bd97edcc04daedbd6f7cd0c009151089"
+    },
+    {
+      "path": "public/blockbench-theme.css",
+      "sha256": "6e41744a3348431fc9ee9e29a3fcb2f5cbf02ea37131c760fda8c67bb2536fcd"
     },
     {
       "path": "public/blockbench.js",
-      "sha256": "4584506c1c82ebe298719841aed39888e5d912dde8c51a8f4c9d4f16e9e5481f"
+      "sha256": "dc5578056781d1e7897620aa1dd8d568a843485273d9f15b88bb18fec05f48a5"
+    },
+    {
+      "path": "public/blockbench/assets/armor_stand.png",
+      "sha256": "3255d73a7838114316debd575e739adc81f1869f9abafccdd531895bb9c02230"
+    },
+    {
+      "path": "public/blockbench/assets/brush_outline_circle.png",
+      "sha256": "bc5bfe8a8d2a970ba7f3ba5cf6f48861ada5474c927e65a2553d03ec4c0ae47f"
+    },
+    {
+      "path": "public/blockbench/assets/brush_outline.png",
+      "sha256": "773ea6fea683281e8273c37a91c066e062301ff5ef7370ffbbfe4e50776cd4b8"
+    },
+    {
+      "path": "public/blockbench/assets/brush.png",
+      "sha256": "f3d9a01f60c3a1bda777474b709362ca183b97acdf1a367454035c259df13b4b"
+    },
+    {
+      "path": "public/blockbench/assets/crafting_table.png",
+      "sha256": "77ce3d97d19feb0ec4c4caa14ec43eccda09404285d41030321d2d26e09dc20e"
+    },
+    {
+      "path": "public/blockbench/assets/crosshair.png",
+      "sha256": "dfd3e628d2a4941a7ad8bacf4b362363b64197ad0ae1148b0f069ceeea69534e"
+    },
+    {
+      "path": "public/blockbench/assets/flower_pot.png",
+      "sha256": "7146b0e65fd18daee254bd7960a5660c91183c639343d94d4c2e8d09dede7198"
+    },
+    {
+      "path": "public/blockbench/assets/fox.png",
+      "sha256": "5bd169935621d7273679107802d49acae83de163179cf36aa0f707332a1d885a"
+    },
+    {
+      "path": "public/blockbench/assets/hud.png",
+      "sha256": "ccb133a37673246b6bbe20229ae02fc52ec89b236264c3df4ae4339dd350605b"
+    },
+    {
+      "path": "public/blockbench/assets/image_editor.png",
+      "sha256": "954a97549234c5e0119d7bd24cc1ef35e35473435cf16ff8630d53a4aa5ec24d"
+    },
+    {
+      "path": "public/blockbench/assets/inventory_full.png",
+      "sha256": "305cf4fdb4df28c08284ac4482e713684672f3a2445b1385056d9c49c1208d2f"
+    },
+    {
+      "path": "public/blockbench/assets/inventory_nine.png",
+      "sha256": "008ff343d2b8c7c3d11c649935cc54c0a668c0e5f235648aa962f1b2f05a2727"
+    },
+    {
+      "path": "public/blockbench/assets/item_frame.png",
+      "sha256": "6fd5620a58df1fda40e414a755ff103b76ddd268666fc5e16b4d5bb7a2d3209d"
+    },
+    {
+      "path": "public/blockbench/assets/locator.png",
+      "sha256": "cdd6028e7528e9be24932362edd3657a0c236fd8cd33937d44f5c78d8611c6ed"
+    },
+    {
+      "path": "public/blockbench/assets/logo_cutout.svg",
+      "sha256": "99b306b6c97cda3869b1025d855b33d50265e8b0a843d11170ed837a0017c63e"
+    },
+    {
+      "path": "public/blockbench/assets/logo_text_white.svg",
+      "sha256": "e36c84687d5c256df724b475625cf8eed4675b601ab40add1065a4721bd35af5"
+    },
+    {
+      "path": "public/blockbench/assets/missing_blend.png",
+      "sha256": "8e90427f9950fb17578fee5e9f94ee94efacabdca1f9aebdb3f5aa14b42566f3"
+    },
+    {
+      "path": "public/blockbench/assets/missing.png",
+      "sha256": "bf9538c15b9363b1db1b071e758ae5a8b96b9e64e1be728fd6c4106de8772bb7"
+    },
+    {
+      "path": "public/blockbench/assets/netlify-full-logo-dark.svg",
+      "sha256": "ce15cb8a45999a6e9b290a275b6e9f3f5edfd8a43e98926f0ee4dcbe81657a6f"
+    },
+    {
+      "path": "public/blockbench/assets/north.png",
+      "sha256": "d23c4f80ae93a79f9b59f0e371221ef9a3ea59a42c3fb70f2b0f01e5256afdf0"
+    },
+    {
+      "path": "public/blockbench/assets/null_object.png",
+      "sha256": "14d361570f9d3e654b80ff04ac43ecee5256b098e5ae4443a1c45ad399cc26dd"
+    },
+    {
+      "path": "public/blockbench/assets/oak_shelf.png",
+      "sha256": "cb7cf9720f3e50d6cd2e67dd8fde89a4865aa507f84e38d1c0ae0e639dd52c87"
+    },
+    {
+      "path": "public/blockbench/assets/player_skin.png",
+      "sha256": "8f348547559183284492ee38f2ae5d9b7bf95c026dad1efc1ee90786b52869be"
+    },
+    {
+      "path": "public/blockbench/assets/plugins.png",
+      "sha256": "7510a09c2069726a186ff8e72fc476507e93d5fb9f9d35864b8b8eb47c4b2300"
+    },
+    {
+      "path": "public/blockbench/assets/poses/aiming.svg",
+      "sha256": "90fa849f2da47f3126ba145afc918c816182f3b711ba94fb537dab1a6ab4efcd"
+    },
+    {
+      "path": "public/blockbench/assets/poses/crouching.svg",
+      "sha256": "259da3238b9a53f9db0f8037bdd634e509b2f0bda6d8fb19961d06005341d131"
+    },
+    {
+      "path": "public/blockbench/assets/poses/jumping.svg",
+      "sha256": "f662ff5d10657ff4249dabba0445cce147d94c8ea772fa514874d712e1ed1a47"
+    },
+    {
+      "path": "public/blockbench/assets/poses/natural.svg",
+      "sha256": "77d940e143aae46fc73d9bc315b67e464d1195ba012d8c2f87925573f2a56c4d"
+    },
+    {
+      "path": "public/blockbench/assets/poses/none.svg",
+      "sha256": "2e337727d5ecdfd23b9bf4444f1b0b35a7aeb0a126d37f471f4470c7e921be13"
+    },
+    {
+      "path": "public/blockbench/assets/poses/sitting.svg",
+      "sha256": "73a00ecd8f952f87f72f8516706fe2785ae9a1db8d2d1a27a168a261f485ebbe"
+    },
+    {
+      "path": "public/blockbench/assets/poses/walking.svg",
+      "sha256": "573ad038667e4754641e013c4befec2f358602ff7f71e01e2a4510ed08ad96d6"
+    },
+    {
+      "path": "public/blockbench/assets/preview_scenes/studio.png",
+      "sha256": "9c4967bdffc44f78d0a3c90654ce6de267446be576df29ecfb026bc2247f2911"
+    },
+    {
+      "path": "public/blockbench/assets/rotate_cursor.png",
+      "sha256": "b8a7345e762b3a8c3716549b8e7b1fd4e74911190fdbe72ec7123ece96ed81c3"
+    },
+    {
+      "path": "public/blockbench/assets/splash_art.png",
+      "sha256": "bb47b77b5b56cea2a26a00722fa9d7f7bf86432b93aa34e63642090d1a1f559e"
+    },
+    {
+      "path": "public/blockbench/assets/splash_art/1.webp",
+      "sha256": "35c421fe3113ea2966ce60716baf3a1754b8ed442a03d360017161df809e26a5"
+    },
+    {
+      "path": "public/blockbench/assets/splash_art/2.webp",
+      "sha256": "cc26fd41bec68eeef929b506cae81afac2636e484605166c3eb91dc4eae074bd"
+    },
+    {
+      "path": "public/blockbench/assets/splash_art/3.webp",
+      "sha256": "caf325bf8b0caba2b4d6b94a10fb25f3de64fcdadcbb5864b613b55786075c6a"
+    },
+    {
+      "path": "public/blockbench/assets/splash_art/4.webp",
+      "sha256": "19addb0b109e49b6756ee011f67f2670e6677a4755c891dc9e6fd475579a2a66"
+    },
+    {
+      "path": "public/blockbench/assets/uv_preview.png",
+      "sha256": "3bc106e2663e3a0d061e2c0afded74d32a4140775e56eea5c74ad2f037713cba"
+    },
+    {
+      "path": "public/blockbench/assets/vertex.png",
+      "sha256": "83ca60415b097c91afcd548259f023bd1b0ac0866349b31af03e069609d7c089"
+    },
+    {
+      "path": "public/blockbench/assets/zombie.png",
+      "sha256": "1a3177a2dd30388ec02809a8d7b32ab23d9342261650706e8c8c4ca5500f32e8"
+    },
+    {
+      "path": "public/blockbench/content/front_page_app.png",
+      "sha256": "4ab0c64a8b6c7273c81816c17da66f67c5e8579c906dbf199ecbb4fd1c7082d4"
+    },
+    {
+      "path": "public/blockbench/content/ik_pole.png",
+      "sha256": "83f0a3e10a10aac8446121797f0cfbd3898ee35a43f0c161d77d61afd126e081"
+    },
+    {
+      "path": "public/blockbench/content/layer_groups.png",
+      "sha256": "9a2b7979aafe855110ea9107ea260d1fa947bbbe02ef7e060ee53425ccc33dd5"
+    },
+    {
+      "path": "public/blockbench/content/news.json",
+      "sha256": "e5cb2e83e006c5d8255f3a36cfdea9dd30ad92d2c32618f1a3e10ff437463479"
+    },
+    {
+      "path": "public/blockbench/content/reference_images.png",
+      "sha256": "f7a6a936cf92e0cac1bcb608b8ff298fb92680202e5c32db1b193b04ac4966e9"
+    },
+    {
+      "path": "public/blockbench/content/screen_space_brush.png",
+      "sha256": "5728d1971077e9a77084e243d68f36e5fa809b8db9eddd188681dbd4a04bd532"
+    },
+    {
+      "path": "public/blockbench/css/dialogs.css",
+      "sha256": "2ea3f46bc86d3db26d28d828b78059503b59b894f1dc946c881ab44f24fc50cd"
+    },
+    {
+      "path": "public/blockbench/css/fontawesome.css",
+      "sha256": "016a86653f2dcfab9da8e1089ae6067392553dd1ae02d3de68da98e38251d7a0"
+    },
+    {
+      "path": "public/blockbench/css/general.css",
+      "sha256": "1ffc46efa0a050a432bf77c29c5cb5e6c4c01bc493fb779449b2d4e2a0ed24ab"
+    },
+    {
+      "path": "public/blockbench/css/jquery-ui.min.css",
+      "sha256": "dc31f59c57cb22bc2a2d2ccb2dba4a70fd5942cc375240492ac789428a3d980e"
+    },
+    {
+      "path": "public/blockbench/css/panels.css",
+      "sha256": "903bb066f46b5d5b87e2750588d7568f95b10fef8e7d72d2f1a9db459650035e"
+    },
+    {
+      "path": "public/blockbench/css/prism.css",
+      "sha256": "1d86b0bcb0fc6bd877483f94a973762800460d38926138b4c3d1b2d127a80216"
+    },
+    {
+      "path": "public/blockbench/css/setup.css",
+      "sha256": "f0bf820f27a0b3505977773ea5a24fb1c2f2b67c9e0ce537e98debd2541e93f7"
+    },
+    {
+      "path": "public/blockbench/css/spectrum.css",
+      "sha256": "a4ca25a558301dab33dee2070d3d617977685b661f9fee1f6658e261b6b60bb1"
+    },
+    {
+      "path": "public/blockbench/css/start_screen.css",
+      "sha256": "b2fff874ad180f72939d69abaf83d950bfab3a9e5b8d7ae67f3ffb66d82eed73"
+    },
+    {
+      "path": "public/blockbench/css/w3.css",
+      "sha256": "305665273c7055ccc17fef569f99baf550a96ecae13941ee55ed09622f4617da"
+    },
+    {
+      "path": "public/blockbench/css/window.css",
+      "sha256": "f4c7218daa3fe5e429ec13a6abe39c0929dff7c9ec33329615f3a49fdaa4b043"
+    },
+    {
+      "path": "public/blockbench/dist/bundle.js",
+      "sha256": "27cb5a0550ce36a9a847c096c0d0a8d35810532ecb4f7a5a11bc3d8a10120ff7"
+    },
+    {
+      "path": "public/blockbench/favicon.png",
+      "sha256": "94b250c457ee212cc93194be8ef3ee01e5e2d49f634a8dcf865e3a06d1e4111b"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-Bold.ttf",
+      "sha256": "f853d3191ada80a736a4b781d234d04880498bc309759240c34cf63dff0a4be9"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-ExtraBold.ttf",
+      "sha256": "72c4b44b02e598d9fe9e86a56914e84838ba68443b4e775502a98e56f5588fc9"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-ExtraLight.ttf",
+      "sha256": "92100e9f871d7787e1aff2a08213d403543220e0024021e9a5e549e8bbc50133"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-Light.ttf",
+      "sha256": "15df71be475c473af086b5ba6ee16966a4575257867e08d31c9698c5c00adb82"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-Regular.ttf",
+      "sha256": "a371de97ec70f1097296336ab8d35d1e73d3d4dd19e54bea9b8d6025672993a1"
+    },
+    {
+      "path": "public/blockbench/font/Assistant-SemiBold.ttf",
+      "sha256": "6a0cab01d3f902b1d821037ea9b180156964ca34228f416c751a403bc4c01d39"
+    },
+    {
+      "path": "public/blockbench/font/fa-brands-400.woff2",
+      "sha256": "c411f11975d26eb04cd2aa3c071181d4b18e489f1fb97060d4176a3531dfb36e"
+    },
+    {
+      "path": "public/blockbench/font/fa-regular-400.woff2",
+      "sha256": "c732f106e91bc618767fbac8e2c7b27e5c736d477b2bb4fb83f597a43198c33c"
+    },
+    {
+      "path": "public/blockbench/font/fa-solid-900.woff2",
+      "sha256": "1f0189e087fcefbf654fad74a3a06668b782c01353a61d5c0b7f0bf23e33c020"
+    },
+    {
+      "path": "public/blockbench/font/icomoon.ttf",
+      "sha256": "9ef98c2260ffba7c79a8ff14ad86afc5a065f345b7b2ac1fb68fdde4e2303e0c"
+    },
+    {
+      "path": "public/blockbench/font/icomoon.woff",
+      "sha256": "4a15f10a97d8ce84b0dcb1ca8496882a692b0a2f044b16301dbf8b53a4bda44c"
+    },
+    {
+      "path": "public/blockbench/font/material-icons.woff2",
+      "sha256": "6682b29f7d5badced1032b8c114e8a3c27ec79fe6e0e5a32366ca83fc4429c41"
+    },
+    {
+      "path": "public/blockbench/font/Montserrat-VariableFont_wght.ttf",
+      "sha256": "498dc34d0fa45288e0ac5345bd385c98bf81c56ee70209aacfb4a22a6510697c"
+    },
+    {
+      "path": "public/blockbench/icon_full.png",
+      "sha256": "d66c6f937ab38ab5c822c0c24fdc5b50d0a001eabb44a9bd4703bda44670a7f4"
+    },
+    {
+      "path": "public/blockbench/icon_maskable.png",
+      "sha256": "971ad5dcc59a8a868f3867c02fa27947c9e99aa5015a28ee4ae8cb94e00f9d69"
+    },
+    {
+      "path": "public/blockbench/icon.png",
+      "sha256": "7ae8d8c5a37c81b43ff3f9dad96b9ab94c008145b02f9de0425edcd2df166e9b"
+    },
+    {
+      "path": "public/blockbench/icons/favicon_beta.png",
+      "sha256": "fc388734e8b8748737284af2a567b5eb186afad6208297f6d7553151cdfd895a"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/armor_stand_small.svg",
+      "sha256": "f32cd73a981caae00160528470947f4ca7375dd38931b23f709c31eae44a8b83"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/armor_stand.svg",
+      "sha256": "931b980146b99d4dd22d0ac41a0d84ded3a066dae8fc8754776e4b91c832200e"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/baby_zombie.svg",
+      "sha256": "363a910e2efa1d5f83a9bee19dd129239ca13cc226a4f754072caed25557f868"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/bb_interface.svg",
+      "sha256": "28a96b770c4186d009481e11ad31bd92765a36a824595b09c1ca1901f238824d"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/blockbench_file.svg",
+      "sha256": "72730700880c1a38b266dcc2c7bd3377167dbd36379b2e30fd5e78fed5990c90"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/blockbench_inverted.svg",
+      "sha256": "ba79afacc81095b0c4c7d68b956ee93a58d7f48187d700ec077ffe1fab287f8d"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/bow.svg",
+      "sha256": "4117bb270dc348a1a63111416a1a088b967f7725db0655ad45e900c1ead8ae38"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/collada.svg",
+      "sha256": "63364e8668006d9269e75674d2d014b77ef4095790a08f8fe5768963456b9f1e"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/create_bitmap.svg",
+      "sha256": "ddd5cef3cec14960f21888182f1731155b5f8d03e28ac5681b058121dd5b06e4"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/crossbow.svg",
+      "sha256": "a756d74dc3e5678f430c291b5f9964aa57ff3e4912f5bdebf7a6390f37d62d39"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/fbx.svg",
+      "sha256": "29bd531c0b1ed04a8292736d5c0a72830278a90978b920ddad425df62ee25622"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_bedrock_block.svg",
+      "sha256": "bbd3267119b8bfe1abcc1802da0e165126654ace0ffbf3ac4cf261ee4dba086f"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_bedrock_entity.svg",
+      "sha256": "940e869504a3c1d123d338a2d78674e9bbadf1467d60fb2ead1d76e26e72bb5d"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_bedrock_legacy.svg",
+      "sha256": "a48cf6be134f069225f4424c786a95ad32fc9c9e88aedc988c37c439c8b69bbc"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_bedrock.svg",
+      "sha256": "dbd8c72c64dfe60e4431da93d9cc7e72a12eac7db1b94450f0c026d7d9bd7288"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_block.svg",
+      "sha256": "77e29a91b076ca51a2075bcd17e5775db1c3cf861a52936f17eb532c529d3d53"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_free.svg",
+      "sha256": "4111720b016cd72b4f9b028271542e5d6ee76eddca6b86ddc51520cc6ce1e740"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_hytale.svg",
+      "sha256": "3be9dcfa550aa5dec730d26b57b1b850774e0ff1232157439983ea0001e23eef"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_java.svg",
+      "sha256": "ec424bf7cc5264530133c3da375cfb758d8a107ca5e31179245ecef762609876"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/format_optifine.svg",
+      "sha256": "a5b5cb22b11b06fc7bcb23ab0f99f8d7012ff15b436cbae58c973fa085ce268b"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/gizmo.svg",
+      "sha256": "b7909fc2b8668e2862367f38e9e9a6e0c7d6edcf53f8133dbdc0640caa6e97eb"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/gltf.svg",
+      "sha256": "8a80764355ffee0c00156b9676d1c095e8b16ce240f14d8ffea2b7625f00b0a2"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/ground.svg",
+      "sha256": "3a684362736238365a268920157a8ee375588dfc60741e8c3b5084c43c4179ed"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/hud.svg",
+      "sha256": "3e9e90fc35c7f154a287f5f54e8f5918de6ab59d29741b0ac1d082edc4e3282b"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/icon blockbench.svg",
+      "sha256": "2b3b004747f6b99c0fce5a1823e59ed275460b368ca6027c2406fed695438470"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/inventory_full.svg",
+      "sha256": "3a4d26cf2ae1df5b1783aa323521e36c7601450052f7a00e4ae938d665bacae5"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/inventory_nine.svg",
+      "sha256": "3885f212faa9e79e81c9b74660a9a01e715587e780c03dc1011fd1f6e2238535"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/inventory_single.svg",
+      "sha256": "745272cf7933985cdfbb7747125773059130c739c75967702b126a41d4b5c5ef"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe_bezier.svg",
+      "sha256": "48cbde2b0651add2710a8012bed4586a6efd07338569c1f9215af59f009087d4"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe_discontinuous_bezier.svg",
+      "sha256": "a16e3036bf308d6ed5a3c1cb6d286d1fff1f4a08177b6ede555ce2b6e658eae9"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe_discontinuous.svg",
+      "sha256": "2058f19127e415d5bcad58e980d115930c0975677873a8fdea167d5220be2dea"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe_smooth.svg",
+      "sha256": "6e40b449e075ab7aa714e9676c9077d0584b1634b0347b2c3a3e88422f9b66dc"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe_step.svg",
+      "sha256": "05949101c0204ac5543e12721da087bc8b566dacfbd6390e4d9fbbf1ec119ac3"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/keyframe.svg",
+      "sha256": "aa3353c3085b77c77894af7e09a8d95c6f3e6989cc2f0c9ab069d261e436bbb2"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/mirror_x.svg",
+      "sha256": "bfda00dca10800a4aef32ba855748ea6db770a9781e00af250105eb255e075d9"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/mirror_y.svg",
+      "sha256": "da5e8505b3344cce6979c1128733677df78baa38a858a8cdad3a1fa4e5649d35"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/mirror_z.svg",
+      "sha256": "f55ea4cc1b9e0206d0c2adff8a68fb05202ab12fdf8c8e03f426941bd4e71a93"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/objects.svg",
+      "sha256": "f2ab785d678dd6a6cea5e024dcdaaed1c014be1c09f43b2f8f5b9f0350d4a1d0"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/optifine_file.svg",
+      "sha256": "d75f38e74a9ce4c8aa7109b86a6fe16df52a8f46a5ae5b0f55eca57292e95687"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/player_head.svg",
+      "sha256": "5a5493ab3c8f1b8e158a3fb465e6c6c58def260a982eb09904ac522a5d49ecd1"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/player.svg",
+      "sha256": "2182a1799c58c4bcd90f4d68393e103bf9351fd93ae258f690663c83f08f595f"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/saved.svg",
+      "sha256": "b68f5e8f7071ae6d61f49675517409dec47e69326d1ee8952b7a3900614cbe16"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/selection.json",
+      "sha256": "0f8ba06330cbae05dc8c0832dd39a948ee9c90ae89403ef786b66e373cdaece6"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/sketchfab.svg",
+      "sha256": "7614a72916e1dde5ffec28b874e3c965ff30d2ab8a6fdf487c7f18f3e3e6df1d"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/vertexsnap.svg",
+      "sha256": "4333f8e0b8657763fd570ad59fa14ebb816665d26d495a14ae789d9269247fcb"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/x11.svg",
+      "sha256": "b65920f09bf54f4239ffaf2c0a93f174755817a6669bb3b4589026974e6e0980"
+    },
+    {
+      "path": "public/blockbench/icons/icomoon/zombie.svg",
+      "sha256": "47362cf7635e8c03f317a9a11eacc69fdbd498673683343e5c9626b4b6c84926"
+    },
+    {
+      "path": "public/blockbench/icons/icon_maskable_beta.png",
+      "sha256": "013fa457d2abdd0934f8ee21a23651bd6142090503f06b0ad8b1d6600b1c3d6a"
+    },
+    {
+      "path": "public/blockbench/index.html",
+      "sha256": "1b7e5525cb182c71b5f55b0b8498b38b546631ec854b81e8b36b824155574fd6"
+    },
+    {
+      "path": "public/blockbench/keymaps/blender.bbkeymap",
+      "sha256": "d9433d10c1cff90c9d62eb4d94e74e60f1b047fc3986f66d29cd28a5ffbb71d3"
+    },
+    {
+      "path": "public/blockbench/keymaps/cinema4d.bbkeymap",
+      "sha256": "35922abd4c707c8f5a296acb1f350afcc199bc6af29dbb3489ffea0a9d9a128f"
+    },
+    {
+      "path": "public/blockbench/keymaps/maya.bbkeymap",
+      "sha256": "0639a3f3699835b03b752f1e3bb1ccff80d54eda0212b7c20d49b331b258015d"
+    },
+    {
+      "path": "public/blockbench/lang/ar.json",
+      "sha256": "1a140996035663277aabe6921a7718dcd21378ec5a7825c33be720d9df14a3fc"
+    },
+    {
+      "path": "public/blockbench/lang/cz.json",
+      "sha256": "3bf05ea9879cd5704ca0a19a64ff8f508033ed2b1b60e6e910cb913496aef568"
+    },
+    {
+      "path": "public/blockbench/lang/de.json",
+      "sha256": "d675b07574d039be7ebd8b33e06341492f1888b8db1e8682c0cc959eae6c8cfe"
+    },
+    {
+      "path": "public/blockbench/lang/en.json",
+      "sha256": "ed9cbd33665394fb51bef1c5b79f678340586c6cd8e967a9177d0bfea82dbea4"
+    },
+    {
+      "path": "public/blockbench/lang/es.json",
+      "sha256": "7221268927fbf5707192949af51fc67dd9adc4816b280739bb5dff0d8a2425ee"
+    },
+    {
+      "path": "public/blockbench/lang/fr.json",
+      "sha256": "ed241c998c8a54507491fec232462f01a4ca21966f81bc15018ffcd39c895a54"
+    },
+    {
+      "path": "public/blockbench/lang/it.json",
+      "sha256": "70ca84ec1a457fbf31046c2a508d249b5687aca973180914524acbe61898d0d4"
+    },
+    {
+      "path": "public/blockbench/lang/ja.json",
+      "sha256": "6282abe546a040230f0e4fbcf41ec5a3ba20fde2a52d54bf8c78d69251b2840a"
+    },
+    {
+      "path": "public/blockbench/lang/ko.json",
+      "sha256": "a1c345bd32885e3564f6aed6193f0a636cf2bd37cca0f1487f3c016b046ab529"
+    },
+    {
+      "path": "public/blockbench/lang/nl.json",
+      "sha256": "ef3cbc427ef67e6074c9923e42f3082a5be80bc38d1433005505ce6c1485294a"
+    },
+    {
+      "path": "public/blockbench/lang/pl.json",
+      "sha256": "19d1d3626b0bf4c0d9ed0b2c663b49bc76cd1eebbb234bed97e9dea613bf0751"
+    },
+    {
+      "path": "public/blockbench/lang/pt_br.json",
+      "sha256": "b691ef6ec05e02dbde97da1fb90d781362c3fb542935c6c985fffc295cc83f7c"
+    },
+    {
+      "path": "public/blockbench/lang/pt.json",
+      "sha256": "ca929a0bb1671fd67dc5faf76a8a4b40523e5f808c363ab677466ad2df75380a"
+    },
+    {
+      "path": "public/blockbench/lang/ru.json",
+      "sha256": "e47d35349df6f1a33c7f4e90f7758cd754ee47db7b2fadbc7191d1ac94af0975"
+    },
+    {
+      "path": "public/blockbench/lang/sv.json",
+      "sha256": "27acf151bcdcffbec22f373418f3d82936c521eea6a8a8d66d8bb6fc92c6e001"
+    },
+    {
+      "path": "public/blockbench/lang/th.json",
+      "sha256": "cd444b73d0218ee89d3cdbc4861d0a5338bca6803d0eedb331c907fb4224def9"
+    },
+    {
+      "path": "public/blockbench/lang/tr.json",
+      "sha256": "e26a48edbe1461f7e96c39b2bfec3614cc4a89630aec052bc151cb3a5b6f69b9"
+    },
+    {
+      "path": "public/blockbench/lang/uk.json",
+      "sha256": "6be93795e2bd684ed15d50cb4166cd1f9229da1eaf30e20c0dcef36c76a8cb91"
+    },
+    {
+      "path": "public/blockbench/lang/vi.json",
+      "sha256": "440a9c267ecb37acc22b5d58fc4fda2abeef7efdfec7b91846182b93d7a82a2d"
+    },
+    {
+      "path": "public/blockbench/lang/zh_tw.json",
+      "sha256": "edc145f322e041bf031e2a78cefc56de01f7a51344eab85ace822594fe9443ae"
+    },
+    {
+      "path": "public/blockbench/lang/zh.json",
+      "sha256": "a14e5f3a1d3dc72efe7ca0384b6ba78df368fb0118882c5eff1305932f3407b4"
+    },
+    {
+      "path": "public/blockbench/lib/gif.worker.js",
+      "sha256": "12d4e7864e712d7b45c81409d0ba811f9dd09c8924c951984d7ccfea75946f32"
+    },
+    {
+      "path": "public/blockbench/LICENSE.MD",
+      "sha256": "81cbae84a29ce7e770bf2bc7b178e50bda0ce8de6067aba661b0bc7b05b562f8"
+    },
+    {
+      "path": "public/blockbench/manifest.webmanifest",
+      "sha256": "aa7753b7b6d573924dc686ba53d4300e3bdec37255024193b2901acafdea63f5"
+    },
+    {
+      "path": "public/blockbench/themes/contrast.bbtheme",
+      "sha256": "8dcba9d226b73879866da1971f40ca6cacdabf2e4bd640a6609a0376c645f2b2"
+    },
+    {
+      "path": "public/blockbench/themes/dark.bbtheme",
+      "sha256": "36fe36ce5f3d1990699ec485a0964f3d7c1ec3486c60b430af30e7f83c6dc131"
+    },
+    {
+      "path": "public/blockbench/themes/light.bbtheme",
+      "sha256": "b8742e2dd3ea6da739fe2c2b5e0807901bccea4cd24aa8ca804957f5674e0dc9"
     },
     {
       "path": "public/editor.js",
@@ -48,16 +688,24 @@
       "sha256": "684ad5b531f81d43c1e8c7038262d5db7cdc1f68006e04d6c7769efa8d33c8cc"
     },
     {
+      "path": "public/glass-scene-aurora.webp",
+      "sha256": "5485222d808ce401e6913cfd28bc41f8f1e4c38cb3a8f055f21f3f8b1cfc9c6b"
+    },
+    {
+      "path": "public/glass-scene-cherry.webp",
+      "sha256": "171a2354ee84111f42233ab440fa3fe8083efc2f6e06629ad4cb1efc9045bf02"
+    },
+    {
       "path": "public/glass-scene.webp",
       "sha256": "62032ad2aad957171f37116def0642e949cdc528dc985af6716a9535d7e41c66"
     },
     {
       "path": "public/glass-skin.css",
-      "sha256": "e705657f830c5e02b33b54204bb4cd35abd393413dfe15a1fe47c9aed2c4d5c2"
+      "sha256": "7d0d3f312d4b1d6b5333ed61a60112b58b954c4e2cecd04813b36a91327a974c"
     },
     {
       "path": "public/index.html",
-      "sha256": "009d5ba31dbf028dd64e6b4d647e155f1da3092653d6eb83adcc25278214ee89"
+      "sha256": "a6f19cbd2ac6ed5275a6ba61e173b5d64817eb3c35160acac08e3721955a18b1"
     },
     {
       "path": "public/industrial.css",
@@ -105,7 +753,7 @@
     },
     {
       "path": "server/http.js",
-      "sha256": "f6f9f62c717b4c12028a266c015035ca8cca9a2e888c7f9f3a1a0f34046826b2"
+      "sha256": "1ac9b28120e77023790899d01f2b2704d8dd403416c155314800c0e4f0574e76"
     },
     {
       "path": "server/index.js",

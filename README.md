@@ -19,7 +19,7 @@
 
 ---
 
-> **New in [0.3.3](CHANGELOG.md):** a lighter build (WebP wallpapers, 7.2 MB → 0.8 MB) and Mod Studio alpha 11 with Liquid Glass as default and a fix for lost edits during saves.
+> **New in [0.3.4](CHANGELOG.md):** the full Blockbench editor inside Mod Studio with guided steps, a redesigned AI chat in every layout, and a glass launch animation.
 >
 > **0.3.2:** **UI 5 · Liquid Glass** – frosted panels over your Minecraft world with soft transitions – plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.
 >

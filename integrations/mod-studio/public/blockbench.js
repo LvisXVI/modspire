@@ -82,8 +82,9 @@ export function importBlockbenchProject(project) {
     const faces = {};
     for (const direction of FACE_NAMES) {
       const source = element.faces?.[direction];
-      if (!source || source.texture === null || source.texture === undefined) continue;
-      const textureId = Number(source.texture);
+      if (!source || source.texture === false) continue;
+      // Cubes added in Blockbench start without a texture; Mod Studio has one texture per element, so they get it.
+      const textureId = source.texture === null || source.texture === undefined ? 0 : Number(source.texture);
       if (!Number.isInteger(textureId) || textureId < 0 || textureId >= (project.textures?.length || 1)) {
         throw new Error('Eine Cube-Seite verweist auf eine unbekannte Blockbench-Textur.');
       }

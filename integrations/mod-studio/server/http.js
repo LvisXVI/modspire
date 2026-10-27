@@ -7,15 +7,17 @@ import { pathToFileURL } from 'node:url';
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.ico': 'image/x-icon', '.json': 'application/json; charset=utf-8',
+  '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.webmanifest': 'application/manifest+json', '.gif': 'image/gif', '.jpg': 'image/jpeg',
+  '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.md': 'text/markdown; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.bbmodel': 'application/json; charset=utf-8',
 };
 const MAX_BODY_BYTES = 2_000_000;
 
 export function createServer({ publicDir, projectStore, services, updates, version = '0.1.0-alpha.3' }) {
   const root = resolve(publicDir);
   return createHttpServer(async (req, res) => {
-    addSecurityHeaders(res);
     try {
       const url = new URL(req.url || '/', 'http://127.0.0.1');
+      addSecurityHeaders(res, url.pathname);
       if (req.method === 'GET' && url.pathname === '/api/health') return json(res, 200, { ok: true, version });
       if (url.pathname.startsWith('/api/')) return await routeApi(req, res, url, projectStore, services, updates);
       if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'Diese Anfrage ist nicht verfügbar.' });
@@ -88,7 +90,9 @@ async function serveStatic(req, res, root, pathname) {
     await access(file);
     const fileStat = await stat(file);
     if (!fileStat.isFile()) return json(res, 404, { error: 'Seite nicht gefunden.' });
-    res.writeHead(200, { 'Content-Type': MIME_TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'Content-Length': fileStat.size, 'Cache-Control': 'no-store' });
+    // the vendored Blockbench build only changes with an app update; let the frame reuse it
+    const cache = relative.startsWith('blockbench/') ? 'private, max-age=86400' : 'no-store';
+    res.writeHead(200, { 'Content-Type': MIME_TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'Content-Length': fileStat.size, 'Cache-Control': cache });
     if (req.method === 'HEAD') return res.end();
     createReadStream(file).pipe(res);
   } catch {
@@ -117,11 +121,19 @@ function json(res, status, value) {
   res.end(JSON.stringify(value));
 }
 
-function addSecurityHeaders(res) {
+function addSecurityHeaders(res, pathname = '/') {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'no-referrer');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
+  if (pathname.startsWith('/blockbench/')) {
+    // The bundled Blockbench web app runs in a same-origin frame. Its UI compiles Vue templates
+    // and uses inline styles and blob workers; connect-src stays local, so its telemetry and
+    // online plugin store are never reached.
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'");
+    return;
+  }
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
 }
 
 function safeErrorMessage(error) {

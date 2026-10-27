@@ -1,0 +1,49 @@
+/* Mod Studio look for the embedded Blockbench. Loaded into the Blockbench frame by blockbench-embed.js;
+   Blockbench itself stays unmodified. --ms-accent follows the selected Mod Studio design. */
+html body {
+  --ms-accent: #c6ff4a;
+  --color-ui: #131917 !important;
+  --color-back: #0e1211 !important;
+  --color-dark: #080b0a !important;
+  --color-border: #1f2925 !important;
+  --color-selected: #23302a !important;
+  --color-elevated: #19211e !important;
+  --color-button: #212b27 !important;
+  --color-bright_ui: #eef3f0 !important;
+  --color-accent: var(--ms-accent) !important;
+  --color-frame: #060807 !important;
+  --color-text: #dce4df !important;
+  --color-light: #f4f8f5 !important;
+  --color-accent_text: #08100b !important;
+  --color-bright_ui_text: #08100b !important;
+  --color-subtle_text: #85928b !important;
+  --color-grid: #25302b !important;
+  --color-wireframe: #6d8c7a !important;
+  --color-checkerboard: #0b0f0d !important;
+  background: #060807;
+}
+
+
+/* Mod Studio provides its own download and project handling */
+#web_download_button { display: none !important; }
+
+/* softer chrome */
+header { background: linear-gradient(180deg, #151c19, #101513) !important; border-bottom: 1px solid rgba(255, 255, 255, .05); }
+.panel, .panel_container { border-radius: 10px; }
+.tool, .toolbar .tool, .bar_select, .menu_bar_point { border-radius: 8px !important; transition: background-color .15s, color .15s; }
+.tool:hover, .menu_bar_point:hover { background-color: rgba(255, 255, 255, .07) !important; }
+.tool.enabled, .tool.selected { background-color: color-mix(in srgb, var(--ms-accent) 20%, transparent) !important; color: var(--ms-accent) !important; }
+button, .dialog_bar button { border-radius: 10px !important; }
+input[type="text"], input[type="number"], .dark_bordered, .bar_select select { border-radius: 8px !important; }
+.contextMenu, .menu, ul.contextMenu { border-radius: 12px !important; overflow: hidden; border: 1px solid rgba(255, 255, 255, .08) !important; box-shadow: 0 18px 50px -18px rgba(0, 0, 0, .9) !important; }
+dialog, .dialog { border-radius: 16px !important; overflow: hidden; }
+
+/* mode switcher as pills */
+#mode_selector li { border-radius: 999px !important; margin: 0 2px; }
+#mode_selector li.selected { background: var(--ms-accent) !important; color: var(--color-accent_text) !important; }
+
+/* focus that stays visible on dark surfaces */
+:focus-visible { outline: 2px solid var(--ms-accent) !important; outline-offset: 1px; }
+
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .14) !important; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .24) !important; }

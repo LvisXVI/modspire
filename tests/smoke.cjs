@@ -52,9 +52,10 @@ const profileIconTools = require('../main.cjs');
   const preload = fs.readFileSync(require.resolve('../preload.cjs'), 'utf8');
   const packageJson = JSON.parse(fs.readFileSync(require.resolve('../package.json'), 'utf8'));
   const appIcon = fs.readFileSync(path.join(__dirname, '..', 'assets', 'modspire.ico'));
-  assert.equal(appIcon.readUInt16LE(2), 1);
-  assert.equal(appIcon.readUInt16LE(4), 1);
-  assert.equal(appIcon.readUInt32LE(14), appIcon.length - 22);
+  assert.equal(appIcon.readUInt16LE(2), 1, 'app icon is an ICO file');
+  const iconCount = appIcon.readUInt16LE(4);
+  assert.ok(iconCount >= 4, 'app icon carries several sizes, so Windows shows it sharp everywhere');
+  for (let i = 0; i < iconCount; i++) { const size = appIcon.readUInt32LE(6 + i * 16 + 8), offset = appIcon.readUInt32LE(6 + i * 16 + 12); assert.ok(offset + size <= appIcon.length, 'icon entries stay inside the file'); }
   assert.equal(packageJson.build.win.icon, 'assets/modspire.ico');
   const profilePng = profileIconTools.createProfileIconPng('L');
   const profileIco = profileIconTools.makePngIco(profilePng);

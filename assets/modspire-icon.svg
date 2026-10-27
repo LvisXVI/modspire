@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Modspire: a spire of three isometric blocks (grass, stone, diamond) crowned by a crystal spark, on a glass tile -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2150b0"/>
+      <stop offset=".55" stop-color="#162a68"/>
+      <stop offset="1" stop-color="#0a1230"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".26" r=".5">
+      <stop offset="0" stop-color="#7ff0e4" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#7ff0e4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#000" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".6"/>
+      <stop offset=".4" stop-color="#fff" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".2"/>
+    </linearGradient>
+    <linearGradient id="crystal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".45" stop-color="#8ff6ea"/>
+      <stop offset="1" stop-color="#9b86ff"/>
+    </linearGradient>
+    <clipPath id="clip"><rect x="8" y="8" width="240" height="240" rx="58"/></clipPath>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="58" fill="url(#tile)"/>
+  <g clip-path="url(#clip)">
+    <rect x="8" y="8" width="240" height="240" fill="url(#glow)"/>
+    <path d="M8 104 L248 24 L248 66 L8 146 Z" fill="#fff" opacity=".05"/>
+    <ellipse cx="128" cy="214" rx="74" ry="16" fill="url(#shadow)"/>
+  </g>
+  <g transform="translate(0 -4)">
+    <!-- grass block -->
+    <g transform="translate(128 164)">
+      <path d="M0 -26 L52 0 L0 26 L-52 0 Z" fill="#74e06c"/>
+      <path d="M-52 0 L0 26 L0 66 L-52 40 Z" fill="#8d5b2c"/>
+      <path d="M52 0 L0 26 L0 66 L52 40 Z" fill="#6c4321"/>
+      <!-- grass edge with pixel drips -->
+      <path d="M-52 0 L0 26 L0 36 L-8 32 L-8 38 L-20 32 L-20 28 L-32 22 L-32 28 L-44 22 L-44 14 L-52 10 Z" fill="#52c454"/>
+      <path d="M52 0 L0 26 L0 36 L10 31 L10 37 L22 31 L22 25 L34 19 L34 25 L46 19 L46 13 L52 10 Z" fill="#3fa346"/>
+      <!-- dirt specks -->
+      <path d="M-40 34 l6 3 v5 l-6 -3 Z M-22 46 l6 3 v5 l-6 -3 Z M18 46 l6 -3 v5 l-6 3 Z M36 34 l6 -3 v5 l-6 3 Z" fill="#5a3618" opacity=".7"/>
+      <path d="M0 -26 L52 0 L0 26 L-52 0 Z" fill="none" stroke="#b9ffb0" stroke-opacity=".45" stroke-width="1.5"/>
+    </g>
+    <!-- stone block -->
+    <g transform="translate(128 124)">
+      <path d="M0 -19 L38 0 L0 19 L-38 0 Z" fill="#d3ddee"/>
+      <path d="M-38 0 L0 19 L0 49 L-38 30 Z" fill="#96a3bb"/>
+      <path d="M38 0 L0 19 L0 49 L38 30 Z" fill="#717d97"/>
+      <path d="M-38 15 L0 34 M0 34 L38 15 M-19 9.5 V24.5 M19 9.5 V24.5" stroke="#5b667e" stroke-width="2" opacity=".55" fill="none"/>
+    </g>
+    <!-- diamond block -->
+    <g transform="translate(128 92)">
+      <path d="M0 -13 L25 0 L0 13 L-25 0 Z" fill="#c2fff8"/>
+      <path d="M-25 0 L0 13 L0 34 L-25 21 Z" fill="#4dd6c8"/>
+      <path d="M25 0 L0 13 L0 34 L25 21 Z" fill="#2aa29c"/>
+      <path d="M-16 8 l5 2.5 v5 l-5 -2.5 Z M10 13 l5 -2.5 v5 l-5 2.5 Z" fill="#e9fffc" opacity=".8"/>
+    </g>
+    <!-- crystal spark -->
+    <g transform="translate(128 52)">
+      <circle r="24" fill="#7ff0e4" opacity=".22"/>
+      <path d="M0 -22 L5.5 -5.5 L22 0 L5.5 5.5 L0 22 L-5.5 5.5 L-22 0 L-5.5 -5.5 Z" fill="url(#crystal)"/>
+    </g>
+  </g>
+  <rect x="9.5" y="9.5" width="237" height="237" rx="56.5" fill="none" stroke="url(#rim)" stroke-width="3"/>
+</svg>

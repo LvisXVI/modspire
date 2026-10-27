@@ -292,16 +292,59 @@ function createProfileIconPng(initial) {
   const raw=Buffer.concat(rows);
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',Buffer.from([0,0,0,size,0,0,0,size,8,6,0,0,0])),chunk('IDAT',zlib.deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]);
 }
+// ICO with one PNG entry per size, largest first.
+function makeIco(entries) {
+  const sorted = [...entries].sort((a, b) => b.size - a.size);
+  const header = Buffer.alloc(6 + 16 * sorted.length);
+  header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(sorted.length, 4);
+  let offset = header.length;
+  sorted.forEach(({ size, png }, i) => {
+    const at = 6 + i * 16;
+    header.writeUInt8(size >= 256 ? 0 : size, at); header.writeUInt8(size >= 256 ? 0 : size, at + 1);
+    header.writeUInt16LE(1, at + 4); header.writeUInt16LE(32, at + 6); header.writeUInt32LE(png.length, at + 8); header.writeUInt32LE(offset, at + 12);
+    offset += png.length;
+  });
+  return Buffer.concat([header, ...sorted.map(entry => entry.png)]);
+}
+function profileBadgeSvg(initial, viewBox, cx, ring, radius, fontSize) {
+  const letter = String(initial).replace(/[<>&"']/g, '');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${viewBox} ${viewBox}" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#ff7a59"/></linearGradient></defs><circle cx="${cx}" cy="${cx}" r="${ring}" fill="#0a1230"/><circle cx="${cx}" cy="${cx}" r="${radius}" fill="url(#b)"/><text x="${cx}" y="${cx}" dy=".35em" text-anchor="middle" font-family="Segoe UI Variable Display, Segoe UI, Arial, sans-serif" font-weight="800" font-size="${fontSize}" fill="#2a1200">${letter}</text></svg>`;
+}
+// Renders SVG markup in a hidden off-screen window and returns it as a native image.
+async function renderSvgImage(markup, size) {
+  const win = new BrowserWindow({ show: false, width: size, height: size, useContentSize: true, frame: false, transparent: true, webPreferences: { offscreen: true, javascript: false } });
+  try {
+    await win.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`<!doctype html><html><body style="margin:0;background:transparent;overflow:hidden"><div style="position:relative;width:${size}px;height:${size}px">${markup}</div></body></html>`));
+    await new Promise(resolve => setTimeout(resolve, 150));
+    return await win.webContents.capturePage({ x: 0, y: 0, width: size, height: size });
+  } finally { win.destroy(); }
+}
+// The Modspire app icon with the profile's initial as a badge, at every Windows icon size.
+async function renderProfileIconPngs(initial) {
+  const fit = svg => svg.replace('<svg ', '<svg style="position:absolute;inset:0;width:100%;height:100%" ');
+  const big = await fs.readFile(path.join(__dirname, 'assets', 'modspire-icon.svg'), 'utf8');
+  const small = await fs.readFile(path.join(__dirname, 'assets', 'modspire-icon-small.svg'), 'utf8');
+  const large = await renderSvgImage(fit(big) + profileBadgeSvg(initial, 256, 196, 45, 38, 46), 256);
+  const tiny = await renderSvgImage(fit(small) + profileBadgeSvg(initial, 32, 24, 8, 6.8, 8.5), 64);
+  if (large.isEmpty() || tiny.isEmpty()) throw new Error('Profilsymbol konnte nicht gezeichnet werden.');
+  return [256, 128, 64, 48].map(size => ({ size, png: large.resize({ width: size, height: size, quality: 'best' }).toPNG() }))
+    .concat([32, 24, 16].map(size => ({ size, png: tiny.resize({ width: size, height: size, quality: 'best' }).toPNG() })));
+}
+// The EXE the user actually starts: the portable build unpacks itself to a temp folder, so
+// process.execPath would point there and the shortcut would break once the app closes.
+function launcherExecutable() { return process.env.PORTABLE_EXECUTABLE_FILE || process.execPath; }
 async function createProfileDesktopShortcut(username, settings = {}) {
   if (process.platform !== 'win32' || !app.isPackaged) return false;
   const desktop = app.getPath('desktop');
   const initial = profileInitial(username);
   const iconDirectory = path.join(app.getPath('userData'), 'profile-icons');
   await fs.mkdir(iconDirectory, { recursive: true });
-  const iconVersion = 'profile-icon-v3';
+  const iconVersion = 'profile-icon-v4';
   const iconPath = path.join(iconDirectory, `${crypto.createHash('sha256').update(`${iconVersion}:${username}`).digest('hex').slice(0, 16)}.ico`);
-  const png = createProfileIconPng(initial);
-  await fs.writeFile(iconPath, makePngIco(png));
+  let ico;
+  try { ico = makeIco(await renderProfileIconPngs(initial)); }
+  catch (error) { console.warn('Profilsymbol: einfaches Ersatzsymbol wird verwendet.', error.message); ico = makePngIco(createProfileIconPng(initial)); }
+  await fs.writeFile(iconPath, ico);
 
   const baseName = `${safeFilePart(username)} – Modspire`;
   let shortcutPath = path.join(desktop, `${baseName}.lnk`);
@@ -309,7 +352,7 @@ async function createProfileDesktopShortcut(username, settings = {}) {
     if (settings.desktopShortcutPath && path.resolve(settings.desktopShortcutPath) === path.resolve(shortcutPath)) break;
     shortcutPath = path.join(desktop, `${baseName} (${suffix}).lnk`);
   }
-  const ps = `$ErrorActionPreference='Stop';$w=New-Object -ComObject WScript.Shell;$s=$w.CreateShortcut(${psQuote(shortcutPath)});$s.TargetPath=${psQuote(process.execPath)};$s.WorkingDirectory=${psQuote(path.dirname(process.execPath))};$s.IconLocation=${psQuote(iconPath)};$s.Description=${psQuote(`Modspire – lokales Profil ${username}`)};$s.Save()`;
+  const ps = `$ErrorActionPreference='Stop';$w=New-Object -ComObject WScript.Shell;$s=$w.CreateShortcut(${psQuote(shortcutPath)});$s.TargetPath=${psQuote(launcherExecutable())};$s.WorkingDirectory=${psQuote(path.dirname(launcherExecutable()))};$s.IconLocation=${psQuote(iconPath)};$s.Description=${psQuote(`Modspire – lokales Profil ${username}`)};$s.Save()`;
   await new Promise((resolve, reject) => {
     const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', Buffer.from(ps, 'utf16le').toString('base64')], { windowsHide: true, stdio: 'ignore' });
     child.once('error', reject); child.once('exit', code => code === 0 ? resolve() : reject(new Error(`Desktop-Verknüpfung konnte nicht erstellt werden (PowerShell ${code}).`)));
@@ -1600,4 +1643,4 @@ app.on('before-quit',()=>{localWeb?.close();modStudio?.close();});
 app.whenReady().then(() => { getDiagnostics().record('session-start', 'Werkstatt gestartet.'); createWindow(); app.on('activate', () => { if (!BrowserWindow.getAllWindows().length) createWindow(); }); });
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 
-module.exports = { createProfileIconPng, makePngIco, parseChatAnswer, fallbackModSearchTerms, fallbackExplicitModNames, applyExactModIntent, resolveSpokenModAlias };
+module.exports = { createProfileIconPng, makePngIco, makeIco, renderProfileIconPngs, parseChatAnswer, fallbackModSearchTerms, fallbackExplicitModNames, applyExactModIntent, resolveSpokenModAlias };

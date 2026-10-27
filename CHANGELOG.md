@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.7] — New icon, personal desktop shortcut (2026-10-27)
+
+### Changed
+- New Modspire icon: a spire of grass, stone and diamond blocks crowned by a crystal spark, on a glass tile. The app icon now carries seven sizes (16–256 px) with a simplified drawing for the small ones, so it stays sharp in the taskbar, Explorer and on the desktop.
+- The personal desktop shortcut created after you choose your name on first start uses the new icon with your initial as a badge, drawn sharp at every size.
+
+### Fixed
+- The personal desktop shortcut of the portable build pointed to its temporary unpack folder and stopped working once the app was closed; it now points to the EXE you started.
+
 ## [0.3.6] — Calmer surfaces, new sidebar, resizable window (2026-10-27)
 
 ### Changed

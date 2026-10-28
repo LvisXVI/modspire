@@ -9,3 +9,9 @@ html body #workspace-grid .selected-section:has(.empty-selected:not([hidden])) :
 
 /* helper text was 9-11 px in places */
 html body :is(.lab-footnote, .composer-hint, .chat-footnote, .hint, .mod-selection-heading p, .settings-local) { font-size: 12px !important; line-height: 1.5 !important; }
+
+/* Pack lab with no mods: the four analysis cards only repeat "0"; show one short note instead. */
+html body .lab-empty-note { display: none; }
+html body #lab-panel[data-empty] .lab-empty-note { display: grid; gap: 4px; grid-column: 1 / -1; padding: 16px 20px; border-radius: 20px; border: 1px dashed color-mix(in srgb, currentColor 28%, transparent); background: color-mix(in srgb, currentColor 5%, transparent); }
+html body #lab-panel[data-empty] .lab-empty-note span { font-size: 13px; opacity: .75; }
+html body #lab-panel[data-empty] :is(.dna-card, .compass-card, .world-card, .sound-card) { display: none !important; }

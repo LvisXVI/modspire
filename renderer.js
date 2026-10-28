@@ -391,7 +391,7 @@ const labRoles=[
 function roleForMod(mod){const value=[mod.title,mod.description,(mod.categories||[]).join(' ')].join(' ');return labRoles.find(role=>role.test.test(value))?.name||'Vielfalt'}
 function renderLab(){
   if(!$('lab-panel'))return;
-  const mods=state.project.mods||[];$('lab-mod-count').textContent=mods.length+' '+(mods.length===1?'Mod':'Mods');
+  const mods=state.project.mods||[];$('lab-mod-count').textContent=mods.length+' '+(mods.length===1?'Mod':'Mods');{const panel=$('lab-panel'),note=$('lab-empty-note'),en=(window.workshopI18n?.locale||'de').startsWith('en');panel.toggleAttribute('data-empty',!mods.length);if(note){note.firstChild.textContent=en?'Your pack is still empty':'Dein Pack ist noch leer';note.lastChild.textContent=en?'The analysis cards appear as soon as you add mods. Notes, library and tools below work already.':'Die Analyse-Karten erscheinen, sobald du Mods hinzufügst. Notizen, Bibliothek und Werkzeuge darunter funktionieren schon.'}}
   const counts=Object.fromEntries(labRoles.map(role=>[role.name,0]));counts.Vielfalt=0;mods.forEach(mod=>counts[roleForMod(mod)]++);
   const graph=$('dna-graph');graph.replaceChildren();const ns='http://www.w3.org/2000/svg';const svg=(tag,attrs)=>{const el=document.createElementNS(ns,tag);Object.keys(attrs).forEach(key=>el.setAttribute(key,attrs[key]));return el};
   graph.append(svg('circle',{cx:140,cy:94,r:32,fill:'rgba(58,142,212,.12)',stroke:'#6eafe2','stroke-width':2}));

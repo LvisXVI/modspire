@@ -9,11 +9,11 @@ const { chromium } = require('playwright');
     .map(file => fs.readFileSync(path.join(root, file), 'utf8')).join('\n');
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const renderer = fs.readFileSync(path.join(root, 'renderer.js'), 'utf8');
-  assert.match(html, /id="theme-opacity"[^>]*min="30"[^>]*value="88"/);
+  assert.match(html, /id="theme-opacity"[^>]*min="8"[^>]*value="88"/);
   assert.match(html, /data-theme-choice="clear"[^>]*>[\s\S]*?Kristallglas[\s\S]*?kräftiger Hintergrund-Blur/);
   assert.match(html, /data-theme-choice="translucent"[^>]*>[\s\S]*?Milchglas-Türkis[\s\S]*?einstellbarer Deckkraft/);
-  assert.match(renderer, /themeSurfaceOpacity\s*=\s*Math\.max\(30,[^;]+\)/);
-  assert.match(renderer, /themeSurfaceOpacity=Math\.max\(30,/);
+  assert.match(renderer, /themeSurfaceOpacity\s*=\s*Math\.max\(8,[^;]+\)/);
+  assert.match(renderer, /themeSurfaceOpacity=Math\.max\(8,/);
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   try {
     const page = await browser.newPage();

@@ -4,6 +4,12 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.13] — Real glass in Translucent designs (2026-10-28)
+
+### Fixed
+- Fluid Glass, Crystal Glass and Translucent now look like real glass in the dark Glass and UI 4 layouts: the chat panel, composer, bubbles, bars and cards start at roughly a fifth of opacity with a light glass tint, a blur and a darkening layer behind, so the scene shows through and text stays readable. The opacity control now goes down to 8 %.
+- The other layouts keep their usual opacity until you set a value yourself.
+
 ## [0.3.12] — Glass palettes are see-through again (2026-10-28)
 
 ### Fixed

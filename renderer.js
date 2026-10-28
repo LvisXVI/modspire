@@ -52,9 +52,9 @@ let currentTheme = 'blue';
 let currentWallpaper = localStorage.getItem('mw-wallpaper') || (localStorage.getItem('mw-theme') === 'voxel' ? 'voxel' : 'none');
 const storedSurfaceOpacity = Number(localStorage.getItem('mw-theme-opacity'));
 let opacityIsCustom = Boolean(storedSurfaceOpacity);
-let themeSurfaceOpacity = Math.max(30, Math.min(100, storedSurfaceOpacity || 88));
+let themeSurfaceOpacity = Math.max(8, Math.min(100, storedSurfaceOpacity || 88));
 // the see-through glass palettes start clearly translucent until the user picks a value
-const glassSurfaceOpacity = { fluid: 36, clear: 32, translucent: 38 };
+const glassSurfaceOpacity = { fluid: 22, clear: 18, translucent: 24 };
 let wallpaperMotionEnabled = localStorage.getItem('mw-wallpaper-motion') !== 'false';
 let selectedUserAvatar = localStorage.getItem('mw-user-avatar') || '';
 let skinUsername = localStorage.getItem('mw-skin-username') || '';
@@ -103,6 +103,7 @@ function applyTheme(theme = currentTheme, colors = themeColors, persist = true) 
   document.body.style.setProperty('--custom-surface', themeColors.surface);
   document.body.style.setProperty('--custom-background', themeColors.background);
   if (!opacityIsCustom) themeSurfaceOpacity = glassSurfaceOpacity[currentTheme] ?? 88;
+  document.body.dataset.opacityCustom = opacityIsCustom ? '1' : '0';
   document.body.style.setProperty('--theme-surface-opacity', `${themeSurfaceOpacity}%`);
   if ($('theme-opacity')) $('theme-opacity').value = String(themeSurfaceOpacity);
   if ($('theme-opacity-value')) $('theme-opacity-value').textContent = `${themeSurfaceOpacity}%`;
@@ -1730,7 +1731,7 @@ $('design-overlay').addEventListener('click',event=>{if(event.target===$('design
 document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{const theme=button.dataset.themeChoice;applyTheme(theme,themeColors);if(theme!=='blue')$('color-config').hidden=true}));
 document.querySelectorAll('[data-wallpaper-choice]').forEach(button=>button.addEventListener('click',()=>applyWallpaper(button.dataset.wallpaperChoice)));
 $('toggle-color-config').onclick=()=>{$('color-config').hidden=!$('color-config').hidden};
-function setThemeSurfaceOpacity(value){opacityIsCustom=true;themeSurfaceOpacity=Math.max(30,Math.min(100,Number(value)||88));document.body.style.setProperty('--theme-surface-opacity',`${themeSurfaceOpacity}%`);$('theme-opacity-value').textContent=`${themeSurfaceOpacity}%`;$('theme-opacity').value=String(themeSurfaceOpacity);localStorage.setItem('mw-theme-opacity',String(themeSurfaceOpacity))}
+function setThemeSurfaceOpacity(value){opacityIsCustom=true;document.body.dataset.opacityCustom='1';themeSurfaceOpacity=Math.max(8,Math.min(100,Number(value)||88));document.body.style.setProperty('--theme-surface-opacity',`${themeSurfaceOpacity}%`);$('theme-opacity-value').textContent=`${themeSurfaceOpacity}%`;$('theme-opacity').value=String(themeSurfaceOpacity);localStorage.setItem('mw-theme-opacity',String(themeSurfaceOpacity))}
 $('theme-opacity').addEventListener('input',event=>setThemeSurfaceOpacity(event.target.value));
 $('wallpaper-motion').addEventListener('change',event=>applyWallpaperMotion(event.target.checked));
 function readThemeColors(){return{accent:$('theme-accent').value,surface:$('theme-surface').value,background:$('theme-background').value}}

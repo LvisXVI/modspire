@@ -58,8 +58,8 @@ button { font: inherit; color: inherit; }
 .lg-scene::after {
   content: ""; position: absolute; inset: 0;
   background:
-    radial-gradient(120% 80% at 50% 0%, transparent 0 30%, rgba(4, 8, 20, .55) 70%),
-    linear-gradient(180deg, rgba(5, 9, 19, .25) 0%, rgba(5, 9, 19, .55) 45%, rgba(5, 9, 19, .9) 100%);
+    radial-gradient(120% 80% at 50% 0%, transparent 0 30%, rgba(4, 8, 20, .3) 70%),
+    linear-gradient(180deg, rgba(5, 9, 19, .12) 0%, rgba(5, 9, 19, .28) 45%, rgba(5, 9, 19, .6) 100%);
 }
 
 

@@ -26,7 +26,7 @@
   let timer = null;
 
   const root = document.createElement('aside');
-  root.className = 'music-player is-open';
+  root.className = 'music-player music-player--ambient is-open';
   root.innerHTML = `
     <button class="music-player__toggle" type="button" aria-pressed="${!muted}" aria-label="Hintergrundmusik ein- oder ausschalten">
       <span class="music-player__icon" aria-hidden="true">♫</span>
@@ -41,16 +41,17 @@
   }
 
   function refreshUi() {
-    button.setAttribute('aria-pressed', String(!muted));
-    if (muted) {
-      setState('aus – klicken für Musik');
-    } else if (!ctx) {
-      setState('startet …');
-    } else if (ctx.state === 'running') {
-      setState('läuft');
-    } else {
-      setState('klicken für Ton');
-    }
+    const available = Boolean(window.AudioContext || window.webkitAudioContext);
+    const playing = Boolean(!muted && ctx && ctx.state === 'running');
+    button.disabled = !available;
+    button.setAttribute('aria-pressed', String(playing));
+    button.setAttribute('aria-label', available
+      ? (playing ? 'Hintergrundmusik ausschalten' : 'Hintergrundmusik einschalten')
+      : 'Hintergrundmusik wird von diesem Browser nicht unterstützt');
+    button.title = button.getAttribute('aria-label');
+    root.classList.toggle('is-playing', playing);
+    setState(!available ? 'Nicht verfügbar' : muted ? 'Aus · zum Starten tippen'
+      : playing ? 'Läuft · zum Pausieren tippen' : 'Tippen für Musik');
   }
 
   function createReverb() {
@@ -150,8 +151,12 @@
   function startEngine() {
     if (!ctx) {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-      ctx = new AudioContextClass();
+      if (!AudioContextClass) { refreshUi(); return; }
+      try { ctx = new AudioContextClass(); } catch (error) {
+        setState('Musik konnte nicht starten');
+        return;
+      }
+      ctx.addEventListener('statechange', refreshUi);
       buildGraph();
       origin = ctx.currentTime + 0.3;
       nextChordTime = origin;
@@ -160,7 +165,7 @@
       timer = setInterval(schedule, 500);
     }
     if (ctx.state === 'suspended') {
-      ctx.resume().then(refreshUi, () => {});
+      ctx.resume().then(refreshUi, refreshUi);
     }
     refreshUi();
   }
@@ -180,18 +185,22 @@
   button.addEventListener('click', () => {
     if (muted) {
       setMuted(false);
-    } else if (ctx && ctx.state !== 'running') {
+    } else if (!ctx || ctx.state !== 'running') {
       startEngine();
     } else {
       setMuted(true);
     }
   });
 
-  // Browsers keep sound off until a gesture. Start on the first interaction if the load-time start was blocked.
-  const gestures = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
-  function onFirstGesture() {
-    gestures.forEach((name) => window.removeEventListener(name, onFirstGesture, true));
+  // Player clicks have their own handler: do not start in capture phase and
+  // immediately mute again when the same click reaches the button.
+  const gestures = ['pointerdown', 'keydown', 'touchend'];
+  function onFirstGesture(event) {
+    if (root.contains(event.target) || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
     if (!muted) startEngine();
+    if (muted || (ctx && ctx.state === 'running')) {
+      gestures.forEach((name) => window.removeEventListener(name, onFirstGesture, true));
+    }
   }
   gestures.forEach((name) => window.addEventListener(name, onFirstGesture, true));
 

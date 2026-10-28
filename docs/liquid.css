@@ -389,3 +389,9 @@ pre { margin: 0; padding: 18px 20px; border-radius: 18px; background: rgba(0, 0,
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass, .btn { background: rgba(18, 26, 44, .92); }
 }
+
+/* Living backgrounds (living-bg.js) */
+.living { background-size: cover; background-position: center 42%; }
+.living > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.living__gl { opacity: 0; transition: opacity 1.2s ease; }
+.living__gl.is-ready { opacity: 1; }

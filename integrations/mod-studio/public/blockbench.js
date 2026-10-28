@@ -1,7 +1,11 @@
 const FACE_NAMES = ['north', 'south', 'east', 'west', 'up', 'down'];
+const TEXTURE_SIZES = [16, 32, 64, 128];
 
 export function createBlockbenchProject(element, textureSource, uuidFactory = () => crypto.randomUUID()) {
   const modelElements = element.javaModel?.elements?.length ? element.javaModel.elements : defaultGeometry(element.kind);
+  // Blockbench stores UVs in texture pixels, so a 32 px texture uses 0-32 where the Java model uses 0-16.
+  const side = TEXTURE_SIZES.includes(element.texture?.size) ? element.texture.size : 16;
+  const scale = side / 16;
   const elements = modelElements.map((source, index) => {
     const uuid = uuidFactory();
     const rotation = source.rotation;
@@ -11,7 +15,7 @@ export function createBlockbenchProject(element, textureSource, uuidFactory = ()
       const face = faceDefaults[name];
       if (face === undefined && source.faces) continue;
       faces[name] = {
-        uv: [...(face?.uv || [0, 0, 16, 16])],
+        uv: [...(face?.uv || [0, 0, 16, 16])].map((value) => value * scale),
         texture: 0,
         ...(face?.rotation ? { rotation: face.rotation } : {}),
         ...(face?.cullface ? { cullface: face.cullface } : {}),
@@ -42,7 +46,7 @@ export function createBlockbenchProject(element, textureSource, uuidFactory = ()
     visible_box: [1, 1, 0],
     variable_placeholders: '',
     variable_placeholder_buttons: [],
-    resolution: { width: 16, height: 16 },
+    resolution: { width: side, height: side },
     elements,
     groups: [],
     outliner: elements.map((modelElement) => modelElement.uuid),
@@ -70,9 +74,11 @@ export function importBlockbenchProject(project) {
   }
   if (project.textures !== undefined && !Array.isArray(project.textures)) throw new Error('Die Blockbench-Texturliste ist ungültig.');
   const resolution = project.resolution || { width: 16, height: 16 };
-  if (project.textures?.some((texture) => texture.source) && (resolution.width !== 16 || resolution.height !== 16)) {
-    throw new Error('Dieses Projekt nutzt eine andere Texturgröße. Mod Studio übernimmt derzeit Blockbench-Texturen mit 16 × 16 Pixeln.');
+  const side = Number(resolution.width) === Number(resolution.height) && TEXTURE_SIZES.includes(Number(resolution.width)) ? Number(resolution.width) : null;
+  if (project.textures?.some((texture) => texture.source) && !side) {
+    throw new Error('Mod Studio übernimmt quadratische Blockbench-Texturen mit 16, 32, 64 oder 128 Pixeln.');
   }
+  const scale = (side || 16) / 16;
   const usedTextures = new Set();
   const elements = project.elements.map((element) => {
     if (element.type && element.type !== 'cube') throw new Error('Mod Studio kann aus Blockbench derzeit Java-Würfelgeometrie übernehmen.');
@@ -90,7 +96,7 @@ export function importBlockbenchProject(project) {
       }
       usedTextures.add(textureId);
       faces[direction] = {
-        ...(Array.isArray(source.uv) ? { uv: [...source.uv] } : {}),
+        ...(Array.isArray(source.uv) ? { uv: source.uv.map((value) => value / scale) } : {}),
         texture: '#all',
         ...(source.rotation ? { rotation: source.rotation } : {}),
         ...(source.cullface ? { cullface: source.cullface } : {}),
@@ -114,6 +120,7 @@ export function importBlockbenchProject(project) {
       ...(project.display ? { display: structuredClone(project.display) } : {}),
     },
     textureSource,
+    textureSize: side || 16,
   };
 }
 

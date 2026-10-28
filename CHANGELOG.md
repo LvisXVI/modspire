@@ -4,6 +4,16 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.14] — Mod Studio 1.1.0 (2026-10-28)
+
+### Changed
+- Embedded Mod Studio is now **1.1.0**: textures up to 128 px, Blockbench as the main editor for painting and modelling, and a new glass-style launcher.
+
+## [0.3.14] — Mod Studio 1.1.1 (2026-10-28)
+
+### Changed
+- Embedded Mod Studio is now **1.1.2**: textures up to 128 px, Blockbench as the main editor, a glass-style launcher, quitting when the last browser tab closes and a runtime that is unpacked only once.
+
 ## [0.3.13] — Real glass in Translucent designs (2026-10-28)
 
 ### Fixed

@@ -217,7 +217,10 @@ function parseLocalUpdate(text, currentElement) {
     return palette[1].toUpperCase();
   });
   if (pixels.filter(Boolean).length < 24 || new Set(pixels.filter(Boolean)).size < 3) throw new Error('Die lokale Skizze war zu flach oder unvollständig. Deine Mod blieb unverändert; formuliere die Material- oder Farbdetails konkreter.');
-  return { message: parsed.message.slice(0, 4000), memories: Array.isArray(parsed.memories) ? parsed.memories.slice(0, 2) : [], element: { ...parsed.element, texture: { size: 16, pixels } } };
+  // the sketch is always 16 x 16; keep the element's chosen texture size by scaling it up with crisp pixels
+  const targetSize = [16, 32, 64, 128].includes(currentElement.texture?.size) ? currentElement.texture.size : 16;
+  const scaled = targetSize === 16 ? pixels : Array.from({ length: targetSize * targetSize }, (_, index) => pixels[Math.floor(Math.floor(index / targetSize) * 16 / targetSize) * 16 + Math.floor((index % targetSize) * 16 / targetSize)]);
+  return { message: parsed.message.slice(0, 4000), memories: Array.isArray(parsed.memories) ? parsed.memories.slice(0, 2) : [], element: { ...parsed.element, texture: { size: targetSize, pixels: scaled } } };
 }
 
 function localElementSchema(element) {

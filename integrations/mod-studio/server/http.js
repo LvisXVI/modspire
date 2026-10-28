@@ -12,13 +12,19 @@ const MIME_TYPES = {
 };
 const MAX_BODY_BYTES = 2_000_000;
 
-export function createServer({ publicDir, projectStore, services, updates, version = '1.0.0' }) {
+export function createServer({ publicDir, projectStore, services, updates, lifecycle = null, version = '1.0.0' }) {
   const root = resolve(publicDir);
   return createHttpServer(async (req, res) => {
     try {
       const url = new URL(req.url || '/', 'http://127.0.0.1');
       addSecurityHeaders(res, url.pathname);
       if (req.method === 'GET' && url.pathname === '/api/health') return json(res, 200, { ok: true, version });
+      if (req.method === 'GET' && url.pathname === '/api/lifecycle') {
+        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive' });
+        res.write(': open\n\n');
+        lifecycle?.connect(res);
+        return;
+      }
       if (url.pathname.startsWith('/api/')) return await routeApi(req, res, url, projectStore, services, updates);
       if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'Diese Anfrage ist nicht verfügbar.' });
       return await serveStatic(req, res, root, url.pathname);

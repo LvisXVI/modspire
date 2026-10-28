@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/LvisXVI/minecraft-mod-studio",
-  "version": "1.0.0",
-  "sourceRevision": "df53b53d3d3d4678c0934c957d3c3969f1f6a444",
+  "version": "1.1.2",
+  "sourceRevision": "982639c48662693485630804565e4b0b80a87476",
   "files": [
     {
       "path": "licenses/blockbench/LICENSE.MD",
@@ -25,7 +25,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "798561ac78811aed03b232f87d6fb4dc20b515d4ac188edc10f7e869a0766059"
+      "sha256": "06d1c857bd65d5cbade32829fe93ef36d76075210ebbd499aa3d1970b6bca3da"
     },
     {
       "path": "public/ai-memory.css",
@@ -37,11 +37,11 @@
     },
     {
       "path": "public/app.js",
-      "sha256": "e37e0152459d91e9765c3f69dab9ba52727b886ca0786c364545637bac2e0997"
+      "sha256": "cd099238c61d4b7d42631805a4d671abde850a85a60617256ef349560859e3f5"
     },
     {
       "path": "public/blockbench-embed.js",
-      "sha256": "dfccfff95c2ffca7fc4c65a1145db284bd97edcc04daedbd6f7cd0c009151089"
+      "sha256": "95eb41800ac4d226681ef37c50cf1b158aabf42966b5244b7b0fbfe2c66efd06"
     },
     {
       "path": "public/blockbench-theme.css",
@@ -49,7 +49,7 @@
     },
     {
       "path": "public/blockbench.js",
-      "sha256": "dc5578056781d1e7897620aa1dd8d568a843485273d9f15b88bb18fec05f48a5"
+      "sha256": "7e6fbb58a26408f36b666a8a3567854743bd5a381141770665a6a7732066c717"
     },
     {
       "path": "public/blockbench/assets/armor_stand.png",
@@ -677,7 +677,7 @@
     },
     {
       "path": "public/editor.js",
-      "sha256": "e5333e931594aaf1f0ecb011b0474092b066624b46968bbfaacfec87ee84d21e"
+      "sha256": "0806d6e5c8cf6acc5a916cf1c56c39fa884ed53515cfefd8762076a0e8dae592"
     },
     {
       "path": "public/favicon.svg",
@@ -705,11 +705,11 @@
     },
     {
       "path": "public/index.html",
-      "sha256": "a6f19cbd2ac6ed5275a6ba61e173b5d64817eb3c35160acac08e3721955a18b1"
+      "sha256": "f4d46ef4aef80530902b5dcfd055c13df47e1c54fd839eb09f08a33a38dd06dd"
     },
     {
       "path": "public/industrial.css",
-      "sha256": "cdee4f76428918d29ac295494bd04a74ccb6f12bb62bf12a8e75c83f2038d582"
+      "sha256": "718c6fafa5c7449f03def2ca409d0daadae8d775e6bf9baaf603a513f69d4e3f"
     },
     {
       "path": "public/styles.css",
@@ -729,7 +729,7 @@
     },
     {
       "path": "server/ai.js",
-      "sha256": "4840f3ff45c96ef4379f6f6d4268b0608cd817248995bfd5e948dab382a55daa"
+      "sha256": "e141c9ab34f09558eedab2476c248c6fd57e8e8d1e8b815f58cf5377f0b3b86a"
     },
     {
       "path": "server/auth/dpapi.ps1",
@@ -749,15 +749,19 @@
     },
     {
       "path": "server/generator.js",
-      "sha256": "3dcfe776b9034d4ba1ce825749be4d9189a30bad7c3059e1035f647bf1226048"
+      "sha256": "781e64c4d76e44c47617290705c876631a3f6c383f57949977d7c8d33800f166"
     },
     {
       "path": "server/http.js",
-      "sha256": "8631cb99dcbf1b6a4c71a4e9e0cccb3c87dea58d80265310106cc2d2ce4a2513"
+      "sha256": "0b02c5704088028b4c93a12f3feec9f0c38a3e97a2161111c5615d4ced0ed5b5"
     },
     {
       "path": "server/index.js",
-      "sha256": "0afd44a886c4cee537eada9c145f94e403e221ccf6391506e45953e5834df469"
+      "sha256": "3fd5826798e69b1ad10aca5b2b62d071988bcf012c1b4d780e39509f4c4aa032"
+    },
+    {
+      "path": "server/lifecycle.js",
+      "sha256": "5f69f5257b9795d106ef2e277953b8e04996c21d4c88632b586190598690d79a"
     },
     {
       "path": "server/loader-version-fallback.json",
@@ -769,7 +773,7 @@
     },
     {
       "path": "server/schema.js",
-      "sha256": "435411c369a089f4bbeb37c95a98cc794f2e07998c088245c5ddeeaae8fd3968"
+      "sha256": "165fed01d88f2ab17995e902850f386f2d16ef2303043c99b5d27e205fef023e"
     },
     {
       "path": "server/secure-store.js",

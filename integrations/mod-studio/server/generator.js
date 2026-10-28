@@ -120,7 +120,7 @@ function projectFingerprint(project) { return createHash('sha256').update(JSON.s
 function constant(identifier) { return identifier.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
 
 function encodeTexture(pixels) {
-  const width = 16, height = 16;
+  const width = Math.round(Math.sqrt(pixels.length)) || 16, height = width;
   const raw = Buffer.alloc((width * 4 + 1) * height);
   for (let y = 0; y < height; y += 1) {
     const row = y * (width * 4 + 1); raw[row] = 0;

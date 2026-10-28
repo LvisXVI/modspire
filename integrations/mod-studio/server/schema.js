@@ -4,6 +4,7 @@ import { validateJavaBlockModel } from './blockbench.js';
 export const PROJECT_SCHEMA_VERSION = 1;
 export const MAX_PROJECT_ELEMENTS = 80;
 export const TEXTURE_SIZE = 16;
+export const TEXTURE_SIZES = [16, 32, 64, 128];
 const idPattern = /^[a-z0-9][a-z0-9_.-]{1,47}$/;
 const elementKinds = new Set(['item', 'block']);
 
@@ -112,7 +113,8 @@ function validateElement(value) {
   const identifier = String(value.identifier || '').trim().toLowerCase();
   if (!idPattern.test(identifier)) throw new Error('Die Kennung darf nur Kleinbuchstaben, Ziffern, Punkte, Unterstriche und Bindestriche enthalten.');
   const sourcePixels = value.texture?.pixels;
-  if (!Array.isArray(sourcePixels) || sourcePixels.length !== TEXTURE_SIZE * TEXTURE_SIZE) throw new Error('Texturen müssen 16×16 Pixel groß sein.');
+  const textureSize = TEXTURE_SIZES.find((size) => Array.isArray(sourcePixels) && sourcePixels.length === size * size);
+  if (!textureSize || (value.texture?.size !== undefined && Number(value.texture.size) !== textureSize)) throw new Error('Texturen müssen 16×16, 32×32, 64×64 oder 128×128 Pixel groß sein.');
   const pixels = sourcePixels.map((pixel) => {
     if (pixel === null || pixel === '') return null;
     if (typeof pixel !== 'string' || !/^#[\da-fA-F]{6}(?:[\da-fA-F]{2})?$/.test(pixel)) throw new Error('Ungültige Texturfarbe.');
@@ -136,7 +138,7 @@ function validateElement(value) {
     identifier,
     description: cleanText(value.description, 500),
     properties,
-    texture: { size: TEXTURE_SIZE, pixels },
+    texture: { size: textureSize, pixels },
     ...(value.javaModel ? { javaModel: validateJavaBlockModel(value.javaModel) } : {}),
     recipes: Array.isArray(value.recipes) ? value.recipes.slice(0, 8).map(validateRecipe) : [],
   };

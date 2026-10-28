@@ -1,7 +1,8 @@
-const SIZE = 16;
+export const TEXTURE_SIZES = [16, 32, 64, 128];
 
 export function createPixelEditor(canvas, initialTexture, onChange) {
   const context = canvas.getContext('2d', { alpha: false });
+  let SIZE = TEXTURE_SIZES.includes(initialTexture.size) ? initialTexture.size : 16;
   let pixels = [...initialTexture.pixels];
   let color = '#465E84';
   let tool = 'pencil';
@@ -24,13 +25,15 @@ export function createPixelEditor(canvas, initialTexture, onChange) {
         const pixel = pixels[y * SIZE + x];
         if (pixel) {
           context.fillStyle = pixel;
-          context.fillRect(x * cell + 1, y * cell + 1, cell - 2, cell - 2);
+          const inset = cell >= 8 ? 1 : 0;
+          context.fillRect(x * cell + inset, y * cell + inset, cell - inset * 2, cell - inset * 2);
         }
       }
     }
     context.strokeStyle = 'rgba(220, 230, 224, .11)';
     context.lineWidth = 1;
-    for (let index = 0; index <= SIZE; index += 1) {
+    const gridStep = SIZE > 32 ? 8 : 1;
+    for (let index = 0; index <= SIZE; index += gridStep) {
       const pos = Math.round(index * cell) + 0.5;
       context.beginPath(); context.moveTo(pos, 0); context.lineTo(pos, height); context.stroke();
       context.beginPath(); context.moveTo(0, pos); context.lineTo(width, pos); context.stroke();
@@ -112,7 +115,8 @@ export function createPixelEditor(canvas, initialTexture, onChange) {
   return {
     setTool(value) { tool = ['pencil', 'eraser', 'fill'].includes(value) ? value : 'pencil'; },
     setColor(value) { if (/^#[\da-f]{6}$/i.test(value)) color = value.toUpperCase(); },
-    setTexture(texture) { pixels = [...texture.pixels]; undoStack = []; redoStack = []; draw(); },
+    setTexture(texture) { SIZE = TEXTURE_SIZES.includes(texture.size) ? texture.size : 16; pixels = [...texture.pixels]; undoStack = []; redoStack = []; draw(); },
+    getSize() { return SIZE; },
     setChangeHandler(callback) { onCommit = callback; },
     getTexture() { return { size: SIZE, pixels: [...pixels] }; },
     undo() { if (!undoStack.length) return; redoStack.push([...pixels]); pixels = undoStack.pop(); commit(); },
@@ -132,7 +136,8 @@ export function renderVoxelPreview(canvas, pixels, element, rotation = 0) {
   const context = canvas.getContext('2d');
   const width = canvas.width;
   const height = canvas.height;
-  const texture = pixels?.length === SIZE * SIZE ? pixels : Array(SIZE * SIZE).fill(null);
+  const side = TEXTURE_SIZES.find((value) => value * value === pixels?.length) || 16;
+  const texture = pixels?.length === side * side ? pixels : Array(side * side).fill(null);
   context.clearRect(0, 0, width, height);
   if (!element) return;
   const centerX = width / 2;
@@ -185,7 +190,7 @@ export function renderVoxelPreview(canvas, pixels, element, rotation = 0) {
   }
 
   function drawTexturePlane(texturePixels, map, ctx, extent) {
-    const n = SIZE;
+    const n = textureSide(texturePixels);
     const scratch = createTextureCanvas(texturePixels);
     const [a, b] = map(0, 0), [c, d] = map(extent, 0), [e, f] = map(0, extent);
     ctx.save();
@@ -198,11 +203,14 @@ export function renderVoxelPreview(canvas, pixels, element, rotation = 0) {
   function parseHex(value) { const n = Number.parseInt(value.slice(1, 7), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255, value.length === 9 ? Number.parseInt(value.slice(7, 9), 16) : 255]; }
 }
 
+function textureSide(texturePixels) { return TEXTURE_SIZES.find((value) => value * value === texturePixels?.length) || 16; }
+
 function createTextureCanvas(texturePixels) {
+  const side = textureSide(texturePixels);
   const canvas = document.createElement('canvas');
-  canvas.width = SIZE; canvas.height = SIZE;
+  canvas.width = side; canvas.height = side;
   const context = canvas.getContext('2d');
-  const image = context.createImageData(SIZE, SIZE);
+  const image = context.createImageData(side, side);
   texturePixels.forEach((pixel, index) => {
     const value = pixel || '#ffffff';
     const packed = Number.parseInt(value.slice(1, 7), 16);
@@ -232,9 +240,9 @@ function drawJavaModelPreview(context, elements, pixels, width, height, cameraRo
     const rz = localX * Math.sin(angle) + localZ * Math.cos(angle);
     return [width / 2 + (rx - rz) * scale * 0.5, height * 0.54 + (rx + rz) * scale * 0.25 - ((y - center[1]) / 16) * scale * 0.58];
   };
-  const textureCanvas = document.createElement('canvas'); textureCanvas.width = 16; textureCanvas.height = 16;
+  const textureCanvas = document.createElement('canvas'); textureCanvas.width = side; textureCanvas.height = side;
   const textureContext = textureCanvas.getContext('2d');
-  const textureImage = textureContext.createImageData(16, 16);
+  const textureImage = textureContext.createImageData(side, side);
   pixels.forEach((hex, index) => {
     if (!hex) return;
     const rgb = Number.parseInt(hex.slice(1, 7), 16), offset = index * 4;
@@ -256,7 +264,7 @@ function drawJavaModelPreview(context, elements, pixels, width, height, cameraRo
       context.save();
       context.beginPath(); projected.forEach(([x, y], index) => index ? context.lineTo(x, y) : context.moveTo(x, y)); context.closePath(); context.clip();
       context.setTransform((p1[0] - p0[0]) / uvWidth, (p1[1] - p0[1]) / uvWidth, (p2[0] - p0[0]) / uvHeight, (p2[1] - p0[1]) / uvHeight, p0[0] - ((p1[0] - p0[0]) / uvWidth) * u1 - ((p2[0] - p0[0]) / uvHeight) * v1, p0[1] - ((p1[1] - p0[1]) / uvWidth) * u1 - ((p2[1] - p0[1]) / uvHeight) * v1);
-      context.imageSmoothingEnabled = false; context.drawImage(textureCanvas, 0, 0);
+      context.imageSmoothingEnabled = false; context.drawImage(textureCanvas, 0, 0, 16, 16);
       if (brightness < 1) { context.fillStyle = `rgba(0,0,0,${1 - brightness})`; context.fillRect(-512, -512, 1024, 1024); }
       context.restore();
       context.beginPath(); projected.forEach(([x, y], index) => index ? context.lineTo(x, y) : context.moveTo(x, y)); context.closePath();

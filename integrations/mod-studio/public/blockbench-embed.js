@@ -117,12 +117,15 @@ export async function openEmbeddedBlockbench({ title, fileName, project, onApply
     }
     closeEmbeddedBlockbench();
   });
-  layer.addEventListener('keydown', (event) => { if (event.key === 'Escape' && event.target === layer) close.click(); });
+  const onEscape = (event) => { if (event.key === 'Escape') close.click(); };
+  document.addEventListener('keydown', onEscape);
+  layer.addEventListener('remove-escape', () => document.removeEventListener('keydown', onEscape));
 
   try {
     api = await waitForBlockbench(frame);
     if (layer !== current) return;
     themeFrame(api);
+    try { frame.contentWindow.addEventListener('keydown', onEscape); } catch { /* cross-origin frame: Escape works from the page */ }
     api.loadModelFile({ content: JSON.stringify(project), path: fileName, name: fileName });
     layer.querySelector('.bb-loading')?.remove();
     if (!tipsSeen()) showTips(true);
@@ -181,6 +184,7 @@ export async function openEmbeddedBlockbench({ title, fileName, project, onApply
 export function closeEmbeddedBlockbench() {
   if (!layer) return;
   const closing = layer; layer = null;
+  closing.dispatchEvent(new Event('remove-escape'));
   closing.classList.remove('open');
   closing.classList.add('closing');
   setTimeout(() => closing.remove(), 280);

@@ -9,14 +9,16 @@ import { createProjectStore } from './projects.js';
 import { createServices } from './services.js';
 import { createUpdateService } from './updates.js';
 import { createWindowsVault } from './secure-store.js';
+import { createLifecycle } from './lifecycle.js';
 
 const execFileAsync = promisify(execFile);
 const applicationRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 
 export function createApp({ rootDir = applicationRoot, dataDir = defaultDataDirectory(), runtimeDir = defaultRuntimeDirectory(rootDir), vault = createWindowsVault(), openExternal = openInSystemBrowser, updates = createUpdateService({ currentVersion: packageJson.version }) } = {}) {
+  const lifecycle = createLifecycle({ enabled: process.env.MOD_STUDIO_EXIT_WHEN_CLOSED === '1', onIdle: () => process.emit('mod-studio:idle') });
   const projectStore = createProjectStore(join(dataDir, 'projects'));
   const services = createServices({ projectStore, dataDir, runtimeDir, vault, openExternal });
-  const server = createServer({ publicDir: join(rootDir, 'public'), projectStore, services, updates, version: packageJson.version });
+  const server = createServer({ publicDir: join(rootDir, 'public'), projectStore, services, updates, lifecycle, version: packageJson.version });
   server.once('close', () => services.ai.close());
   return server;
 }
@@ -27,10 +29,11 @@ function defaultDataDirectory() {
 }
 
 function defaultRuntimeDirectory(rootDir) {
+  const base = process.env.MOD_STUDIO_RUNTIME_DIR || join(rootDir, '.runtime');
   return {
-    node: join(rootDir, '.runtime', 'node', 'node-v24.21.0-win-x64'),
-    jdk: join(rootDir, '.runtime', 'jdk', 'jdk-25.0.4.1+1'),
-    gradle: join(rootDir, '.runtime', 'gradle', 'gradle-9.8.2'),
+    node: join(base, 'node', 'node-v24.21.0-win-x64'),
+    jdk: join(base, 'jdk', 'jdk-25.0.4.1+1'),
+    gradle: join(base, 'gradle', 'gradle-9.8.2'),
   };
 }
 
@@ -48,8 +51,10 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
   server.listen(requestedPort, host, () => {
     const address = server.address(); const url = `http://${host}:${address.port}`;
     process.stdout.write(`Mod Studio läuft unter ${url}\nProjekte bleiben lokal. Dieses Fenster schließen, um Mod Studio zu beenden.\n`);
-    openInSystemBrowser(url).catch(() => {});
+    if (process.env.MOD_STUDIO_NO_BROWSER !== '1') openInSystemBrowser(url).catch(() => {});
   });
-  const shutdown = () => server.close(() => process.exit(0));
+  const shutdown = () => { server.closeAllConnections?.(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 3000).unref(); };
   process.on('SIGINT', shutdown); process.on('SIGTERM', shutdown);
+  // the last browser tab was closed: leave quietly (exit code 0 tells the launcher this was intended)
+  process.on('mod-studio:idle', shutdown);
 }

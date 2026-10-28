@@ -28,6 +28,8 @@ let timerDirty = false;
 let targetCatalog = null;
 
 async function initialize() {
+  // keeps one stream open so the local app knows a tab is still using it (it quits after the last tab closes)
+  try { new EventSource('/api/lifecycle'); } catch { /* not available */ }
   wireShell();
   await refreshCapabilityLabel();
   await refreshProjects();
@@ -50,7 +52,8 @@ function wireShell() {
   document.querySelectorAll('input[name="background-style"]').forEach((input) => input.addEventListener('change', () => setBackgroundStyle(input.value)));
   $('#new-project-button').addEventListener('click', openNewProject);
   $('#empty-create-button').addEventListener('click', openNewProject);
-  $('#add-first-element').addEventListener('click', () => addElement('item'));
+  // the first element opens straight in Blockbench, the main place to paint and model
+  $('#add-first-element').addEventListener('click', async () => { await addElement('item'); if (selectedElement()) openBlockbench(); });
   $('#add-element-button').addEventListener('click', () => addElement('item'));
   $('#add-block-button').addEventListener('click', () => addElement('block'));
   $('#delete-element-button').addEventListener('click', deleteSelectedElement);
@@ -59,6 +62,8 @@ function wireShell() {
   $('#close-dialog-button').addEventListener('click', () => dialog.close());
   $('#export-button').addEventListener('click', exportProject);
   $('#blockbench-open-button').addEventListener('click', openBlockbench);
+  $('#blockbench-cta').addEventListener('click', openBlockbench);
+  $('#texture-size').addEventListener('change', changeTextureSize);
   $('#blockbench-import-button').addEventListener('click', () => $('#blockbench-file-input').click());
   $('#blockbench-file-input').addEventListener('change', importBlockbenchModel);
   $('#undo-button').addEventListener('click', () => editor?.undo());
@@ -100,9 +105,13 @@ function wireShell() {
   $('#build-button').addEventListener('click', startBuild);
   document.addEventListener('keydown', (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); saveNow(); }
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openNewProject(); }
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); editor?.undo(); }
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !document.querySelector('dialog[open], .bb-layer')) { event.preventDefault(); openNewProject(); }
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && !event.target.closest?.('input, textarea, select, [contenteditable]')) { event.preventDefault(); editor?.undo(); }
   });
+  // a click on the dimmed area closes a dialog, like Escape does (the update dialog stays while it installs)
+  document.querySelectorAll('dialog').forEach((dialog) => dialog.addEventListener('mousedown', (event) => {
+    if (event.target === dialog && dialog.id !== 'update-dialog') dialog.close();
+  }));
 }
 
 async function checkForUpdates({ silent = false } = {}) {
@@ -256,12 +265,31 @@ async function selectProject(id) {
   } catch (error) { toast(error.message); }
 }
 
+function chosenTextureSize() { const size = Number($('#texture-size')?.value); return [16, 32, 64, 128].includes(size) ? size : 16; }
+// Nearest-neighbour resize keeps pixel art crisp when the size changes.
+function resizeTexture(texture, size) {
+  const from = Math.round(Math.sqrt(texture.pixels.length)) || 16;
+  if (from === size) return texture;
+  const pixels = Array(size * size).fill(null);
+  for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
+    pixels[y * size + x] = texture.pixels[Math.min(from - 1, Math.floor(y * from / size)) * from + Math.min(from - 1, Math.floor(x * from / size))];
+  }
+  return { size, pixels };
+}
+async function changeTextureSize(event) {
+  const element = selectedElement(); const size = Number(event.target.value);
+  if (!element || element.texture.size === size) return;
+  element.texture = resizeTexture(element.texture, size);
+  editor?.setTexture(element.texture); drawPreview(); renderElements();
+  await saveNow();
+  toast(`Textur ist jetzt ${size} × ${size} Pixel groß.`);
+}
 function selectedElement() { return project?.elements.find((item) => item.id === project.activeElementId) || null; }
 
 async function addElement(kind) {
   if (!project) return;
   const count = project.elements.filter((item) => item.kind === kind).length;
-  const element = { id: crypto.randomUUID(), kind, name: `${kind === 'block' ? 'Neuer Block' : 'Neues Item'}${count ? ` ${count + 1}` : ''}`, identifier: `${kind === 'block' ? 'new_block' : 'new_item'}${count ? `_${count + 1}` : ''}`, description: '', properties: kind === 'block' ? { hardness: 2, resistance: 3, requiresTool: false, luminance: 0 } : { maxStackSize: 64, fireResistant: false }, texture: { size: 16, pixels: Array(256).fill(null) }, recipes: [] };
+  const element = { id: crypto.randomUUID(), kind, name: `${kind === 'block' ? 'Neuer Block' : 'Neues Item'}${count ? ` ${count + 1}` : ''}`, identifier: `${kind === 'block' ? 'new_block' : 'new_item'}${count ? `_${count + 1}` : ''}`, description: '', properties: kind === 'block' ? { hardness: 2, resistance: 3, requiresTool: false, luminance: 0 } : { maxStackSize: 64, fireResistant: false }, texture: { size: chosenTextureSize(), pixels: Array(chosenTextureSize() ** 2).fill(null) }, recipes: [] };
   project.elements.push(element); project.activeElementId = element.id; renderElements(); updateSelection(); await saveNow();
   document.querySelector('.add-first-element').hidden = true;
 }
@@ -293,6 +321,7 @@ async function deleteSelectedElement() {
 function updateSelection() {
   const element = selectedElement();
   $('#blockbench-actions').hidden = !element;
+  $('#texture-size').value = String(element?.texture?.size || 16); $('#pixel-canvas').setAttribute('aria-label', `${element?.texture?.size || 16} mal ${element?.texture?.size || 16} Pixel Zeichenfläche`); $('#blockbench-cta').disabled = !element;
   $('#delete-element-button').hidden = !element;
   $('#selected-element-label').textContent = element ? `${element.kind === 'block' ? 'BLOCK' : 'ITEM'} / ${element.identifier}` : 'Noch kein Element';
   $('#element-inspector').hidden = !element; $('#element-name').value = element?.name || ''; $('#element-identifier').value = element?.identifier || ''; $('#element-description').value = element?.description || '';
@@ -330,7 +359,7 @@ function renderPalette() {
   const palette = $('#palette'); palette.replaceChildren();
   for (const color of editor.getPalette()) { const button = document.createElement('button'); button.type='button'; button.className='palette-swatch'; button.style.background=color; button.setAttribute('aria-label',`Farbe ${color}`); button.addEventListener('click',()=>{editor.setColor(color);$('#color-picker').value=color;$('#color-swatch').style.background=color;}); palette.append(button); }
 }
-function paintThumbnail(canvas, pixels) { const ctx=canvas.getContext('2d'); const image=ctx.createImageData(16,16); pixels.forEach((color,index)=>{if(!color)return;const n=parseInt(color.slice(1,7),16),at=index*4;image.data[at]=(n>>16)&255;image.data[at+1]=(n>>8)&255;image.data[at+2]=n&255;image.data[at+3]=color.length===9?parseInt(color.slice(7,9),16):255;});ctx.putImageData(image,0,0); }
+function paintThumbnail(canvas, pixels) { const side=Math.round(Math.sqrt(pixels.length))||16; canvas.width=side; canvas.height=side; const ctx=canvas.getContext('2d'); const image=ctx.createImageData(side,side); pixels.forEach((color,index)=>{if(!color)return;const n=parseInt(color.slice(1,7),16),at=index*4;image.data[at]=(n>>16)&255;image.data[at+1]=(n>>8)&255;image.data[at+2]=n&255;image.data[at+3]=color.length===9?parseInt(color.slice(7,9),16):255;});ctx.putImageData(image,0,0); }
 
 // Bumped on every local edit so a save response never overwrites edits made while it was in flight.
 let editRevision=0;
@@ -396,16 +425,16 @@ async function importBlockbenchModel(event) {
 async function applyBlockbenchModel(model, fileName, rethrow = false) {
   try {
     let imported = model;
-    let texturePixels = null;
+    let importedTexture = null;
     if (/\.bbmodel$/i.test(fileName) || imported.meta?.model_format) {
       const result = importBlockbenchProject(imported);
       imported = result.javaModel;
-      if (result.textureSource) texturePixels = await textureFromDataUrl(result.textureSource);
+      if (result.textureSource) importedTexture = await textureFromDataUrl(result.textureSource);
     }
     const nextProject = structuredClone(project);
     const element = nextProject.elements.find((entry) => entry.id === nextProject.activeElementId);
     element.javaModel = imported;
-    if (texturePixels) element.texture = { size: 16, pixels: texturePixels };
+    if (importedTexture) element.texture = importedTexture;
     const saved = await api(`/api/projects/${project.id}`, { method: 'PUT', body: jsonBody(nextProject) });
     project = saved.project;
     renderElements();
@@ -421,10 +450,11 @@ async function applyBlockbenchModel(model, fileName, rethrow = false) {
   }
 }
 function textureDataUrl(pixels) {
+  const side = Math.round(Math.sqrt(pixels.length)) || 16;
   const canvas = document.createElement('canvas');
-  canvas.width = 16; canvas.height = 16;
+  canvas.width = side; canvas.height = side;
   const context = canvas.getContext('2d');
-  const image = context.createImageData(16, 16);
+  const image = context.createImageData(side, side);
   pixels.forEach((color, index) => {
     if (!color) return;
     const rgb = Number.parseInt(color.slice(1, 7), 16); const at = index * 4;
@@ -438,16 +468,17 @@ async function textureFromDataUrl(source) {
   const image = new Image();
   image.src = source;
   await image.decode();
-  if (image.naturalWidth !== 16 || image.naturalHeight !== 16) throw new Error('Die Blockbench-Textur muss 16 × 16 Pixel groß sein.');
-  const canvas = document.createElement('canvas'); canvas.width = 16; canvas.height = 16;
+  const side = image.naturalWidth;
+  if (side !== image.naturalHeight || ![16, 32, 64, 128].includes(side)) throw new Error('Die Blockbench-Textur muss quadratisch sein: 16, 32, 64 oder 128 Pixel.');
+  const canvas = document.createElement('canvas'); canvas.width = side; canvas.height = side;
   const context = canvas.getContext('2d', { willReadFrequently: true }); context.drawImage(image, 0, 0);
-  const rgba = context.getImageData(0, 0, 16, 16).data;
-  const pixels = Array.from({ length: 256 }, (_, index) => {
+  const rgba = context.getImageData(0, 0, side, side).data;
+  const pixels = Array.from({ length: side * side }, (_, index) => {
     const offset = index * 4; const red = rgba[offset], green = rgba[offset + 1], blue = rgba[offset + 2], alpha = rgba[offset + 3];
     if (alpha === 0) return null;
     return `#${[red, green, blue].map((value) => value.toString(16).padStart(2, '0')).join('')}${alpha === 255 ? '' : alpha.toString(16).padStart(2, '0')}`.toUpperCase();
   });
-  return pixels;
+  return { size: side, pixels };
 }
 function downloadText(name, content, type) {
   const url = URL.createObjectURL(new Blob([content], { type }));

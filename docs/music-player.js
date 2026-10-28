@@ -1,5 +1,6 @@
 /* Built-in ambient soundtrack, generated in the browser with Web Audio (no external player).
-   It never starts on its own: sound only plays after the visitor presses the music button. */
+   It starts as soon as the page opens. Browsers may hold sound until the visitor first interacts,
+   so the first tap, click, key press or scroll starts it if it was blocked. */
 (() => {
   'use strict';
   const MUTE_KEY = 'site-music-muted';
@@ -13,7 +14,8 @@
   ];
   const TARGET_VOLUME = 0.7;
 
-  let muted = true; // off on every visit until the visitor turns it on
+  let muted = false;
+  try { muted = localStorage.getItem(MUTE_KEY) === '1'; } catch (error) { /* private mode */ }
 
   let ctx = null;
   let master = null;
@@ -190,5 +192,24 @@
     }
   });
 
+  // Player clicks have their own handler: do not start in capture phase and
+  // immediately mute again when the same click reaches the button.
+  const gestures = ['pointerdown', 'keydown', 'touchend'];
+  function onFirstGesture(event) {
+    if (root.contains(event.target) || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (!muted) startEngine();
+    if (muted || (ctx && ctx.state === 'running')) {
+      gestures.forEach((name) => window.removeEventListener(name, onFirstGesture, true));
+    }
+  }
+  gestures.forEach((name) => window.addEventListener(name, onFirstGesture, true));
+
   refreshUi();
+  if (!muted) {
+    startEngine();
+    // Chrome creates the context already running when the visitor has played media on this site before.
+    setTimeout(() => {
+      if (ctx && ctx.state === 'running') refreshUi();
+    }, 400);
+  }
 })();

@@ -1,0 +1,30 @@
+/* See-through palettes (Fluid Glass, Crystal Glass, Translucent): the main surfaces follow the "surface opacity" control
+   with a real glass tint and a blur, instead of staying nearly solid. Other palettes keep their existing look.
+   Bars and side panels only use the dark tint in the dark layouts; the light layouts keep their own (already translucent) bars. */
+html body[data-theme="fluid"] { --gt: rgb(18, 44, 82); }
+html body[data-theme="clear"] { --gt: rgb(14, 48, 82); }
+html body[data-theme="translucent"] { --gt: rgb(12, 66, 96); }
+html body[data-chat-tone="light"][data-theme] { --gt: rgb(255, 255, 255); }
+
+/* chat surfaces, in every layout (they follow the measured light/dark tone of the chat) */
+html body:is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) :is(#chat-panel, .chat-form, .assistant-message .bubble, .more-suggestions):not(#_):not(#_) {
+  background-color: color-mix(in srgb, var(--gt) var(--theme-surface-opacity, 40%), transparent) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.3); backdrop-filter: blur(22px) saturate(1.3);
+}
+/* bars, panels and cards in the dark layouts */
+html body:is(.ui-glass, .ui-v4, .ui-v3):is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) :is(
+  .topbar, .setup-strip, .bottom-bar, .sidebar, .v4-rail, .v4-panel, .v4-stats article, .lab-card, .overview-card, .selected-section, .selected-mod,
+  .popular-section, .popular-card, #mods-panel, #lab-panel, .modern-card, .v3-panel
+):not(#_):not(#_) {
+  background-color: color-mix(in srgb, var(--gt) var(--theme-surface-opacity, 40%), transparent) !important;
+  background-image: none !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.3); backdrop-filter: blur(22px) saturate(1.3);
+}
+html body:is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) :is(#chat-panel .chat-messages, #chat-panel .panel-heading, .chat-form textarea):not(#_):not(#_) { background: transparent !important; }
+
+/* Light layouts (Classic, Modern) with a dark glass tint: the bars keep light text so the title and buttons stay readable
+   (the dark title colour used to sit on the dark glass). */
+html body:not(.ui-glass):not(.ui-v4):not(.ui-v3):is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) :is(.topbar, .setup-strip, .bottom-bar):not(#_):not(#_) { color: #eef6ff !important; }
+html body:not(.ui-glass):not(.ui-v4):not(.ui-v3):is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) :is(.topbar, .setup-strip, .bottom-bar):not(#_):not(#_) :is(.pack-title, .save-status, .eyebrow, label, small, span, strong, .compat-chip, #compat-status, .button-quiet, .bottom-bar button):not(.button-primary):not(#_):not(#_) { color: #eef6ff !important; -webkit-text-fill-color: #eef6ff !important; text-shadow: none !important; }
+html body:not(.ui-glass):not(.ui-v4):not(.ui-v3):is([data-theme="fluid"], [data-theme="clear"], [data-theme="translucent"]) .setup-strip select:not(#_):not(#_):not(#_) { color: #eef6ff !important; -webkit-text-fill-color: #eef6ff !important; }

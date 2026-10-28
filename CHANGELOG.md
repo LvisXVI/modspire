@@ -4,6 +4,12 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.12] — Glass palettes are see-through again (2026-10-28)
+
+### Fixed
+- **Fluid Glass, Crystal Glass and Translucent are really see-through now.** The surface-opacity control only reached 82 %, and the chat panel, composer, message bubbles and (in some layouts) the bars ignored it. The range is now 30–100 %, the three glass palettes start translucent (about a third), and those surfaces follow the control with a glass tint and blur.
+- In the light Classic and Modern layouts the title and buttons in the top bar were dark on dark glass in these palettes; they are light again.
+
 ## [0.3.11] — Performance check (2026-10-28)
 
 ### Added

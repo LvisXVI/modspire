@@ -198,3 +198,27 @@ html body.ui-modern[data-theme="emerald"] .lab-card :is(p, small, .lab-footnote,
 /* Modern layout + Nether: status chip was white on its white pill */
 html body.ui-modern[data-theme="nether"] .main-content #compat-status { color: #4a1d18 !important; }
 html body.ui-modern[data-theme="nether"] .main-content .selected-heading h3 { color: #fbe9e4 !important; }
+
+/* ---------- pack name: an editable title instead of a wide form field ---------- */
+html body .topbar .title-drag-region .eyebrow { font-size: 10px !important; font-weight: 600 !important; letter-spacing: .16em !important; opacity: .6 !important; margin: 0 0 1px !important; }
+html body .topbar .project-title-row { position: relative; display: flex !important; align-items: center !important; justify-content: flex-start !important; gap: 12px !important; }
+html body .topbar .project-title-row .save-status { margin-left: 0 !important; flex: none !important; }
+html body .topbar #pack-name.pack-title {
+  field-sizing: content; flex: 0 1 auto !important; width: auto !important; min-width: 10ch !important; max-width: min(44ch, 100%) !important; height: 40px !important;
+  margin: 0 0 0 -12px !important; padding: 0 12px !important; font-size: 21px !important; font-weight: 700 !important; letter-spacing: -.01em !important; line-height: 1 !important;
+  text-overflow: ellipsis; color: inherit !important; background: transparent !important; background-image: none !important;
+  border: 1px solid transparent !important; border-radius: 12px !important; box-shadow: none !important; cursor: text;
+  transition: background-color .2s, border-color .2s, box-shadow .2s !important;
+}
+html body .topbar #pack-name.pack-title:hover { background: color-mix(in srgb, currentColor 7%, transparent) !important; border-color: color-mix(in srgb, currentColor 14%, transparent) !important; }
+html body .topbar #pack-name.pack-title:focus { outline: 0 !important; background: color-mix(in srgb, currentColor 9%, transparent) !important; border-color: var(--custom-accent, #398ce0) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--custom-accent, #398ce0) 24%, transparent) !important; }
+html body .topbar .save-status {
+  position: static !important; display: inline-flex !important; align-items: center !important; gap: 7px !important; padding: 4px 11px !important; border-radius: 999px !important;
+  font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important; color: inherit !important;
+  background: color-mix(in srgb, currentColor 7%, transparent) !important; border: 1px solid color-mix(in srgb, currentColor 12%, transparent) !important; opacity: .85;
+}
+html body .topbar .save-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3ccf7f; box-shadow: 0 0 8px color-mix(in srgb, #3ccf7f 70%, transparent); }
+
+/* light layouts: the setup strip's selects follow the light surface instead of staying dark navy pills */
+html body[data-chat-tone="light"] .setup-strip :is(select, .auto-setup-toggle) { background-color: #fff !important; background-image: none; color: #14202c !important; border: 1px solid rgba(20, 32, 44, .18) !important; box-shadow: none !important; }
+html body[data-chat-tone="light"] .setup-strip select { background-image: linear-gradient(45deg, transparent 50%, #14202c 50%), linear-gradient(135deg, #14202c 50%, transparent 50%) !important; background-position: calc(100% - 17px) 55%, calc(100% - 12px) 55% !important; background-size: 5px 5px !important; background-repeat: no-repeat !important; appearance: none; padding-right: 32px !important; }

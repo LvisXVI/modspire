@@ -56,15 +56,18 @@
   }
   const saved = key => records.find(entry => entry.key === key || keyOf(entry.mod) === key);
   const report = value => bridge?.status?.(value);
+  function paintStar(star, t = text()) {
+    const mod = star._libraryMod, key = keyOf(mod), active = Boolean(saved(key));
+    const label = (active ? t.removeMod : t.saveMod) + (mod.title || mod.id);
+    star.textContent = active ? '★' : '☆';
+    star.setAttribute('aria-pressed', String(active)); star.setAttribute('aria-label', label); star.title = label;
+    star.disabled = pending.has(key);
+  }
   function refreshStars() {
     const t = text();
     for (const star of stars) {
       if (!star.isConnected) { stars.delete(star); continue; }
-      const mod = star._libraryMod, key = keyOf(mod), active = Boolean(saved(key));
-      const label = (active ? t.removeMod : t.saveMod) + (mod.title || mod.id);
-      star.textContent = active ? '★' : '☆';
-      star.setAttribute('aria-pressed', String(active)); star.setAttribute('aria-label', label); star.title = label;
-      star.disabled = pending.has(key);
+      paintStar(star, t);
     }
   }
   async function change(key, action, message, onSuccess) {
@@ -101,7 +104,7 @@
         star.addEventListener('keyup', event => event.stopPropagation());
         (target || card).append(star);
       }
-      star._libraryMod = mod; stars.add(star);
+      star._libraryMod = mod; stars.add(star); paintStar(star);
     };
     container.querySelectorAll('[data-mod-details]').forEach(card => attach(card, mods?.[Number(card.dataset.modDetails)], card.querySelector('.mod-name')));
     container.querySelectorAll('.selected-mod [data-remove]').forEach(remove => attach(remove.closest('.selected-mod'), mods?.[Number(remove.dataset.remove)]));

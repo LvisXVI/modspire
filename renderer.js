@@ -59,7 +59,7 @@ function skinAvatarUrl(username){return `https://mc-heads.net/avatar/${encodeURI
 function setAvatarImage(node,source,label){const image=document.createElement('img');image.src=source;image.alt=label;image.draggable=false;image.onerror=()=>{image.replaceWith(document.createTextNode('✦'))};node.replaceChildren(image)}
 function avatarContent(){return selectedUserAvatar.startsWith('skin:')?`<img src="${skinAvatarUrl(selectedUserAvatar.slice(5))}" alt="Minecraft-Skin" draggable="false">`:selectedUserAvatar||profileInitial(state.settings.username||(isDemoMode()?'Demo-Modder':'Modder'))}
 function applyUserAvatar(){document.querySelectorAll('.user-message .avatar').forEach(node=>{node.classList.add('user-avatar');if(selectedUserAvatar.startsWith('skin:'))setAvatarImage(node,skinAvatarUrl(selectedUserAvatar.slice(5)),'Minecraft-Skin');else if(selectedUserAvatar.startsWith('data:image/'))setAvatarImage(node,selectedUserAvatar,'Eigenes Profilbild');else node.textContent=avatarContent()})}
-function setAssistantAvatar(node){node.classList.add('assistant-avatar');if(selectedAssistantAvatar.startsWith('skin:')){setAvatarImage(node,skinAvatarUrl(selectedAssistantAvatar.slice(5)),'Minecraft-Skin des Pack-Assistenten');return}if(selectedAssistantAvatar.startsWith('data:image/')){setAvatarImage(node,selectedAssistantAvatar,'Eigenes Pack-Assistenten-Bild');return}if(selectedAssistantAvatar){node.textContent=selectedAssistantAvatar;return}node.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#76502e" stroke="#111d32" stroke-width="2" d="M5 12 16 7l11 5v14H5z"/><path fill="#bd8242" stroke="#111d32" stroke-width="2" d="m5 12 11 5 11-5-11-5z"/><path fill="#e3b65e" d="m9 12 7 3 7-3-7-3z"/><path fill="#f1cc76" stroke="#111d32" stroke-width="1.5" d="M13 17h6v5h-6z"/><path fill="#3d83cb" d="M14 18h4v3h-4z"/><path fill="#8ee0ff" d="M15 18h2v2h-2z"/><path fill="#c5eaff" d="m23 5 1-2 1 2 2 1-2 1-1 2-1-2-2-1z"/></svg>'}
+function setAssistantAvatar(node){node.classList.add('assistant-avatar');if(selectedAssistantAvatar.startsWith('skin:')){setAvatarImage(node,skinAvatarUrl(selectedAssistantAvatar.slice(5)),'Minecraft-Skin des Pack-Assistenten');return}if(selectedAssistantAvatar.startsWith('data:image/')){setAvatarImage(node,selectedAssistantAvatar,'Eigenes Pack-Assistenten-Bild');return}if(selectedAssistantAvatar){node.textContent=selectedAssistantAvatar;return}node.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1d46a6"/><path fill="#2f6be0" d="M0 9q0-9 9-9h14q9 0 9 9v3C22 8 10 8 0 14z" opacity=".55"/><path fill="#fff" d="m16 2.4 1.4 3 3 1.4-3 1.4L16 11.2l-1.4-3-3-1.4 3-1.4z"/><rect x="6.5" y="11.5" width="19" height="16" rx="4.5" fill="#6beadd" stroke="#0e1b48" stroke-width="1.5"/><rect x="8" y="13" width="16" height="4" rx="2" fill="#c8fff9" opacity=".7"/><rect x="10.2" y="17.6" width="3.6" height="4.4" rx="1.1" fill="#0e1b48"/><rect x="18.2" y="17.6" width="3.6" height="4.4" rx="1.1" fill="#0e1b48"/><rect x="11.2" y="18.2" width="1.3" height="1.3" fill="#fff"/><rect x="19.2" y="18.2" width="1.3" height="1.3" fill="#fff"/><path d="M13.2 24.2q2.8 1.8 5.6 0" fill="none" stroke="#0e1b48" stroke-width="1.6" stroke-linecap="round"/></svg>'}
 function applyAssistantAvatar(){document.querySelectorAll('.assistant-avatar').forEach(setAssistantAvatar);const header=$('assistant-panel-avatar');if(header){header.classList.add('assistant-avatar');setAssistantAvatar(header)}}
 function applyWallpaper(wallpaper = currentWallpaper, persist = true) {
   currentWallpaper = ['none', 'voxel', 'crystal', 'aurora', 'grove', 'deep-forest', 'nether-forge'].includes(wallpaper) ? wallpaper : 'none';
@@ -827,6 +827,7 @@ function makeChatModSortControl(turn,english){
   select.innerHTML=`<option value="relevance">${english?'Most relevant':'Relevanteste'}</option><option value="downloads">${english?'Most downloads':'Meiste Downloads'}</option>`;select.value=turn.modSortOrder||'relevance';
   select.addEventListener('change',()=>{const activeTurn=state.modPickerTurn||turn;activeTurn.modSortOrder=select.value;if(activeTurn.selectionInline&&!activeTurn.selectionComplete)renderChat();else renderModSelectionDialog()});label.append(caption,select);return label;
 }
+const inlinePickerShown=new WeakMap();
 function renderInlineModPicker(section,turn,items,english){
   section.classList.add('has-inline-picker');
   const picker=document.createElement('div');picker.className='chat-mod-inline-picker';
@@ -836,12 +837,18 @@ function renderInlineModPicker(section,turn,items,english){
   const mode=document.createElement('button');mode.type='button';mode.className='button button-quiet';mode.textContent=english?'Open large picker':'Großes Auswahlfenster';mode.onclick=()=>setModPickerView('window');toolbar.append(label,mode);
   const cards=document.createElement('div');cards.className='mod-results mod-picker-results chat-mod-inline-results';cards.dataset.chatScrollKey='mod-suggestions';
   state.modPickerTurn=turn;state.modPickerSelection=syncSuggestedModsWithPack(turn);
-  renderModCards(cards,items,{selection:state.modPickerSelection,compact:true,onToggle:(mod,selection)=>applyModPickerToggle(turn,mod,selection,picker,items,english)});
+  // the chat is the only scroller: a page of cards plus "show more" instead of a scroll box inside the chat
+  const PAGE=6;if(!inlinePickerShown.has(turn))inlinePickerShown.set(turn,PAGE);
+  const drawCards=()=>renderModCards(cards,items.slice(0,inlinePickerShown.get(turn)),{selection:state.modPickerSelection,compact:true,onToggle:(mod,selection)=>applyModPickerToggle(turn,mod,selection,picker,items,english)});
+  drawCards();
+  const more=document.createElement('button');more.type='button';more.className='chat-mod-inline-more';
+  const syncMore=()=>{const rest=items.length-inlinePickerShown.get(turn);more.hidden=rest<=0;more.textContent=english?`Show ${Math.min(PAGE,rest)} more (${rest} left)`:`${Math.min(PAGE,rest)} weitere anzeigen (noch ${rest})`};
+  more.onclick=()=>{inlinePickerShown.set(turn,inlinePickerShown.get(turn)+PAGE);drawCards();syncMore()};syncMore();
   const actions=document.createElement('div');actions.className='chat-mod-inline-actions';
   const count=document.createElement('span');count.className='chat-mod-inline-count';
   const ai=document.createElement('button');ai.type='button';ai.className='button button-quiet';ai.textContent=english?'✨ Add with AI · up to 12':'✨ Mit KI ergänzen · bis zu 12';ai.onclick=()=>confirmModSelection({ai:true});
   const confirm=document.createElement('button');confirm.type='button';confirm.className='button button-primary';confirm.textContent=english?'Done · back to chat':'Fertig · zurück zum Chat';confirm.onclick=()=>closeInlineModSelection(turn);
-  actions.append(count,ai,confirm);picker.append(toolbar,cards,actions);section.append(picker);syncInlinePickerActions(picker,turn,items,english);
+  actions.append(count,ai,confirm);picker.append(toolbar,cards,more,actions);section.append(picker);syncInlinePickerActions(picker,turn,items,english);
 }
 function syncInlinePickerActions(picker,turn,items,english){
   const selected=state.modPickerSelection;const count=picker.querySelector('.chat-mod-inline-count');if(count)count.textContent=`${selected.size} ${english?'selected':'ausgewählt'}`;
@@ -1098,7 +1105,7 @@ function renderAssistantFollowups(turn) {
   if(state.sending)return null;
   if(turn.edition==='bedrock'&&!turn.alternativesAccepted&&!turn.alternativesDeclined)return null;
   const topics=turnTopics(turn),topicLabel=topics.length?topics.join(' & '):'deiner bisherigen Idee';
-  const firstTopic=topics[0]||'in diese Richtung';
+  const firstTopic=topics[0]||((window.workshopI18n?.locale||'de').startsWith('en')?'in this direction':'in diese Richtung');
   const english=(window.workshopI18n?.locale||'de').startsWith('en');
   const prompts=[
     {label:english?`✨ More ${firstTopic}`:`✨ Mehr ${firstTopic}`,prompt:english?`Find more suitable mods for ${topicLabel}. Use my idea and selected mods as context, avoid mods already selected, and find Modrinth versions for my current setup.`:`Finde weitere passende Mods für ${topicLabel}. Nutze meine bisherige Idee und Mod-Auswahl als Kontext, vermeide bereits ausgewählte Mods und suche passende Modrinth-Versionen für mein aktuelles Setup.`},
@@ -1157,11 +1164,15 @@ function renderAssistantFollowups(turn) {
   const actions=document.createElement('div');actions.className='assistant-followups';
   const label=document.createElement('span');label.className='assistant-followups-label';label.textContent=english?'Continue with one click':'Wie möchtest du weitermachen?';actions.append(label);
   const buttons=document.createElement('div');buttons.className='suggestion-row';
-  buttons.innerHTML=prompts.map((item,index)=>`<button class="suggestion" data-prompt="${safe(item.prompt||'')}" data-search-kind="${item.kind||''}">${safe(item.label)}</button>`).join('');
-  buttons.querySelectorAll('[data-prompt]').forEach(button=>button.onclick=()=>button.dataset.searchKind?searchInChatMode(button.dataset.searchKind):submitAssistantPrompt(button,button.dataset.prompt));
+  // five ideas stay visible; the rest of the first set moves into "more ideas" so the chat is not a wall of chips
+  const visiblePrompts=prompts.slice(0,5),hiddenPrompts=prompts.slice(5);
+  const promptMarkup=list=>list.map((item,index)=>`<button class="suggestion" data-prompt="${safe(item.prompt||'')}" data-search-kind="${item.kind||''}">${safe(item.label)}</button>`).join('');
+  const wirePrompts=area=>area.querySelectorAll('[data-prompt]').forEach(button=>button.onclick=()=>button.dataset.searchKind?searchInChatMode(button.dataset.searchKind):submitAssistantPrompt(button,button.dataset.prompt));
+  buttons.innerHTML=promptMarkup(visiblePrompts);wirePrompts(buttons);
   actions.append(buttons);
   const more=document.createElement('details');more.className='more-suggestions';
-  const summary=document.createElement('summary');summary.textContent=english?`${morePrompts.length} more directions`:`${morePrompts.length} weitere Richtungen`;more.append(summary);
+  const summary=document.createElement('summary');const moreCount=morePrompts.length+hiddenPrompts.length;summary.textContent=english?`${moreCount} more ideas`:`${moreCount} weitere Ideen`;more.append(summary);
+  if(hiddenPrompts.length){const firstRow=document.createElement('div');firstRow.className='suggestion-row';firstRow.innerHTML=promptMarkup(hiddenPrompts);wirePrompts(firstRow);more.append(firstRow)}
   for(const group of moreGroups){const groupTitle=document.createElement('span');groupTitle.className='more-suggestions-title';groupTitle.textContent=english?({
     'Spielstil':'Play style','Welt & Abenteuer':'World & adventure','Bauen & Alltag':'Building & life','Technik & Feinschliff':'Tuning & polish'
   }[group.title]||group.title):group.title;more.append(groupTitle);const row=document.createElement('div');row.className='suggestion-row';
@@ -1351,7 +1362,7 @@ function renderChat() {
     { label: '🖼 Resource-Packs', kind:'resourcepack' }
   ];
   suggestions.innerHTML=`<div class="suggestion-row">${starterPrompts.map(item=>`<button class="suggestion" data-prompt="${safe(item.prompt||'')}" data-search-kind="${item.kind||''}">${safe(item.label)}</button>`).join('')}</div>`;
-  const initial=document.createElement('div');initial.className='message assistant-message';initial.innerHTML='<div class="avatar assistant-avatar" aria-label="Pack-Assistent"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#76502e" stroke="#111d32" stroke-width="2" d="M5 12 16 7l11 5v14H5z"/><path fill="#bd8242" stroke="#111d32" stroke-width="2" d="m5 12 11 5 11-5-11-5z"/><path fill="#e3b65e" d="m9 12 7 3 7-3-7-3z"/><path fill="#f1cc76" stroke="#111d32" stroke-width="1.5" d="M13 17h6v5h-6z"/><path fill="#3d83cb" d="M14 18h4v3h-4z"/><path fill="#8ee0ff" d="M15 18h2v2h-2z"/><path fill="#c5eaff" d="m23 5 1-2 1 2 2 1-2 1-1 2-1-2-2-1z"/></svg></div><div class="bubble">'+((window.workshopI18n?.locale||'de').startsWith('en')?'<p>Hey! What kind of modpack do you have in mind?</p><p>Name example mods or modpacks, describe the direction or choose a video. For Bedrock add-ons I ask first before looking for Java alternatives.</p>':'<p>Hey! Was für ein Modpack schwebt dir vor?</p><p>Nenne Mods oder Modpacks als Beispiel, beschreibe die Richtung oder wähle ein Video aus. Bei Bedrock-Add-ons frage ich dich erst, bevor ich Java-Alternativen suche.</p>')+'</div>';
+  const initial=document.createElement('div');initial.className='message assistant-message';initial.innerHTML='<div class="avatar assistant-avatar" aria-label="Pack-Assistent"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1d46a6"/><path fill="#2f6be0" d="M0 9q0-9 9-9h14q9 0 9 9v3C22 8 10 8 0 14z" opacity=".55"/><path fill="#fff" d="m16 2.4 1.4 3 3 1.4-3 1.4L16 11.2l-1.4-3-3-1.4 3-1.4z"/><rect x="6.5" y="11.5" width="19" height="16" rx="4.5" fill="#6beadd" stroke="#0e1b48" stroke-width="1.5"/><rect x="8" y="13" width="16" height="4" rx="2" fill="#c8fff9" opacity=".7"/><rect x="10.2" y="17.6" width="3.6" height="4.4" rx="1.1" fill="#0e1b48"/><rect x="18.2" y="17.6" width="3.6" height="4.4" rx="1.1" fill="#0e1b48"/><rect x="11.2" y="18.2" width="1.3" height="1.3" fill="#fff"/><rect x="19.2" y="18.2" width="1.3" height="1.3" fill="#fff"/><path d="M13.2 24.2q2.8 1.8 5.6 0" fill="none" stroke="#0e1b48" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="bubble">'+((window.workshopI18n?.locale||'de').startsWith('en')?'<p>Hey! What kind of modpack do you have in mind?</p><p>Name example mods or modpacks, describe the direction or choose a video. For Bedrock add-ons I ask first before looking for Java alternatives.</p>':'<p>Hey! Was für ein Modpack schwebt dir vor?</p><p>Nenne Mods oder Modpacks als Beispiel, beschreibe die Richtung oder wähle ein Video aus. Bei Bedrock-Add-ons frage ich dich erst, bevor ich Java-Alternativen suche.</p>')+'</div>';
   const popular=document.createElement('section');popular.className='popular-section';
   const english=(window.workshopI18n?.locale||'de').startsWith('en'),weeklyData=state.weeklyFavorites,weeklyReady=weeklyData?.ranking==='weekly',rankMode=state.popularRankMode;
   const fallback=state.project.provider==='curseforge'&&!state.settings.hasCurseForgeKey;

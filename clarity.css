@@ -1,0 +1,11 @@
+/* Clarity pass: fewer repeated facts, no controls without a job, readable helper text. Nothing is removed from
+   the app: hidden elements stay in the DOM so every script and shortcut keeps working. */
+
+/* UI 4 dashboard: the setup chip repeated what the toolbar and the stat cards already show */
+html body.ui-v4 .v4-version-chip { display: none !important; }
+
+/* mod view: while the pack is empty there is nothing to filter, copy or export (undo/redo stay: redo is needed after undoing the last mod) */
+html body #workspace-grid .selected-section:has(.empty-selected:not([hidden])) :is(.selected-filter-row, #copy-mod-list, #export-pack-json) { display: none !important; }
+
+/* helper text was 9-11 px in places */
+html body :is(.lab-footnote, .composer-hint, .chat-footnote, .hint, .mod-selection-heading p, .settings-local) { font-size: 12px !important; line-height: 1.5 !important; }

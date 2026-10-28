@@ -31,7 +31,18 @@ const startContrastGuard = () => {
     return layers.reduceRight((acc, layer) => acc ? blend(layer, acc) : layer, null);
   };
 
+  // icon-only sidebar buttons (UI 4 / UI 5, Classic rail) keep their name as tooltip and accessible name
+  const labelNav = () => {
+    for (const item of document.querySelectorAll('.sidebar .nav-item')) {
+      const name = [...item.childNodes].filter(n => !(n.nodeType === 1 && n.classList.contains('nav-icon'))).map(n => n.textContent).join(' ').replace(/\s+/g, ' ').trim();
+      if (!name) continue;
+      if (!item.getAttribute('aria-label')) item.setAttribute('aria-label', name);
+      if (!item.title) item.title = name;
+    }
+  };
+
   const check = () => {
+    labelNav();
     document.querySelectorAll('[data-contrast-guard]').forEach(el => { el.style.removeProperty('color'); el.removeAttribute('data-contrast-guard'); });
     const root = document.querySelector('.app-shell');
     if (!root) return;

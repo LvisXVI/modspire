@@ -1,0 +1,40 @@
+/* Design dialog in every layout and theme: options, wallpaper picker and sliders share one look built from the
+   dialog's own text colour. The selected option used to keep light text on its light highlight (white on white)
+   and, in dark Modern themes, all options were light grey slabs inside a dark dialog. */
+html body #design-overlay#design-overlay .design-card {
+  --dd-surface: color-mix(in srgb, currentColor 6%, transparent);
+  --dd-surface-2: color-mix(in srgb, currentColor 10%, transparent);
+  --dd-line: color-mix(in srgb, currentColor 16%, transparent);
+  --dd-muted: color-mix(in srgb, currentColor 64%, transparent);
+  --dd-accent: var(--custom-accent, var(--green, #398ce0));
+  border-radius: 28px !important;
+}
+html body #design-overlay#design-overlay .design-card :is(h2, strong, .settings-copy, .eyebrow, label, output, p, .settings-local) { color: inherit !important; text-shadow: none !important; }
+html body #design-overlay#design-overlay .design-card :is(.settings-copy, small, .eyebrow, .settings-local, .theme-opacity-heading small, .wallpaper-heading small) { color: var(--dd-muted) !important; }
+
+/* theme options */
+html body #design-overlay#design-overlay .theme-options { display: grid !important; gap: 10px !important; }
+html body #design-overlay#design-overlay .theme-option {
+  display: grid !important; grid-template-columns: 64px minmax(0, 1fr) 26px !important; align-items: center !important; gap: 4px 16px !important; width: 100% !important; margin: 0 !important; padding: 10px 16px 10px 10px !important;
+  text-align: left !important; color: inherit !important; background: var(--dd-surface) !important; background-image: none !important; border: 1px solid var(--dd-line) !important; border-radius: 20px !important; box-shadow: none !important;
+  transition: background-color .2s, border-color .2s, transform .35s cubic-bezier(.34, 1.56, .64, 1) !important;
+}
+html body #design-overlay#design-overlay .theme-option:hover { transform: translateY(-1px); background: var(--dd-surface-2) !important; }
+html body #design-overlay#design-overlay .theme-option:focus-visible { outline: 2px solid var(--dd-accent) !important; outline-offset: 2px !important; }
+html body #design-overlay#design-overlay .theme-option.active { background: color-mix(in srgb, var(--dd-accent) 14%, transparent) !important; border-color: color-mix(in srgb, var(--dd-accent) 65%, transparent) !important; }
+html body #design-overlay#design-overlay .theme-option > :is(strong, small, span:not(.theme-swatch):not(.theme-check)) { color: inherit !important; opacity: 1 !important; }
+html body #design-overlay#design-overlay .theme-option small { color: var(--dd-muted) !important; }
+html body #design-overlay#design-overlay .theme-option .theme-check { display: grid !important; place-items: center !important; width: 24px !important; height: 24px !important; border-radius: 50% !important; border: 1.5px solid var(--dd-line) !important; background: transparent !important; color: transparent !important; font-size: 13px !important; }
+html body #design-overlay#design-overlay .theme-option.active .theme-check { background: var(--dd-accent) !important; border-color: var(--dd-accent) !important; color: #fff !important; }
+
+/* wallpapers, sliders, motion switch */
+html body #design-overlay#design-overlay .wallpaper-options { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)) !important; gap: 10px !important; }
+html body #design-overlay#design-overlay .wallpaper-option { display: grid !important; gap: 6px !important; padding: 8px !important; border-radius: 16px !important; color: inherit !important; font-size: 12px !important; background: var(--dd-surface) !important; background-image: none !important; border: 1px solid var(--dd-line) !important; box-shadow: none !important; }
+html body #design-overlay#design-overlay .wallpaper-option.active { background: color-mix(in srgb, var(--dd-accent) 14%, transparent) !important; border-color: color-mix(in srgb, var(--dd-accent) 65%, transparent) !important; }
+html body #design-overlay#design-overlay .wallpaper-option :is(strong, span:not(.wallpaper-thumb), small) { color: inherit !important; }
+html body #design-overlay#design-overlay :is(.theme-opacity-control, .theme-motion-control, .wallpaper-picker, .color-config) { background: var(--dd-surface) !important; background-image: none !important; border: 1px solid var(--dd-line) !important; border-radius: 20px !important; box-shadow: none !important; color: inherit !important; }
+html body #design-overlay#design-overlay :is(.color-config-toggle, .text-button) { color: inherit !important; background: var(--dd-surface-2) !important; border: 1px solid var(--dd-line) !important; border-radius: 12px !important; }
+html body #design-overlay#design-overlay .close-button { color: inherit !important; background: var(--dd-surface-2) !important; border: 1px solid var(--dd-line) !important; border-radius: 50% !important; }
+html body #design-overlay#design-overlay .settings-actions .button-primary { color: #fff !important; }
+
+@media (prefers-reduced-motion: reduce) { html body #design-overlay .theme-option { transition: none !important; transform: none !important; } }

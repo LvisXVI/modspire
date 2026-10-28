@@ -4,6 +4,15 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.9] — Clearer chat, calmer picker (2026-10-28)
+
+### Changed
+- **Mod picker:** one unified mod card in every layout, with a 16:9 gallery, a three-line description and a clean footer in the large picker window. The star glyph now shows on every card.
+- **Chat:** the inline picker is paged (six cards, "show more") instead of a nested scroll area, and follow-up ideas are cut to five with the rest under "more ideas". The chat now follows the light or dark tone of the active UI and theme.
+- **Pack assistant** has a new avatar, and the pack name field reads as a title with a clear "Saved" status.
+- **Design dialog:** options, wallpapers and sliders use the dialog's own text colour, so the selected option is no longer white on white.
+- **Clarity:** empty-pack actions (filter, copy, export) are hidden until there are mods, the redundant version chip is gone, icon-only navigation items get labels, and small hints share one readable size.
+
 ## [0.3.8] — Mod Studio 1.0.0 (2026-10-28)
 
 ### Changed

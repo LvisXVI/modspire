@@ -1,7 +1,7 @@
 /* Chat redesign for every layout (Classic, Modern, UI 3, UI 4, Glass) and every theme.
    Colours come from the theme variables (--panel, --panel2, --line, --text, --muted, --green = accent).
    The layouts style the chat with !important, so these rules use it too; the doubled id makes them win. */
-#chat-panel#chat-panel { --chat-accent: var(--green, #69b8ff); --chat-surface: color-mix(in srgb, var(--panel2, #15233a) 82%, transparent); --chat-line: color-mix(in srgb, var(--line, #23344d) 80%, transparent); --chat-ease: cubic-bezier(.2, .8, .2, 1); }
+#chat-panel#chat-panel { --chat-surface: color-mix(in srgb, var(--panel2, #15233a) 82%, transparent); --chat-line: color-mix(in srgb, var(--line, #23344d) 80%, transparent); --chat-ease: cubic-bezier(.2, .8, .2, 1); }
 /* surfaces are tints of the panel's own text colour, so they work on light and dark panels in every layout */
 #chat-panel#chat-panel { --chat-surface: color-mix(in srgb, currentColor 7%, transparent); --chat-line: color-mix(in srgb, currentColor 15%, transparent); --chat-muted: color-mix(in srgb, currentColor 62%, transparent); }
 
@@ -74,3 +74,50 @@
 @keyframes chatIn { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { #chat-panel#chat-panel .message, #chat-panel#chat-panel .assistant-followups { animation: none !important; } }
 @media (max-width: 760px) { #chat-panel#chat-panel .bubble, #chat-panel#chat-panel .user-message .bubble { max-width: 88% !important; } #chat-panel#chat-panel .composer-hint { display: none !important; } }
+
+/* ---------- light tone: the chat follows light layouts/themes instead of staying a dark block ---------- */
+html body[data-chat-tone="light"] {
+  --chat-panel: color-mix(in srgb, #fff 78%, var(--chat-accent) 22%);
+  --chat-stage: color-mix(in srgb, #fff 86%, var(--chat-accent) 14%);
+  --chat-assistant: color-mix(in srgb, #fff 92%, var(--chat-accent) 8%);
+  --chat-user: color-mix(in srgb, #fff 78%, var(--chat-accent) 22%);
+  --chat-composer: #fff;
+  --chat-field: #fff;
+  --chat-line: color-mix(in srgb, #14202c 18%, transparent);
+  --chat-ink: #14202c;
+  --chat-muted: #536675;
+}
+html body.ui-modern[data-chat-tone="light"] {
+  --chat-panel: var(--modern-canvas);
+  --chat-stage: var(--modern-canvas);
+  --chat-assistant: var(--modern-card);
+  --chat-user: var(--modern-accentSoft);
+  --chat-composer: var(--modern-card);
+  --chat-field: var(--modern-card);
+  --chat-line: var(--modern-line);
+  --chat-ink: var(--modern-ink);
+  --chat-muted: var(--modern-muted);
+}
+html body[data-chat-tone="light"] #chat-panel#chat-panel {
+  --chat-ink: #14202c;
+  background: color-mix(in srgb, #ffffff 78%, var(--chat-accent, #398ce0) 22%) !important; background-image: none !important;
+  color: var(--chat-ink) !important; border-color: color-mix(in srgb, var(--chat-ink) 14%, transparent) !important;
+  box-shadow: 0 18px 44px -30px rgba(20, 32, 44, .45) !important;
+}
+html body[data-chat-tone="light"] #chat-panel#chat-panel :is(.chat-messages, .chat-form, .panel-heading, .chat-footnote, .message-content, .assistant-followups, .more-suggestions, .attach-row, .composer-footer) { background-color: transparent !important; background-image: none !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel :is(h1, h2, h3, p, small, label, strong, summary, .composer-hint, .chat-footnote, .attach-row span, .assistant-followups-label, .chat-model-control span, .welcome-card, .bubble) { color: inherit !important; text-shadow: none !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel :is(.panel-heading p, .chat-footnote, .composer-hint) { color: color-mix(in srgb, var(--chat-ink) 62%, transparent) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel :is(input, select, textarea):not(#chat-input) { color: var(--chat-ink) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel #chat-input { color: var(--chat-ink) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel #chat-input::placeholder { color: color-mix(in srgb, var(--chat-ink) 50%, transparent) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel .chat-header-action, html body[data-chat-tone="light"] #chat-panel#chat-panel .attach-button { color: var(--chat-ink) !important; background: color-mix(in srgb, var(--chat-ink) 6%, transparent) !important; border-color: color-mix(in srgb, var(--chat-ink) 16%, transparent) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel .assistant-message .bubble { background: color-mix(in srgb, var(--chat-ink) 6%, #fff) !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel .user-message .bubble { color: #fff !important; }
+html body[data-chat-tone="light"] #chat-panel#chat-panel .chat-form { background: #fff !important; }
+
+/* The Modern palettes already provide matching canvas, card and ink colours for every theme. */
+html body.ui-modern[data-chat-tone="light"] #chat-panel#chat-panel { --chat-ink: var(--modern-ink); background: var(--modern-canvas) !important; border-color: var(--modern-line) !important; }
+html body.ui-modern[data-chat-tone="light"] #chat-panel#chat-panel .assistant-message .bubble { background: var(--modern-card) !important; border-color: var(--modern-line) !important; }
+html body.ui-modern[data-chat-tone="light"] #chat-panel#chat-panel .chat-form { background: var(--modern-card) !important; border-color: var(--modern-line) !important; }
+html body.ui-modern[data-chat-tone="light"] #chat-panel#chat-panel .chat-header-action,
+html body.ui-modern[data-chat-tone="light"] #chat-panel#chat-panel .attach-button { background: var(--modern-inset) !important; border-color: var(--modern-line) !important; }

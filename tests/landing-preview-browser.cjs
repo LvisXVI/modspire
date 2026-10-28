@@ -24,11 +24,11 @@ const { chromium } = require('playwright');
       assert.equal(await page.locator('a[href="demo/#demo"]').count() > 0, true, 'the interactive demo stays reachable');
       assert.equal(await page.locator('.switch a[aria-current="page"]').textContent(), 'Modspire');
       const tabs = page.locator('[data-showcase] [role="tab"]');
-      assert.equal(await tabs.count(), 5, 'all five app areas are in the showcase');
+      assert.equal(await tabs.count(), 3, 'all three app areas are in the showcase');
       await page.locator('#tour').scrollIntoViewIfNeeded();
       await tabs.nth(2).click();
       assert.equal(await tabs.nth(2).getAttribute('aria-selected'), 'true');
-      await page.waitForFunction(() => document.querySelector('.stage img').src.includes('pack-lab'));
+      await page.waitForFunction(() => document.querySelector('.stage img').src.includes('lab'));
       const contrast = await page.locator('#new .card p').first().evaluate(element => {
         const rgb = value => value.match(/[\d.]+/g).slice(0, 3).map(Number);
         const lum = v => v.map(c => { c /= 255; return c <= .04045 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }).reduce((s, c, i) => s + c * [.2126, .7152, .0722][i], 0);

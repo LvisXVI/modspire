@@ -1,0 +1,27 @@
+const assert = require('node:assert/strict');
+const { estimate, profile, gpuTier, tierFor } = require('../performance-estimate.js');
+const strong = { cpuModel: 'i5-12600KF', threads: 12, cores: 6, ramMB: 16384, cpuScore: 175, gpuName: 'AMD Radeon RX 6900 XT' };
+const weak = { cpuModel: 'Celeron', threads: 2, cores: 2, ramMB: 4096, cpuScore: 45, gpuName: 'Intel(R) UHD Graphics 600' };
+const mods = n => Array.from({ length: n }, (_, i) => ({ title: 'Mod ' + i, description: i % 5 === 0 ? 'automation machines and factory pipes' : i % 7 === 0 ? 'new biomes and structures' : 'adds items' }));
+const shader = { title: 'Complementary Shaders', description: 'shader pack', categories: ['shader'] };
+const sodium = [{ title: 'Sodium', description: 'rendering engine' }, { title: 'Lithium', description: 'game logic' }, { title: 'FerriteCore', description: 'memory' }];
+
+const vanilla = estimate([], strong);
+assert.ok(vanilla.fps > 150 && vanilla.tier === 'excellent', 'vanilla on strong hardware is very smooth');
+assert.ok(estimate(mods(150), strong).fps < vanilla.fps, 'more mods run slower');
+assert.ok(estimate(mods(150), weak).fps < estimate(mods(150), strong).fps, 'weaker hardware runs slower');
+assert.ok(estimate(mods(150), weak).tier === 'heavy' || estimate(mods(150), weak).tier === 'choppy', 'a big pack on a weak PC is flagged');
+assert.ok(estimate(mods(80).concat(sodium), strong).fps > estimate(mods(80), strong).fps, 'optimisation mods help');
+assert.equal(profile(sodium).performance, 3, 'optimisation mods are detected');
+const withShader = estimate(mods(6).concat(shader), weak);
+assert.equal(withShader.bottleneck, 'gpu', 'shaders on integrated graphics are GPU-bound');
+assert.ok(withShader.tips.includes('shader-integrated'), 'integrated graphics get a shader warning');
+const tight = estimate(mods(300), { ...weak, ramMB: 6144 });
+assert.ok(tight.ram.tight && tight.tips.includes('ram-tight'), 'memory shortage is reported');
+assert.ok(tight.ram.allocateMB >= 2048 && tight.ram.allocateMB <= 6144, 'recommended memory stays inside the PC');
+assert.equal(gpuTier('ANGLE (AMD, AMD Radeon RX 6900 XT Direct3D11)').kind, 'high');
+assert.equal(gpuTier('Intel(R) UHD Graphics 630').kind, 'integrated');
+assert.equal(gpuTier('something unknown'), null);
+assert.equal(tierFor(140), 'excellent'); assert.equal(tierFor(80), 'smooth'); assert.equal(tierFor(50), 'playable'); assert.equal(tierFor(30), 'choppy'); assert.equal(tierFor(10), 'heavy');
+assert.ok(estimate(mods(40), strong).viewDistance >= 6 && estimate(mods(40), strong).viewDistance <= 16, 'view distance stays in range');
+console.log('Performance estimate: scaling with mods and hardware, optimisation mods, shaders on integrated graphics, memory limits and tiers passed.');

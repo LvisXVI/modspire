@@ -31,7 +31,7 @@ html body .topbar:not(#_):not(#_) .title-drag-region .eyebrow { display: none !i
 html body .topbar:not(#_):not(#_) { align-items: center !important; }
 html body .topbar:not(#_):not(#_) .title-drag-region { display: flex !important; align-items: center !important; min-width: 0; }
 html body .topbar:not(#_):not(#_) .project-title-row { display: flex !important; align-items: center !important; gap: 12px !important; }
-html body .topbar:not(#_):not(#_) .top-actions > .button-quiet { width: 40px !important; height: 40px !important; min-width: 0 !important; padding: 0 !important; }
+html body .topbar:not(#_):not(#_) .top-actions > .button-quiet { min-height: 40px !important; min-width: 40px !important; }
 html body .topbar:not(#_):not(#_) .top-actions > .button-primary { min-height: 40px !important; margin-left: 12px !important; }
 html body .setup-strip:not(#_):not(#_) label { display: inline-flex; align-items: center; gap: 8px !important; font-size: 11px !important; letter-spacing: .04em !important; opacity: 1; }
 html body .setup-strip:not(#_):not(#_) .strip-divider { height: 20px !important; opacity: .35 !important; margin: 0 4px !important; }

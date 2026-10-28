@@ -455,6 +455,10 @@ function setFullscreen(win, enabled) {
     }
   });
 }
+handleWorkshop('hardware:get', () => {
+  const os = require('node:os'), cpus = os.cpus();
+  return { cpuModel: String(cpus[0]?.model || '').replace(/\s+/g, ' ').trim(), threads: cpus.length, cores: Math.max(1, Math.round(cpus.length / 2)), ramMB: Math.round(os.totalmem() / 1048576), platform: process.platform };
+});
 handleWorkshop('diagnostics:get', () => getDiagnostics().snapshot());
 handleWorkshop('diagnostics:report', (_event, report) => getDiagnostics().record(
   'renderer-error', typeof report?.message === 'string' ? report.message : 'Unbekannter Oberflächenfehler',

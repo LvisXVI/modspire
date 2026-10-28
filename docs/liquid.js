@@ -74,6 +74,15 @@
     nav.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false');
   }));
 
+  // Close the mobile navigation without leaving keyboard focus hidden.
+  nav?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      menu?.setAttribute('aria-expanded', 'false');
+      menu?.focus();
+    }
+  });
+
   // ----- Active section in nav -----
   const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
   if (navLinks.length && 'IntersectionObserver' in window) {

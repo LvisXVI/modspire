@@ -4,6 +4,16 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.11] — Performance check (2026-10-28)
+
+### Added
+- **Performance check in the Pack lab:** a short test measures your processor, graphics card and memory, then estimates how the current pack will run: frame-rate range, CPU / GPU / RAM load, the memory to give Minecraft, a recommended render distance and concrete tips (optimisation mods, shaders on integrated graphics, tight memory). Nothing leaves your PC.
+
+### Fixed
+- The action buttons in the top bar overlapped on wide windows (0.3.10 regression).
+- Picked mods under "Your pack" had light text on a white tile in the dark Liquid Glass layouts.
+- The website now shows sharp 1440×900 preview video and screenshots instead of stretched 960×600 clips.
+
 ## [0.3.10] — Dialogs close properly, calmer top bar (2026-10-28)
 
 ### Changed

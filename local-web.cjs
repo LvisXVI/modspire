@@ -6,7 +6,7 @@ const crypto = require('node:crypto');
 
 // The browser uses the same application handlers as the Electron preload.
 const METHODS = Object.freeze({
-  getDiagnostics:'diagnostics:get',reportError:'diagnostics:report',openDiagnosticsFolder:'diagnostics:open-folder',exportDiagnostics:'diagnostics:export',
+  getHardware:'hardware:get',getDiagnostics:'diagnostics:get',reportError:'diagnostics:report',openDiagnosticsFolder:'diagnostics:open-folder',exportDiagnostics:'diagnostics:export',
   getSettings:'settings:get',setUsername:'settings:set-username',setSecret:'settings:set-secret',
   startOpenCode:'opencode:start',saveOpenCode:'opencode:save',getOpenCodeModels:'opencode:models',getLocalModels:'local-ai:models',saveLocalAi:'local-ai:save',saveOmniRoute:'omniroute:save',testOmniRoute:'omniroute:test',importLocalGguf:'local-ai:import-gguf',
   getChatGPTStatus:'chatgpt:status',connectChatGPT:'chatgpt:connect',disconnectChatGPT:'chatgpt:disconnect',cancelChatGPTSignIn:'chatgpt:cancel-sign-in',openChatGPTUsage:'chatgpt:open-usage',
@@ -16,7 +16,7 @@ const METHODS = Object.freeze({
   exportCurseForge:'project:export-curseforge',openLauncher:'launcher:open',openExternal:'app:open-external',openModStudio:'modstudio:open',startVoiceInput:'voice:start',stopVoiceInput:'voice:stop',returnToDesktop:'web:stop',reportWebReturnError:'web:return-error'
 });
 const EVENTS = Object.freeze({onLocalAiProgress:'local-ai:progress',onChatProgress:'chat:progress',onVoiceInputEvent:'voice:event',onPrepareWebReturn:'web:prepare-return'});
-const STATIC = new Set(['styles.css','visual-fixes.css','modern-ui.css','v3-ui.css','v4-ui.css','desktop-polish.css','renderer.js','pack-tools.js','pack-library.js','pack-library.css','pack-dependencies.js','pack-workflows.js','pack-workflows.css','ui-refresh.css','chat-refresh.css','wallpaper-fx.css','surfaces.css','sidebar.css','picker-refresh.css','design-dialog.css','clarity.css', 'topbar-refresh.css','wallpaper-fx.js','contrast-guard.js','chat-tone.js', 'overlay-dismiss.js','glass-ui.css','glass-ui.js','design-quick.js','i18n.js','design-manager.cjs','v3-ui.js','v4-ui.js','modern-ui.js','diagnostics-ui.js','desktop-polish.js','web-bridge.js','web-bootstrap.js','local-web-ui.js','local-web.css']);
+const STATIC = new Set(['styles.css','visual-fixes.css','modern-ui.css','v3-ui.css','v4-ui.css','desktop-polish.css','renderer.js','pack-tools.js','pack-library.js','pack-library.css','pack-dependencies.js','pack-workflows.js','pack-workflows.css','ui-refresh.css','chat-refresh.css','wallpaper-fx.css','surfaces.css','sidebar.css','picker-refresh.css','design-dialog.css','clarity.css', 'topbar-refresh.css','wallpaper-fx.js','contrast-guard.js','chat-tone.js', 'overlay-dismiss.js','performance-estimate.js','performance-check.js','glass-ui.css','glass-ui.js','design-quick.js','i18n.js','design-manager.cjs','v3-ui.js','v4-ui.js','modern-ui.js','diagnostics-ui.js','desktop-polish.js','web-bridge.js','web-bootstrap.js','local-web-ui.js','local-web.css']);
 const MIME={'.css':'text/css','.js':'text/javascript','.cjs':'text/javascript','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.ico':'image/x-icon','.woff2':'font/woff2','.woff':'font/woff','.gif':'image/gif'};
 const random=()=>crypto.randomBytes(32).toString('hex');
 

@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('workshop', {
   openWebVersion: preferences => ipcRenderer.invoke('web:open', preferences),
   returnToDesktop: () => ipcRenderer.invoke('web:stop'),
   onWebVersionChanged: callback => subscribe('web:active', callback),
+  getHardware: () => ipcRenderer.invoke('hardware:get'),
   getDiagnostics: () => ipcRenderer.invoke('diagnostics:get'),
   reportError: report => ipcRenderer.invoke('diagnostics:report', report),
   openDiagnosticsFolder: () => ipcRenderer.invoke('diagnostics:open-folder'),

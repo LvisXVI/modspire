@@ -15,3 +15,28 @@ html body .lab-empty-note { display: none; }
 html body #lab-panel[data-empty] .lab-empty-note { display: grid; gap: 4px; grid-column: 1 / -1; padding: 16px 20px; border-radius: 20px; border: 1px dashed color-mix(in srgb, currentColor 28%, transparent); background: color-mix(in srgb, currentColor 5%, transparent); }
 html body #lab-panel[data-empty] .lab-empty-note span { font-size: 13px; opacity: .75; }
 html body #lab-panel[data-empty] :is(.dna-card, .compass-card, .world-card, .sound-card) { display: none !important; }
+
+/* picked mods in a dark layout keep a dark tile (the blue theme's light glass surface left light text on a white tile) */
+html body[data-chat-tone="dark"] .selected-mod:not(#_):not(#_) { background-color: rgba(255, 255, 255, .08) !important; border-color: rgba(255, 255, 255, .14) !important; }
+html body[data-chat-tone="dark"] .selected-mod:not(#_):not(#_) .selected-mod-status { color: #7be0b4; background: rgba(37, 156, 111, .22); }
+html body[data-chat-tone="dark"] .selected-mod:not(#_):not(#_) .remove-mod { color: #f0b4ac; }
+
+/* Performance check card in the pack lab */
+html body .perf-card .perf-body { display: grid; gap: 10px; }
+html body .perf-card .perf-hw { font-size: 12px; opacity: .72; line-height: 1.5; }
+html body .perf-card .perf-result { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, currentColor 7%, transparent); border: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+html body .perf-card .perf-result strong { font-size: 18px; }
+html body .perf-card .perf-result span { font-size: 14px; opacity: .85; }
+html body .perf-card .perf-excellent, html body .perf-card .perf-smooth { border-color: rgba(60, 190, 130, .55); }
+html body .perf-card .perf-playable { border-color: rgba(230, 190, 70, .6); }
+html body .perf-card .perf-choppy, html body .perf-card .perf-heavy { border-color: rgba(235, 100, 100, .6); }
+html body .perf-card .perf-meter { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 4px 10px; font-size: 12px; }
+html body .perf-card .perf-meter small { grid-column: 2; opacity: .7; margin-top: -2px; }
+html body .perf-card .perf-bar { height: 8px; border-radius: 999px; background: color-mix(in srgb, currentColor 12%, transparent); overflow: hidden; }
+html body .perf-card .perf-bar i { display: block; height: 100%; border-radius: inherit; background: #3cbe82; transition: width .5s cubic-bezier(.34, 1.1, .64, 1); }
+html body .perf-card .perf-bar i.warm { background: #e6be46; }
+html body .perf-card .perf-bar i.hot { background: #eb6464; }
+html body .perf-card .perf-line, html body .perf-card .perf-hint { margin: 0; font-size: 12px; line-height: 1.5; }
+html body .perf-card .perf-hint { opacity: .6; }
+html body .perf-card .perf-tips { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 12.5px; line-height: 1.5; }
+html body .perf-card #perf-run { justify-self: start; margin-top: 12px; }

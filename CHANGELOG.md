@@ -4,6 +4,13 @@ Notable user-facing changes are documented here. This project follows Keep a Cha
 
 For the retrospective history from the first local build and a consolidated feature list, see the [Modspire patch log](docs/wiki/patch-log.md).
 
+## [0.3.10] — Dialogs close properly, calmer top bar (2026-10-28)
+
+### Changed
+- **Every dialog now closes with Escape or a click on the dimmed area around it** (settings, designs, test run, mod picker, history and the rest); some of them used to trap you.
+- **Top of the app:** one consistent look for the title, action buttons and the pack setup strip in all five layouts, with readable selects on light layouts.
+- **Pack lab** shows one short note instead of four empty analysis cards while the pack has no mods; "Komfort" and "Vielfalt" are translated.
+
 ## [0.3.9] — Clearer chat, calmer picker (2026-10-28)
 
 ### Changed

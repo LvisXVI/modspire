@@ -1,0 +1,40 @@
+/* Top of the app in every layout: one quiet rhythm for the title, the action buttons and the pack setup strip.
+   Surfaces are tints of the text colour, so the same rules read right on light and dark layouts. */
+html body .topbar .title-drag-region .eyebrow { font-size: 11px !important; letter-spacing: .16em !important; opacity: .62 !important; margin: 0 0 5px !important; }
+html body .topbar .top-actions { display: flex !important; align-items: center !important; gap: 8px !important; }
+html body .topbar .top-actions > .button-quiet {
+  min-height: 40px !important; min-width: 40px !important; border-radius: 999px !important; box-shadow: none !important; color: inherit !important;
+  background: color-mix(in srgb, currentColor 7%, transparent) !important; border: 1px solid color-mix(in srgb, currentColor 14%, transparent) !important;
+  transition: background-color .2s, transform .3s cubic-bezier(.34, 1.56, .64, 1) !important;
+}
+html body .topbar .top-actions > .button-quiet:hover { background: color-mix(in srgb, currentColor 13%, transparent) !important; transform: translateY(-1px); }
+html body .topbar .top-actions > .button-quiet:focus-visible { outline: 2px solid var(--custom-accent, var(--green, #398ce0)) !important; outline-offset: 2px !important; }
+
+html body .setup-strip { align-items: center !important; gap: 14px !important; }
+html body .setup-strip :is(select, input):is(*, #project-select, #minecraft-version, #loader):is(*, #project-select, #minecraft-version, #loader) {
+  min-height: 38px !important; border-radius: 12px !important; box-shadow: none !important; color: inherit !important; background-image: none;
+  background-color: color-mix(in srgb, currentColor 7%, transparent) !important; border: 1px solid color-mix(in srgb, currentColor 16%, transparent) !important;
+}
+html body .setup-strip select { appearance: auto; }
+html body .setup-strip select:is(*, #project-select, #minecraft-version, #loader):is(*, #project-select, #minecraft-version, #loader):hover { border-color: color-mix(in srgb, currentColor 30%, transparent) !important; }
+html body .setup-strip select:is(*, #project-select, #minecraft-version, #loader):is(*, #project-select, #minecraft-version, #loader):focus-visible { outline: 2px solid var(--custom-accent, var(--green, #398ce0)) !important; outline-offset: 1px !important; border-color: transparent !important; }
+html body .setup-strip select option { background: #0f1b2d; color: #f2f6fb; }
+html body[data-chat-tone="light"] .setup-strip select option { background: #ffffff; color: #14202e; }
+html body .setup-strip :is(label, .field-label) > :is(span, small):first-child { font-size: 10px !important; letter-spacing: .12em !important; opacity: .62 !important; }
+
+/* the select text follows the measured tone of the layout (some layouts keep a light base text colour on light panels) */
+html body[data-chat-tone="light"] .setup-strip select:is(*, #project-select, #minecraft-version, #loader):is(*, #project-select, #minecraft-version, #loader) { color: #14202e !important; -webkit-text-fill-color: #14202e !important; background-color: rgba(20, 32, 46, .06) !important; border-color: rgba(20, 32, 46, .18) !important; }
+html body[data-chat-tone="dark"] .setup-strip select:is(*, #project-select, #minecraft-version, #loader):is(*, #project-select, #minecraft-version, #loader) { color: #f2f6fb !important; -webkit-text-fill-color: #f2f6fb !important; background-color: rgba(255, 255, 255, .08) !important; border-color: rgba(255, 255, 255, .2) !important; }
+
+/* review round: title row on one centre line, quieter labels and chips, window controls grouped as chrome */
+html body .topbar:not(#_):not(#_) .title-drag-region .eyebrow { display: none !important; }
+html body .topbar:not(#_):not(#_) { align-items: center !important; }
+html body .topbar:not(#_):not(#_) .title-drag-region { display: flex !important; align-items: center !important; min-width: 0; }
+html body .topbar:not(#_):not(#_) .project-title-row { display: flex !important; align-items: center !important; gap: 12px !important; }
+html body .topbar:not(#_):not(#_) .top-actions > .button-quiet { width: 40px !important; height: 40px !important; min-width: 0 !important; padding: 0 !important; }
+html body .topbar:not(#_):not(#_) .top-actions > .button-primary { min-height: 40px !important; margin-left: 12px !important; }
+html body .setup-strip:not(#_):not(#_) label { display: inline-flex; align-items: center; gap: 8px !important; font-size: 11px !important; letter-spacing: .04em !important; opacity: 1; }
+html body .setup-strip:not(#_):not(#_) .strip-divider { height: 20px !important; opacity: .35 !important; margin: 0 4px !important; }
+html body :is(.save-status, #compat-status):not(#_):not(#_) { display: inline-flex !important; align-items: center; gap: 6px; height: 26px; padding: 0 10px !important; border-radius: 999px !important; font-size: 12px !important; background: color-mix(in srgb, currentColor 8%, transparent) !important; border: 1px solid color-mix(in srgb, currentColor 14%, transparent) !important; color: inherit !important; }
+html body .setup-strip:not(#_):not(#_) .auto-setup-toggle { background: transparent !important; box-shadow: none !important; color: inherit !important; border: 1px solid color-mix(in srgb, currentColor 22%, transparent) !important; }
+html body .topbar:not(#_):not(#_) .title-drag-region { flex-direction: row !important; justify-content: flex-start !important; flex: 1 1 auto !important; }

@@ -478,7 +478,7 @@ function scheduleCompatibilityCheck(delay = 900) {
   if (!state.project.mods.length) {
     state.compatibilityReport = null;
     $('compatibility-copy').textContent = 'Füge Mods hinzu, damit die KI sie automatisch prüfen kann.';
-    $('compat-status').innerHTML = '<span>●</span> Noch keine Mods';
+    $('compat-status').innerHTML = '<span>●</span> '+((window.workshopI18n?.locale||'de').startsWith('en')?'No mods yet':'Noch keine Mods');
     $('compatibility-panel').classList.remove('has-issues', 'checking');
     return;
   }

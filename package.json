@@ -1,6 +1,6 @@
 {
   "name": "modpack-werkstatt",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "A Windows desktop studio for planning Minecraft modpacks.",
   "main": "main.cjs",
   "scripts": {
@@ -45,9 +45,11 @@
       "picker-refresh.css",
       "design-dialog.css",
       "clarity.css",
+      "topbar-refresh.css",
       "wallpaper-fx.js",
       "contrast-guard.js",
       "chat-tone.js",
+      "overlay-dismiss.js",
       "glass-ui.css",
       "glass-ui.js",
       "design-quick.js",

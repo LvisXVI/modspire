@@ -7,7 +7,7 @@
     <meta name="description" content="Plan your next Minecraft Java modpack with Modspire: search Modrinth, curate mods, and review your setup. Try the interactive demo or download the Windows app.">
     <link rel="canonical" href="https://lvisxvi.github.io/modspire/demo/">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lvisxvi.github.io/modspire/">
+    <meta property="og:url" content="https://lvisxvi.github.io/modspire/demo/">
     <meta property="og:title" content="Modspire — Minecraft Java pack planning studio">
     <meta property="og:description" content="Plan a Minecraft Java pack, search Modrinth, and check your setup. Try the interactive demo or download the Windows app.">
     <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
@@ -991,22 +991,23 @@
       @media (max-width:760px) { .feature-details .capability-grid { padding-inline:12px; }.more-docs .doc-grid { grid-template-columns:1fr; }.video-panel { max-width:100%; } }
       html { scroll-behavior:smooth; }
     </style>
+      <link rel="stylesheet" href="demo-theme.css">
   </head>
   <body>
     <div class="reading-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
     <div class="topbar">
       <nav class="nav wrap" aria-label="Main navigation">
-        <a class="brand" href="#top" aria-label="Modspire home">
+        <a class="brand" href="../" aria-label="Zur Modspire-Projektseite">
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg>
           </span><span>Modspire</span>
         </a>
-        <div class="product-switch mobile-product-switch" aria-label="Switch product preview"><a class="product-link" href="https://lvisxvi.github.io/modspire/" aria-current="page">Modspire</a><a class="product-link" href="https://lvisxvi.github.io/minecraft-mod-studio/">Mod Studio</a></div>
+        <div class="product-switch mobile-product-switch" aria-label="Switch product preview"><a class="product-link" href="../" aria-current="page">Modspire</a><a class="product-link" href="../../minecraft-mod-studio/">Mod Studio</a></div>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <div class="nav-links" id="site-nav">
-          <a href="#demo">Try the studio</a><a href="#showcase">What’s inside</a><a href="#downloads">Download</a><a href="#docs">Guides</a>
-          <div class="product-switch" aria-label="Switch product preview"><a class="product-link" href="https://lvisxvi.github.io/modspire/" aria-current="page">Modspire</a><a class="product-link" href="https://lvisxvi.github.io/minecraft-mod-studio/">Mod Studio</a></div>
-          <a class="button small primary nav-cta" href="#downloads">Download Modspire <span aria-hidden="true">↓</span></a>
+          <a href="#demo">Demo</a><a href="#showcase">App-Ansichten</a><a href="#downloads">Download</a><a href="#docs">Anleitungen</a>
+          <div class="product-switch" aria-label="Switch product preview"><a class="product-link" href="../" aria-current="page">Modspire</a><a class="product-link" href="../../minecraft-mod-studio/">Mod Studio</a></div>
+          <a class="button small primary nav-cta" href="#downloads">Windows-Download <span aria-hidden="true">↓</span></a>
         </div>
       </nav>
     </div>
@@ -1014,14 +1015,14 @@
       <header class="hero wrap">
         <div class="hero-grid">
           <div class="reveal">
-            <p class="eyebrow"><span class="status-indicator" aria-hidden="true"></span> Minecraft Java · Pack planning studio</p>
-            <h1>Plan the pack.<br><span>Keep it yours.</span></h1>
-            <p class="hero-copy">Plan a Minecraft Java pack from first idea to export. Search Modrinth, curate your picks, and review the setup before you play. AI is optional.</p>
+            <p class="eyebrow"><span class="status-indicator" aria-hidden="true"></span> Modspire · Browser-Demo</p>
+            <h1>Erst ausprobieren.<br><span>Dann dein Pack planen.</span></h1>
+            <p class="hero-copy">Ein Beispielprojekt zum Durchklicken: Mods suchen, die Auswahl ändern und das Pack Lab ansehen. Die Demo ersetzt keinen Test in Minecraft.</p>
             <div class="hero-platform" role="group" aria-label="Choose a download">
-              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.2.98</span></small></a>
-              <a class="platform-choice" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><span>Project source</span><kbd>ZIP</kbd><small>Complete repository</small></a>
+              <a class="platform-choice is-active" id="hero-download" href="https://github.com/LvisXVI/modspire/releases/latest"><span>Windows x64</span><kbd>EXE</kbd><small>Portable · <span id="hero-version">0.3.14</span></small></a>
+              <a class="platform-choice" href="https://github.com/LvisXVI/modspire/archive/refs/heads/main.zip"><span>Quellcode</span><kbd>ZIP</kbd><small>Vollständiges Repository</small></a>
             </div>
-            <div class="hero-utilities"><button class="command-trigger" type="button" data-open-commands><span>Open command menu</span><span class="key-combo"><kbd>Ctrl</kbd><kbd>K</kbd></span></button><span class="release-note">AI optional <i></i> Pack stays local</span></div>
+            <div class="hero-utilities"><button class="command-trigger" type="button" data-open-commands><span>Befehlsmenü öffnen</span><span class="key-combo"><kbd>Ctrl</kbd><kbd>K</kbd></span></button><span class="release-note">KI optional <i></i> Beispieldaten im Browser</span></div>
           </div>
           <div class="hero-art reveal">
             <a class="poster-link" href="#tour" aria-label="Watch the Modspire app tour">
@@ -1043,8 +1044,8 @@
 
       <section class="section wrap" id="demo">
         <div class="section-heading">
-          <div><p class="section-tag">Interactive sample</p><h2>Try the studio.</h2></div>
-          <p>Click through the studio. Add mods, switch views, and shape a sample pack.</p>
+          <div><p class="section-tag">Interaktives Beispiel</p><h2>Die Werkstatt ausprobieren.</h2></div>
+          <p>Ansichten wechseln, Beispiel-Mods hinzufügen und ein Pack zusammenstellen.</p>
         </div>
         <div class="demo-shell" data-demo-active-theme="Aurora" aria-label="Interactive Modspire sample app">
           <div class="demo-top"><div class="demo-window-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="demo-brand"><span class="demo-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z" fill="currentColor"/></svg></span> Modspire <span class="demo-chip">Browser demo</span></div><span class="demo-status">Sample project · 1.21.1 · Fabric</span><div class="demo-window-controls" aria-hidden="true"><span></span><span></span><span></span></div></div>

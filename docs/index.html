@@ -1,281 +1,442 @@
 <!doctype html>
-<html lang="en" class="js-off">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#060b17">
-  <title>Modspire — Minecraft Java Modpack Studio</title>
-  <meta name="description" content="Modspire is a local-first Windows studio for Minecraft Java modpacks: search Modrinth, plan with an optional AI assistant, compare pack snapshots, export .mrpack files and build mods in the integrated Mod Studio.">
-  <link rel="canonical" href="https://lvisxvi.github.io/modspire/">
-  <link rel="icon" href="media/modspire-icon.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://lvisxvi.github.io/modspire/">
-  <meta property="og:title" content="Modspire — your Minecraft Java modpack studio">
-  <meta property="og:description" content="Search Modrinth, curate mods, compare pack variants and export .mrpack files. Local-first, AI optional.">
-  <meta property="og:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://lvisxvi.github.io/modspire/media/modspire-promo-poster.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="media/bg/aurora-lake-poster.webp">
-  <link rel="stylesheet" href="liquid.css">
-  <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Modspire","applicationCategory":"DeveloperApplication","softwareVersion":"0.3.3","operatingSystem":"Windows 10, Windows 11","url":"https://lvisxvi.github.io/modspire/","downloadUrl":"https://github.com/LvisXVI/modspire/releases/latest","author":{"@type":"Person","name":"LvisXVI"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"A local-first Minecraft Java modpack studio with Modrinth search, optional AI planning, Pack Lab snapshots, .mrpack export and an integrated Mod Studio."}
-  </script>
-  <style>
-    body { --scene: url("media/bg/aurora-lake-poster.webp"); --accent: #7ff0e4; --accent-2: #a98bff; --accent-ink: #03161b; }
-    .hero h1 .grad { display: inline-block; padding-bottom: .08em; }
-    .new-ribbon { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink-2); margin-bottom: 26px; }
-    .new-ribbon b { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.12); color: var(--ink); font-size: 12px; }
-    .f1 { left: -34px; top: 12%; } .f2 { right: -18px; top: 46%; animation-delay: -2.5s; } .f3 { left: 12%; bottom: -26px; animation-delay: -4.5s; }
-    .studio-card { overflow: hidden; }
-    .studio-card .orbit { position: absolute; right: -60px; bottom: -60px; width: 260px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 40%), linear-gradient(140deg, var(--accent), var(--accent-2)); filter: blur(2px); opacity: .32; z-index: -1; }
-  </style>
-  <style>
-    .ui5-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); align-items: center; gap: 32px; }
-    .ui5-card .ui5-shot-frame { width: 100%; aspect-ratio: 1600 / 867; overflow: hidden; border-radius: 18px; box-shadow: 0 30px 60px -24px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.12); transition: transform .8s var(--ease-spring); }
-    .ui5-card .ui5-shot { display: block; width: 100%; height: 100%; object-fit: contain; }
-    .ui5-card:hover .ui5-shot-frame { transform: translateY(-6px) rotate(-.6deg); }
-    @media (max-width: 900px) { .ui5-card { grid-template-columns: 1fr; } }
-  </style>
-</head>
-<body data-repo="LvisXVI/modspire" data-asset="Portable\.exe$">
-  <a class="skip" href="#main">Skip to content</a>
-  <div class="lg-scene living" data-living data-image="media/living/modspire-bg.jpg" data-mask-a="media/living/modspire-mask-a.png" data-mask-b="media/living/modspire-mask-b.png" aria-hidden="true" style="background-image: url(media/living/modspire-bg.jpg)"></div>
-
-  <div id="lg-intro" aria-hidden="true">
-    <div class="intro-core">
-      <div class="intro-drop"><img src="media/modspire-icon.png" alt=""></div>
-      <div class="intro-word">Modspire</div>
-      <div class="intro-line"></div>
-      <div class="intro-sub">Modpack studio · 0.3.3</div>
-    </div>
-  </div>
-
-  <nav class="lg-nav glass" aria-label="Main">
-    <a class="brand" href="#top" aria-label="Modspire home"><img src="media/modspire-icon.png" alt=""><span>Modspire</span></a>
-    <div class="nav-links">
-      <a href="#new">What’s new</a><a href="#tour">Tour</a><a href="#features">Features</a><a href="#download">Download</a><a href="#docs">Docs</a>
-    </div>
-    <div class="switch" aria-label="Projects">
-      <a href="./" aria-current="page">Modspire</a>
-      <a href="../minecraft-mod-studio/">Mod Studio</a>
-      <a href="../minecraft-host/">Host</a>
-    </div>
-    <a class="btn primary small nav-cta" href="#download">Download</a>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  </nav>
-
-  <main id="main">
-    <header class="hero wrap" id="top">
-      <div class="hero-grid">
-        <div>
-          <a class="new-ribbon glass" href="#new" data-hero style="--d:0"><span>New: Liquid Glass UI</span><b>0.3.3</b></a>
-          <h1 data-hero style="--d:1">Plan the pack.<br><span class="grad">Skip the chaos.</span></h1>
-          <p class="lead" data-hero style="--d:2">Modspire is a local-first Windows studio for Minecraft Java modpacks. Search Modrinth, shape an idea with an optional AI assistant, compare pack variants and export an installable <code>.mrpack</code>.</p>
-          <div class="actions" data-hero style="--d:3">
-            <a class="btn primary" href="https://github.com/LvisXVI/modspire/releases/download/v0.3.3/Modspire-0.3.3-Portable.exe" data-release-download>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19h14"/></svg>
-              Download for Windows
-            </a>
-            <a class="btn" href="demo/#demo">Try the browser demo</a>
-          </div>
-          <div class="meta" data-hero style="--d:4">
-            <span class="chip"><span class="dot"></span>Version <b data-release-version>0.3.3</b></span>
-            <span class="chip">Portable · no install</span>
-            <span class="chip">Catalog search needs no AI account</span>
-          </div>
-        </div>
-        <div class="hero-visual" data-hero style="--d:2">
-          <div class="device glass"><img src="screenshots/modspire-overview.jpg" width="1280" height="800" alt="Modspire im Liquid-Glass-Design: Übersicht des Modpacks Neues Abenteuer"></div>
-          <div class="float glass f1"><span class="ico">⌕</span><div>Modrinth search<small>Version &amp; loader aware</small></div></div>
-          <div class="float glass f2"><span class="ico">⇄</span><div>Compare snapshots<small>Added · removed · changed</small></div></div>
-          <div class="float glass f3"><span class="ico">⬡</span><div>.mrpack export<small>Exact versions &amp; hashes</small></div></div>
-        </div>
-      </div>
-      <div class="scroll-cue" aria-hidden="true"></div>
-    </header>
-
-    <figure class="wrap" style="margin:0 auto 48px;max-width:1200px">
-      <img src="media/hero-real.jpg" width="1620" height="907" loading="lazy" alt="Modspire Pack lab with compatibility compass, pack soundcheck, idea moodboard and snapshots" style="display:block;width:100%;height:auto;border-radius:24px">
-    </figure>
-
-    <section class="section wrap" id="new">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">New in 0.3.0 – 0.3.3</span>
-        <h2>From a shortlist to a <span class="grad">real pack file.</span></h2>
-        <p>Pack workflows grew up: keep variants side by side, update safely, and hand friends something they can install.</p>
-      </div>
-      <div class="bento">
-        <article class="card glass tint span-6 feature-wide ui5-card" data-reveal>
-          <div>
-            <div class="ico">🫧</div>
-            <h3>UI 5 · Liquid Glass</h3>
-            <p>A fifth layout: frosted, light-catching panels over your Minecraft world, a floating rail, spring-loaded controls and soft view transitions. Plus fixes across all four existing layouts: readable headings on every theme, calmer chat follow-ups and a fully English interface.</p>
-            <span class="tag">0.3.2</span>
-          </div>
-          <div class="ui5-shot-frame"><img class="ui5-shot" src="screenshots/glass-ui.webp" width="1600" height="867" loading="lazy" alt="Modspire Liquid Glass interface: the active modpack Neues Abenteuer and pack categories over an aurora landscape"></div>
-        </article>
-        <article class="card glass tint span-4 studio-card feature-wide" data-reveal>
-          <div>
-            <div class="ico">🛠️</div>
-            <h3>Mod Studio, built right in</h3>
-            <p>Open the real Minecraft Mod Studio from any of Modspire’s layouts: pixel textures, Blockbench models, AI help, source export and supported JAR builds. It runs on a private loopback server with checksum-verified JDK and Gradle runtimes. No separate installation.</p>
-            <span class="tag">0.3.1</span>
-          </div>
-          <span class="orbit" aria-hidden="true"></span>
-        </article>
-        <article class="card glass span-2" data-reveal style="--d:1">
-          <div class="ico">⇄</div><h3>Compare any two snapshots</h3>
-          <p>See added, removed and changed mod versions plus game setup between saved Pack Lab snapshots.</p><span class="tag">Pack Lab</span>
-        </article>
-        <article class="card glass span-2" data-reveal>
-          <div class="ico">⬆</div><h3>Selective updates</h3>
-          <p>Preview compatible Modrinth updates, pick individual versions, and get an automatic snapshot before anything changes.</p><span class="tag">Safe by default</span>
-        </article>
-        <article class="card glass span-2" data-reveal style="--d:1">
-          <div class="ico">📦</div><h3>Installable .mrpack export</h3>
-          <p>Exact versions, required dependencies, verified hashes, download URLs and a concrete loader version.</p><span class="tag">Modrinth format</span>
-        </article>
-        <article class="card glass span-2" data-reveal style="--d:2">
-          <div class="ico">⭐</div><h3>Bookmarks with notes</h3>
-          <p>Star mods in the catalog and keep a personal cross-pack library with editable notes, stored locally.</p><span class="tag">Library</span>
-        </article>
-        <article class="card glass span-3" data-reveal>
-          <div class="ico">🧩</div><h3>Dependencies, explained</h3>
-          <p>Required dependencies and client/server environments are explained in the selection and Pack Lab, including which parent pulled a shared library in.</p>
-        </article>
-        <article class="card glass span-3" data-reveal style="--d:1">
-          <div class="ico">🛡️</div><h3>Hardened local server</h3>
-          <p>The embedded Studio server blocks external origins and Host-header rebinding. Exact version pins survive import and dependency resolution.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section wrap" id="tour">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Inside the app</span>
-        <h2>Five rooms. <span class="grad">One workflow.</span></h2>
-        <p>Real screenshots from the Windows app, not mockups.</p>
-      </div>
-      <div class="showcase glass" data-showcase data-reveal>
-        <div class="tabs" role="tablist" aria-label="App areas">
-          <button class="tab" role="tab" aria-selected="true" data-src="screenshots/glass/assistant.webp" data-alt="Pack Assistant chat with follow-up choices"><strong>🤖 Pack Assistant</strong><span>Describe the experience you want, review suggestions and continue with contextual choices.</span><i class="bar"></i></button>
-          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/glass/catalog.webp" data-alt="Modrinth search results with filters"><strong>🔎 Modrinth catalog</strong><span>Search and filter by topic, version, loader, category, environment and popularity.</span><i class="bar"></i></button>
-          <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-src="screenshots/glass/lab.webp" data-alt="Pack Lab with mod roles and category balance"><strong>🧪 Pack Lab</strong><span>Mod roles, category balance, snapshots and a crash analyzer that cites log evidence.</span><i class="bar"></i></button>
-        </div>
-        <div class="stage" role="tabpanel"><img src="screenshots/glass/assistant.webp" alt="Pack Assistant chat with follow-up choices" width="1280" height="800"></div>
-      </div>
-      <div class="video-shell glass" style="margin-top:16px" data-reveal>
-        <video controls preload="metadata" playsinline poster="media/modspire-preview-poster.jpg" aria-label="Modspire app tour">
-          <source src="media/modspire-preview.webm" type="video/webm"><source src="media/modspire-preview.mp4" type="video/mp4">
-        </video>
-      </div>
-    </section>
-
-    <section class="section wrap" id="demo">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Demo</span>
-        <h2>Modspire <span class="grad">in motion.</span></h2>
-        <p>Overview, Pack Assistant, Mod catalog and Pack Lab, captured from the real app in the Liquid Glass layout.</p>
-      </div>
-      <figure class="card glass tint" data-reveal style="margin:0;padding:14px">
-        <video poster="media/modspire-preview-poster.jpg" autoplay muted loop playsinline preload="auto" width="1280" height="800" aria-label="Preview video of Modspire: overview, Pack Assistant, Mod catalog and Pack Lab" style="display:block;width:100%;height:auto;border-radius:18px"><source src="media/modspire-preview.webm" type="video/webm"><source src="media/modspire-preview.mp4" type="video/mp4"><source src="media/modspire-preview.webm" type="video/webm"><source src="media/modspire-preview.mp4" type="video/mp4"><source src="media/modspire-preview.webm" type="video/webm"><source src="media/modspire-preview.mp4" type="video/mp4">Dein Browser kann dieses Video nicht abspielen.</video>
-        <figcaption class="muted" style="padding:12px 6px 0">Recorded from the real app in demo mode (no sign-in, sample data): overview, Pack Assistant, Mod catalog and Pack Lab.</figcaption>
-      </figure>
-    </section>
-
-    <section class="section wrap" id="features">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Everything included</span>
-        <h2>Built for people who <span class="grad">actually play the pack.</span></h2>
-      </div>
-      <ul class="checklist">
-        <li class="glass" data-reveal><span class="em">🗂️</span><span><b>Multiple projects</b> with separate Minecraft versions, loaders, selections and chat histories.</span></li>
-        <li class="glass" data-reveal style="--d:1"><span class="em">💬</span><span><b>AI-assisted planning</b>: review Modrinth suggestions before anything changes in your pack.</span></li>
-        <li class="glass" data-reveal><span class="em">↶</span><span><b>Undo &amp; redo</b> selection changes, including batch additions, with Ctrl+Z / Ctrl+Shift+Z.</span></li>
-        <li class="glass" data-reveal style="--d:1"><span class="em">🔗</span><span><b>Shareable mod lists</b> with project links, version, loader and dependency labels.</span></li>
-        <li class="glass" data-reveal><span class="em">📥</span><span><b>Import</b> a Modrinth share code, public pack link or <code>.mrpack</code> into an editable project.</span></li>
-        <li class="glass" data-reveal style="--d:1"><span class="em">🩺</span><span><b>Crash Analyzer</b> explains likely causes and names a mod only when the log supports it.</span></li>
-        <li class="glass" data-reveal><span class="em">📈</span><span><b>Weekly favorites</b> from private local daily snapshots, beside all-time follows.</span></li>
-        <li class="glass" data-reveal style="--d:1"><span class="em">🧠</span><span><b>Your choice of AI</b>: ChatGPT account, OpenAI or Anthropic API, Ollama, OmniRoute or a local OpenCode server.</span></li>
-      </ul>
-      <p class="note glass" data-reveal style="margin-top:16px"><b>Limits, honestly:</b> Modspire organizes packs and reviews metadata. It does not install a Minecraft loader or prove that a pack starts in a game world. Credentials are encrypted with Windows DPAPI-backed storage; chat content goes to the provider you pick, only when you send it.</p>
-    </section>
-
-    <section class="section wrap" id="download">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Download</span>
-        <h2>One file. <span class="grad">Double-click.</span></h2>
-      </div>
-      <div class="download">
-        <div class="dl-main glass tint" data-reveal>
-          <div>
-            <h3 style="font-size:30px">Modspire <span data-release-version>0.3.3</span> for Windows</h3>
-            <p class="muted" style="margin:8px 0 0">Portable executable for Windows 10 and 11. The first launch asks for a local display name. That name is not an account.</p>
-          </div>
-          <div class="spec">
-            <div><small>File</small><strong data-release-name>Modspire-0.3.3-Portable.exe</strong></div>
-            <div><small>Size</small><strong data-release-size>≈ 365 MB</strong></div>
-            <div><small>Released</small><strong data-release-date>Oct 2026</strong></div>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/LvisXVI/modspire/releases/download/v0.3.3/Modspire-0.3.3-Portable.exe" data-release-download>Download portable .exe</a>
-            <a class="btn" href="https://github.com/LvisXVI/modspire/releases">All releases &amp; checksums</a>
-          </div>
-        </div>
-        <div class="dl-side">
-          <div class="card glass" data-reveal style="--d:1">
-            <h3>Run from source</h3>
-            <p>Windows 10/11, Node.js 22+ and pnpm.</p>
-            <pre>pnpm install
-pnpm start
-pnpm dist</pre>
-          </div>
-          <div class="card glass" data-reveal style="--d:2">
-            <h3>Community test build</h3>
-            <p>Found something confusing? <a href="https://github.com/LvisXVI/modspire/issues/new?template=bug_report.yml">Report a bug</a> or <a href="https://github.com/LvisXVI/modspire/discussions">share feedback</a>. Please remove keys, names and paths from screenshots first.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section wrap" id="docs">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Docs</span>
-        <h2>Guides &amp; <span class="grad">background.</span></h2>
-      </div>
-      <div class="links">
-        <a class="glass" data-reveal href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"><span>Getting started<small>Setup, first project, providers</small></span><span class="arr">→</span></a>
-        <a class="glass" data-reveal style="--d:1" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/mod-search.md"><span>Mod search<small>Filters, CurseForge key, ranking</small></span><span class="arr">→</span></a>
-        <a class="glass" data-reveal style="--d:2" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/ai-privacy.md"><span>AI &amp; privacy<small>What is sent, and when</small></span><span class="arr">→</span></a>
-        <a class="glass" data-reveal href="https://github.com/LvisXVI/modspire/blob/main/docs/mod-studio-integration.md"><span>Mod Studio integration<small>How the embedded Studio works</small></span><span class="arr">→</span></a>
-        <a class="glass" data-reveal style="--d:1" href="https://github.com/LvisXVI/modspire/blob/main/CHANGELOG.md"><span>Changelog<small>Every user-facing change</small></span><span class="arr">→</span></a>
-        <a class="glass" data-reveal style="--d:2" href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"><span>Troubleshooting<small>Build, run and debug</small></span><span class="arr">→</span></a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="wrap">
-      <div>
-        <a class="brand" href="#top"><img src="media/modspire-icon.png" alt="" width="28" height="28"><span>Modspire</span></a>
-        <p>An independent project. Not affiliated with or endorsed by Microsoft, Mojang, Modrinth, CurseForge or OpenAI. MIT for original files; see the licence notes in the repository.</p>
-      </div>
-      <nav aria-label="Footer">
-        <a href="https://github.com/LvisXVI/modspire">GitHub</a>
-        <a href="demo/">Interactive demo</a>
-        <a href="https://github.com/LvisXVI/modspire/blob/main/PUBLIC-TEST-DISCLAIMER.md">Disclaimer</a>
-        <a href="https://github.com/LvisXVI/modspire/blob/main/THIRD-PARTY-NOTICES.md">Third-party notices</a>
-        <a href="../minecraft-mod-studio/">Mod Studio</a>
-        <a href="../minecraft-host/">Minecraft Host</a>
-        <a href="https://lvisxvi.github.io/">LvisXVI homepage</a>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171817" />
+    <title>Modspire — Ein Plan für dein Modpack.</title>
+    <meta
+      name="description"
+      content="Mods finden, Varianten vergleichen und eine installierbare .mrpack exportieren. Eine lokale Werkstatt für das Pack, das du spielen willst."
+    />
+    <link rel="canonical" href="https://lvisxvi.github.io/modspire/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lvisxvi.github.io/modspire/" />
+    <meta property="og:title" content="Modspire — Ein Plan für dein Modpack." />
+    <meta
+      property="og:description"
+      content="Mods finden, Varianten vergleichen und eine installierbare .mrpack exportieren. Eine lokale Werkstatt für das Pack, das du spielen willst."
+    />
+    <meta
+      property="og:image"
+      content="https://lvisxvi.github.io/modspire/screenshots/modspire-overview.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="site.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Modspire",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Windows 10, Windows 11",
+        "url": "https://lvisxvi.github.io/modspire/",
+        "downloadUrl": "https://github.com/LvisXVI/modspire/releases/latest",
+        "author": { "@type": "Person", "name": "LvisXVI" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      }
+    </script>
+    <script src="site.js" defer></script>
+  </head>
+  <body
+    class="product-page"
+    data-repo="LvisXVI/modspire"
+    data-asset="Portable\.exe$"
+  >
+    <a class="skip-link" href="#main">Zum Inhalt</a>
+    <aside class="project-rail">
+      <a class="wordmark" href="../" aria-label="LvisXVI – Startseite"
+        >LVIS <span>/</span> XVI</a
+      >
+      <p class="rail-intro">Minecraft-Tools<br />für deinen PC.</p>
+      <nav class="project-nav" aria-label="Projekte">
+        <a class="project-link" href="../minecraft-host/"
+          ><span class="project-number">01</span
+          ><span
+            ><strong>Minecraft Host</strong><small>Servermanager</small></span
+          ></a
+        ><a class="project-link" href="./" aria-current="page"
+          ><span class="project-number">02</span
+          ><span
+            ><strong>Modspire</strong><small>Modpack-Planer</small></span
+          ></a
+        ><a class="project-link" href="../minecraft-mod-studio/"
+          ><span class="project-number">03</span
+          ><span><strong>Mod Studio</strong><small>Mod-Editor</small></span></a
+        >
       </nav>
+      <div class="rail-footer">
+        <p>
+          <strong>LvisXVI</strong><br />Unabhängige Projekte<br />für Minecraft
+          Java.
+        </p>
+        <a href="https://github.com/LvisXVI"
+          >GitHub <span aria-hidden="true">↗</span></a
+        ><a href="mailto:luisminecraft1x@gmail.com"
+          >Kontakt <span aria-hidden="true">↗</span></a
+        ><span class="rail-note">Lokal auf Windows.</span>
+      </div>
+    </aside>
+    <div class="site-body">
+      <header class="topbar">
+        <span class="breadcrumb"
+          >Projekte <span aria-hidden="true">/</span> Modspire</span
+        >
+        <nav aria-label="Seitenmenü">
+          <a href="../">Alle Projekte</a><a href="#download">Download</a
+          ><a href="https://github.com/LvisXVI/modspire"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </header>
+      <main id="main">
+        <nav class="section-nav" aria-label="Auf dieser Seite">
+          <a href="#features">Pack-Werkzeuge</a><a href="#tour">App-Ansichten</a
+          ><a href="#demo">Video</a><a href="#download">Download</a
+          ><a href="#docs">Dokumentation</a>
+        </nav>
+        <header class="page-intro" id="top">
+          <p class="eyebrow">02 / Modspire · Minecraft Java</p>
+          <div class="intro-layout">
+            <h1>Dein nächstes Pack<br />beginnt hier.</h1>
+            <p class="lead">
+              Mods finden, Varianten vergleichen und eine installierbare .mrpack
+              exportieren. Eine lokale Werkstatt für das Pack, das du spielen
+              willst.
+            </p>
+          </div>
+        </header>
+        <section class="product-lead" aria-label="Modspire im Überblick">
+          <figure class="hero-shot">
+            <img
+              src="screenshots/modspire-overview.jpg"
+              alt="Modspire: Übersicht eines Modpacks mit Projektnavigation und Mod-Kategorien"
+              width="1280"
+              height="800"
+              fetchpriority="high"
+            />
+            <figcaption>
+              Projektübersicht · aufgenommen in der Windows-App
+            </figcaption>
+          </figure>
+          <div class="product-brief">
+            <p class="eyebrow">Lokal auf Windows</p>
+            <h2>Ein Plan für dein Modpack.</h2>
+            <ul class="capabilities">
+              <li>Mods nach Version und Loader finden</li>
+              <li>Snapshots vergleichen und Updates prüfen</li>
+              <li>Installierbare .mrpack exportieren</li>
+              <li>Mod Studio direkt aus der App öffnen</li>
+            </ul>
+            <div class="stack-actions">
+              <a class="button primary" href="#download"
+                >Windows-Download <span aria-hidden="true">↗</span></a
+              ><a class="button" href="demo/#demo"
+                >Browser-Demo öffnen <span aria-hidden="true">↗</span></a
+              ><a class="text-link" href="https://github.com/LvisXVI/modspire"
+                >Quellcode auf GitHub <span aria-hidden="true">↗</span></a
+              >
+            </div>
+            <dl class="product-facts">
+              <div>
+                <dt>Release</dt>
+                <dd data-release-version>0.3.14</dd>
+              </div>
+              <div>
+                <dt class="visually-hidden">Voraussetzung</dt>
+                <dd>Windows 10 / 11</dd>
+              </div>
+              <div>
+                <dt class="visually-hidden">Voraussetzung</dt>
+                <dd>Portable · ohne Installation</dd>
+              </div>
+              <div>
+                <dt class="visually-hidden">Voraussetzung</dt>
+                <dd>Modrinth-Suche ohne KI-Konto</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+        <section class="content-section" id="features">
+          <div class="section-heading">
+            <p class="eyebrow"><span>01</span> / Pack-Werkzeuge</p>
+            <h2>Aus einer Liste wird dein Pack.</h2>
+          </div>
+          <div class="feature-list">
+            <article class="feature-row">
+              <span class="row-number">01</span>
+              <h3>Die richtigen Mods finden.</h3>
+              <p>
+                Modrinth nach Thema, Minecraft-Version, Loader, Kategorie und
+                Umgebung durchsuchen. Abhängigkeiten zeigen auch an, welche Mod
+                eine Bibliothek benötigt.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">02</span>
+              <h3>Varianten vergleichen.</h3>
+              <p>
+                Snapshots speichern und sehen, welche Mods und Versionen
+                hinzugekommen, weggefallen oder verändert worden sind. Die
+                Minecraft-Konfiguration wird mitverglichen.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">03</span>
+              <h3>Updates mit Rückweg.</h3>
+              <p>
+                Kompatible Updates vorab prüfen und einzeln auswählen. Vor jeder
+                Änderung wird automatisch ein Snapshot angelegt.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">04</span>
+              <h3>Ein Pack zum Weitergeben.</h3>
+              <p>
+                Als .mrpack exportieren: mit exakten Versionen,
+                Pflicht-Abhängigkeiten, geprüften Hashes, Download-URLs und
+                konkreter Loader-Version. Oder eine Liste mit Projektlinks
+                teilen.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">05</span>
+              <h3>Deine Bibliothek behalten.</h3>
+              <p>
+                Mods mit Sternen und eigenen Notizen vormerken. Mehrere
+                Pack-Projekte haben eigene Versionen, Auswahl und Chatverläufe;
+                Änderungen lassen sich rückgängig machen.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">06</span>
+              <h3>Mod Studio ist schon dabei.</h3>
+              <p>
+                Texturen, Blockbench-Modelle, Quellcode und unterstützte
+                JAR-Builds direkt aus allen fünf App-Layouts öffnen. Ein
+                privater lokaler Server hält die Werkzeuge zusammen.
+              </p>
+            </article>
+          </div>
+        </section>
+        <section class="content-section" id="tour">
+          <div class="section-heading">
+            <p class="eyebrow"><span>02</span> / In der App</p>
+            <h2>Vom Katalog ins Pack Lab.</h2>
+          </div>
+          <div class="gallery">
+            <figure class="screenshot">
+              <img
+                src="screenshots/glass/catalog.webp"
+                alt="Modrinth-Katalog in Modspire mit Suche und Filtern"
+                loading="lazy"
+                width="1280"
+                height="800"
+              />
+              <figcaption>Modrinth-Katalog · suchen und auswählen.</figcaption>
+            </figure>
+            <figure class="screenshot">
+              <img
+                src="media/hero-real.jpg"
+                alt="Pack Lab mit Snapshots und Pack-Analyse"
+                loading="lazy"
+                width="1280"
+                height="800"
+              />
+              <figcaption>
+                Pack Lab · Varianten und Zusammenstellung prüfen.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="feature-list">
+            <article class="feature-row">
+              <span class="row-number">01</span>
+              <h3>Hilfe, wenn du sie brauchst.</h3>
+              <p>
+                Ein optionaler Assistent hilft beim Planen. Du prüfst
+                Vorschläge, bevor Mods übernommen werden. ChatGPT-Konto,
+                OpenAI-/Anthropic-API, Ollama, OmniRoute oder ein lokaler
+                OpenCode-Server stehen zur Wahl.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">02</span>
+              <h3>Import statt neu anfangen.</h3>
+              <p>
+                Modrinth-Sharecode, öffentliche Pack-Links oder eine .mrpack in
+                ein bearbeitbares Projekt übernehmen. Exakte Versionsbindungen
+                bleiben erhalten.
+              </p>
+            </article>
+            <article class="feature-row">
+              <span class="row-number">03</span>
+              <h3>Ein Crash braucht Belege.</h3>
+              <p>
+                Der Crash Analyzer benennt eine Mod nur, wenn das Log Hinweise
+                liefert. Lokale Tages-Snapshots ergänzen die Allzeit-Favoriten
+                um Wochenfavoriten.
+              </p>
+            </article>
+          </div>
+        </section>
+        <section class="content-section" id="limits">
+          <div class="section-heading">
+            <p class="eyebrow"><span>03</span> / Gut zu wissen</p>
+            <h2>Was Modspire übernimmt.</h2>
+          </div>
+          <div class="plain-note">
+            <p>
+              Modspire organisiert Packs und prüft Metadaten. Es installiert
+              keinen Minecraft-Loader und bestätigt nicht, dass ein Pack im
+              Spiel tatsächlich startet.
+            </p>
+            <p>
+              Zugangsdaten werden mit Windows-DPAPI verschlüsselt gespeichert.
+              Chat-Inhalte gehen erst beim Senden an den von dir gewählten
+              Anbieter. Der eingebettete Studio-Server blockiert fremde Origins
+              und Host-Header-Rebinding.
+            </p>
+          </div>
+        </section>
+        <section class="content-section" id="demo">
+          <div class="section-heading">
+            <p class="eyebrow"><span>04</span> / Aufnahme aus der App</p>
+            <h2>Ein Blick in den Alltag.</h2>
+          </div>
+          <figure class="demo-video">
+            <video
+              controls
+              playsinline
+              preload="none"
+              width="1440"
+              height="900"
+              poster="media/modspire-preview-poster.jpg"
+              aria-label="Modspire – Video der Windows-App"
+            >
+              <source src="media/modspire-preview.webm" type="video/webm" />
+              <source src="media/modspire-preview.mp4" type="video/mp4" />
+              Dein Browser kann dieses Video nicht abspielen.
+              <a href="media/modspire-preview.mp4">Video als MP4 öffnen</a>.
+            </video>
+            <figcaption>
+              Aufgenommen in der echten Windows-App. Wiedergabe startet erst auf
+              deinen Klick.
+            </figcaption>
+          </figure>
+        </section>
+        <section class="content-section" id="download">
+          <div class="section-heading">
+            <p class="eyebrow"><span>05</span> / Für deinen Rechner</p>
+            <h2>Herunterladen. Loslegen.</h2>
+          </div>
+          <div class="download-layout">
+            <div class="download-main">
+              <div class="release-title">
+                <h3>Modspire <span data-release-version>0.3.14</span></h3>
+                <span class="platform">Windows 10 / 11</span>
+              </div>
+              <p>
+                Eine portable EXE für Windows. Beim ersten Start wählst du einen
+                lokalen Anzeigenamen – dafür wird kein Konto angelegt.
+              </p>
+              <dl class="release-spec">
+                <div>
+                  <dt>Datei</dt>
+                  <dd data-release-name>Modspire-0.3.14-Portable.exe</dd>
+                </div>
+                <div>
+                  <dt>Größe</dt>
+                  <dd data-release-size>361 MB</dd>
+                </div>
+                <div>
+                  <dt>Veröffentlicht</dt>
+                  <dd data-release-date>28.10.2026</dd>
+                </div>
+              </dl>
+              <div class="actions">
+                <a
+                  class="button primary"
+                  href="https://github.com/LvisXVI/modspire/releases/latest"
+                  data-release-download
+                  >Portable EXE herunterladen
+                  <span aria-hidden="true">↗</span></a
+                ><a
+                  class="button"
+                  href="https://github.com/LvisXVI/modspire/releases"
+                  >Alle Releases &amp; Prüfsummen
+                  <span aria-hidden="true">↗</span></a
+                >
+              </div>
+              <p class="release-note" data-release-status>
+                Release-Stand: 0.3.14. Weitere Versionen auf GitHub.
+              </p>
+            </div>
+            <aside class="source-panel">
+              <p class="eyebrow">Selbst starten</p>
+              <h3>Aus dem Quellcode.</h3>
+              <p>Windows 10/11, Node.js 22+ und pnpm.</p>
+              <pre><code>pnpm install
+pnpm start
+pnpm dist</code></pre>
+              <a class="text-link" href="https://github.com/LvisXVI/modspire"
+                >Repository öffnen <span aria-hidden="true">↗</span></a
+              >
+            </aside>
+          </div>
+        </section>
+        <section class="content-section" id="docs">
+          <div class="section-heading">
+            <p class="eyebrow"><span>06</span> / Weiterlesen</p>
+            <h2>Dokumentation & Feedback.</h2>
+          </div>
+          <div class="doc-links">
+            <a
+              href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/getting-started.md"
+              ><strong>Erste Schritte</strong
+              ><span>Einrichtung und erstes Projekt</span
+              ><span aria-hidden="true">↗</span></a
+            ><a
+              href="https://github.com/LvisXVI/modspire/blob/main/CHANGELOG.md"
+              ><strong>Changelog</strong><span>Was sich geändert hat</span
+              ><span aria-hidden="true">↗</span></a
+            ><a
+              href="https://github.com/LvisXVI/modspire/blob/main/docs/wiki/troubleshooting-development.md"
+              ><strong>Fehlersuche</strong
+              ><span>Starten, bauen und debuggen</span
+              ><span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <p class="download-note">
+            Etwas unklar?
+            <a
+              href="https://github.com/LvisXVI/modspire/issues/new?template=bug_report.yml"
+              >Fehler melden</a
+            >
+            oder
+            <a href="https://github.com/LvisXVI/modspire/discussions"
+              >Feedback teilen</a
+            >. Bitte Schlüssel, Namen und private Pfade aus Screenshots
+            entfernen.
+          </p>
+        </section>
+      </main>
+      <footer class="site-footer" id="contact">
+        <div>
+          <a class="footer-name" href="../">LvisXVI</a>
+          <p>
+            Unabhängige Hobby-Projekte. Nicht mit Mojang oder Microsoft
+            verbunden.<br />Drittsoftware steht unter ihren eigenen Lizenzen.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="mailto:luisminecraft1x@gmail.com"
+            >E-Mail <span aria-hidden="true">↗</span></a
+          ><span>Discord: lvis8311</span
+          ><a href="https://github.com/LvisXVI/modspire/issues"
+            >Fehler melden <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </footer>
     </div>
-  </footer>
-  <script src="living-bg.js" defer></script>
-  <script src="music-player.js" defer></script>
-  <script src="liquid.js" defer></script>
-</body>
+  </body>
 </html>

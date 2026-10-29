@@ -1,0 +1,260 @@
+/* Website shell only: the interactive demo retains its own app themes. */
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: Geist Mono;
+  src: url("../fonts/geist-mono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+:root {
+  --bg: #171817;
+  --ink: #f2f1eb;
+  --muted: #b4b5ac;
+  --subtle: #96988d;
+  --line: #3c3d36;
+  --panel: #1c1d1b;
+  --panel-strong: #22241e;
+  --cyan: #e6c44b;
+  --blue: #e6c44b;
+  --violet: #e6c44b;
+  --radius: 3px;
+  --max: 1180px;
+  --mono: "Geist Mono", monospace;
+}
+html,
+body {
+  background: #171817;
+  font-family: Inter, Arial, sans-serif;
+}
+body::before,
+body::after,
+.reading-progress,
+.hero::before,
+.hero::after {
+  display: none;
+}
+h1,
+h2,
+h3,
+.brand {
+  font-family: Inter, Arial, sans-serif;
+}
+h1 {
+  font-size: clamp(36px, 5vw, 66px);
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+}
+h2 {
+  font-size: clamp(28px, 3vw, 42px);
+  letter-spacing: -0.04em;
+}
+h1 span,
+.hero h1 span {
+  color: #f2f1eb;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #e6c44b;
+  outline-offset: 4px;
+}
+.topbar,
+.topbar.scrolled {
+  position: relative;
+  top: 0;
+  margin: 0 auto;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: #171817;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.nav {
+  padding-inline: 0;
+  min-height: 68px;
+}
+.brand-mark {
+  display: none;
+}
+.brand {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.product-switch {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.product-switch a.product-link,
+.product-switch a.product-link[aria-current="page"] {
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+}
+.button,
+.button.primary,
+.platform-choice,
+.platform-choice.is-active {
+  border-radius: 2px;
+  box-shadow: none;
+  background: none;
+  border-color: #606152;
+  color: var(--ink);
+}
+.button.primary {
+  background: #e6c44b;
+  border-color: #e6c44b;
+  color: #171817;
+}
+.button.primary:hover {
+  background: #f3d568;
+  color: #171817;
+}
+.hero {
+  padding: 40px 0 25px;
+}
+.hero-grid {
+  display: block;
+}
+.hero-art {
+  display: none;
+}
+.hero-copy {
+  max-width: 64ch;
+  font-size: 16px;
+  color: var(--muted);
+}
+.hero-platform {
+  max-width: 620px;
+}
+.platform-choice.is-active {
+  border-color: #e6c44b;
+}
+.platform-choice:before {
+  display: none;
+}
+.platform-choice small,
+.release-note {
+  color: var(--muted);
+}
+.eyebrow,
+.section-tag {
+  color: #e6c44b;
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+}
+.hero-utilities {
+  margin-top: 20px;
+}
+.section {
+  padding-block: 36px;
+  border-top: 1px solid var(--line);
+}
+.section-heading p {
+  color: var(--muted);
+}
+.section-heading h2 {
+  color: var(--ink);
+}
+.section-heading {
+  margin-bottom: 24px;
+}
+.showcase-tabs,
+.download-main,
+.download-side,
+.doc-link,
+.notice,
+.more-docs,
+.video-shell,
+.showcase-stage,
+.command-dialog {
+  border-radius: 3px;
+  background: #1c1d1b;
+  box-shadow: none;
+}
+.feature-list,
+.showcase-grid {
+  border-radius: 0;
+}
+.footer {
+  background: none;
+  border-top: 1px solid var(--line);
+}
+.menu-toggle {
+  border-radius: 2px;
+  background: none;
+}
+.nav-links.open {
+  background: #1c1d1b;
+  border-radius: 2px;
+}
+.hero-platform a {
+  min-width: 0;
+}
+.reveal,
+.reveal-target,
+.motion-ready .reveal-target {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+@media (max-width: 680px) {
+  .wrap {
+    width: calc(100% - 36px);
+  }
+  .nav {
+    gap: 14px;
+    flex-wrap: wrap;
+    min-height: 68px;
+  }
+  .hero {
+    padding-top: 30px;
+  }
+  .hero-platform {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .hero-copy {
+    font-size: 14px;
+  }
+  .hero-utilities {
+    flex-wrap: wrap;
+  }
+  .section {
+    padding-block: 30px;
+  }
+  .mobile-product-switch {
+    display: none;
+  }
+  .nav-links.open {
+    max-height: 65svh;
+    overflow: auto;
+  }
+  .hero-platform .platform-choice {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .nav-links.open .product-switch {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
